@@ -2,28 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AccountResource;
+use App\Http\Resources\WarehouseResource;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
-use App\Models\Account;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-
-
-class AccountResourceController extends Controller
+use Illuminate\Support\Facades\DB;
+class WarehouseResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $account = Account::all();
+        $warehouse = Warehouse::all();
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "List of system account",
-            'data' => AccountResource::collection($account)
+            'message' => "List of warehouse",
+            'data' => WarehouseResource::collection($warehouse)
         ];
         return response()->json($arr,Response::HTTP_OK);
     }
@@ -33,22 +31,13 @@ class AccountResourceController extends Controller
      */
     public function store(Request $request)
     {
-        //The password contains characters from at least three of the following five categories:          
-        // 1. English uppercase characters (A – Z)
-        // 2. English lowercase characters (a – z)
-        // 3. Base 10 digits (0 – 9)
-        // 4. Non-alphanumeric (For example: !, $, #, or %)
-        // 5. Unicode characters
         $input = $request->all();
         $validator = Validator::make($input,[
-            'username' => 'required|string|min:5|max:20',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'password_confirm' => 'required|min:6|same:password|',
-            'role_id' => 'required|string|exists:roles,role_id',
-            'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
-            'email' => 'email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
+            'warehouse_name' => 'required|string|max:255|min:5',
+            'address' => 'string|max:255',
+            'distributor_id' => 'required|string|exists:distributors,distributor_id',
+            'product_quantity' => "required|numeric",            
         ]);
-        
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -58,14 +47,13 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            $input['account_id'] = 'AC'.Carbon::now()->format('d.m.y.h.i.s');
-            $input['password'] = Hash::make($input['password']);            
-            $account = Account::create($input);
+            $input['warehouse_id'] = 'WAR'.Carbon::now()->format('d.m.y.h.i.s');
+            $distributor = Warehouse::create($input);
             $arr = [
                 'success' => true,
                 'status_code' => 201,
-                'message' => "Creating new account successfully",
-                'data' => new AccountResource($account),
+                'message' => "Creating new warehouse successfully",
+                'data' => new WarehouseResource($distributor),
             ];
             return response()->json($arr, Response::HTTP_CREATED);
         }
@@ -74,46 +62,44 @@ class AccountResourceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Account $account)
-    {      
+    public function show(Warehouse $warehouse)
+    {
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "Account has been found",
-            'data' => new AccountResource($account),
-            ];
+            'message' => "Warehouse has been found",
+            'data' => new WarehouseResource($warehouse),
+        ];
         return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Account $account)
+    public function update(Request $request, Warehouse $warehouse)
     {
         $input = $request->all();
-        $validator = Validator::make($input,[                       
-            'role_id' => 'string|exists:roles,role_id',
-            'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
-            'email' => 'email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
-            'full_name' => 'string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',           
-            'date_of_birth' => 'date',           
+        $validator = Validator::make($input,[
+            'warehouse_name' => 'string|max:255|min:5',
+            'address' => 'string|max:255',
+            'distributor_id' => 'string|exists:distributors,distributor_id',
+            'product_quantity' => "unique:distributors,phone_number|digits:10|numeric",
         ]);
-
-        if( $validator->fails()){
+        if($validator->fails()){
             $arr = [
                 'success' => false,
                 'status_code' => 200,
-                'message' => "Updated Account Failed",
+                'message' => "Failed",
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{           
-            $update = $account->update($input);            
+        }else{
+            $update = $warehouse->update($request->all());
             if($update){
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
-                    'message' => "Updated successful",                   
+                    'message' => "Updated Warehouse successful",                  
                     'data' => 'Success!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
@@ -121,7 +107,7 @@ class AccountResourceController extends Controller
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Updated Account Failed",                  
+                    'message' => "Update Warehouse Failed",                   
                     'data' => 'Failed!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
@@ -132,14 +118,14 @@ class AccountResourceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Account $account)
-    {   
-        $delete =  $account->delete();      
+    public function destroy(Warehouse $warehouse)
+    {
+        $delete =  $warehouse->delete();      
             if($delete){
                 $arr = [
                     'success' => true,
                     'status_code' => 204,
-                    'message' => "Account has been deleted",
+                    'message' => "Warehouse has been deleted",
                     'data' => "Success!",
                 ];
                 return response()->json($arr, Response::HTTP_NO_CONTENT);    
@@ -148,9 +134,9 @@ class AccountResourceController extends Controller
                     'success' => false,
                     'status_code' => 200,
                     'message' => "Failed",
-                    'data' => "Deleted Failed!",
+                    'data' => "Deleted Warehouse Failed!",
                 ];
                 return response()->json($arr, Response::HTTP_OK);    
-            }           
+            }   
     }
 }

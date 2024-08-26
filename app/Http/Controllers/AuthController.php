@@ -1,39 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 
 class AuthController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function test(){
-        dd(1);
-    }
+{    
     public function login(Request $request)
     {
         
         $credentials = $request->validate([
             'username' => ['required'],
             'password' => ['required'],   
-            'password_confirm' => ['required','same:password'],             
+            'password_confirm' => ['required','same:password'], 
+            'remember_token' => ['bool']            
         ]);
         $remember = $request->has('remember_token') ? true : false;
        
         if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password])) {         
             $user = Auth::guard('api')->user();
-            
+            $request->session()->regenerateToken(); 
             $token = $user->createToken('authToken')->plainTextToken;                   
             $arr = [
                 'success' => true,
                 'status_code' => 200,
                 'message' => "Login Account Success!",
                 'Bearer-token' => $token,
-                'data' => ""
+                'data' => $user
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
@@ -47,15 +41,18 @@ class AuthController extends Controller
         }
         
     }
-    public function logout(Request $request):RedirectResponse
+    public function logout(Request $request)
     {
-        $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],   
-            'password_confirm' => ['required','same:password'],             
-        ]);
-        dd($request->validate());
-        return 1;
+        Auth::guard('api')->logout();       
+        $request->session()->invalidate(); 
+        $request->session()->regenerateToken();
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "Success",
+            'data' => "Logout successful"
+        ];
+        return response()->json($arr, Response::HTTP_OK);
     }
     
 }

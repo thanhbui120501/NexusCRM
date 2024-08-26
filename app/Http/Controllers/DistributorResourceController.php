@@ -2,60 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Distributor;
 use Illuminate\Http\Request;
-use App\Http\Resources\RoleResource;
-use App\Models\Role;
+use Illuminate\Http\Response;
+use App\Http\Resources\DistributorResource;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Response;
 
-class RoleResourceController extends Controller
+class DistributorResourceController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     *
-     * @return Role[]|\Illuminate\Database\Eloquent\Collection
-     */
-    /**
-     * 
-    * @OA\Info(
- *      version="1.0.0",
- *      title="L5 OpenApi",
- *      description="L5 Swagger OpenApi description"
- * )
- * @OA\Get(
- *    path = "/role"
- *    summary="Role Data",
- *    description="Role Page",
- *    tags={"Role"},
- *    
- *   @OA\Response(
- *     response = 200,
- *     description="OK",
- *     @OA\MediaType(
- *       mediaType={"application/json"},
- *     )
- *   ),
- * @OA\PathItem (
-     *     ),
- * ),
- * 
- */
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $role = Role::all();
+        $distributor = Distributor::all();
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "List of system roles",
-            'data' => RoleResource::collection($role)
+            'message' => "List of distributor",
+            'data' => DistributorResource::collection($distributor)
         ];
         return response()->json($arr,Response::HTTP_OK);
-        
     }
 
     /**
@@ -65,8 +34,12 @@ class RoleResourceController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'role_name' => 'required|string|max:50|min:5',
-            'description' => 'string|max:255',
+            'distributor_name' => 'required|string|max:100|min:5',
+            'address' => 'string|max:255',
+            'representative_name' => 'string|max:70',
+            'phone_number' => "unique:distributors,phone_number|digits:10|numeric",
+            'email' => 'email|unique:distributors,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
+            'business_sector' => 'string|max:10'
         ]);
         if($validator->fails()){
             $arr = [
@@ -77,13 +50,13 @@ class RoleResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            $input['role_id'] = 'R'.Carbon::now()->format('d.m.y.h.i.s');
-                        $role = Role::create($input);
+            $input['distributor_id'] = 'DIS'.Carbon::now()->format('d.m.y.h.i.s');
+            $distributor = Distributor::create($input);
             $arr = [
                 'success' => true,
                 'status_code' => 201,
-                'message' => "Creating new roles successfully",
-                'data' => new RoleResource($role),
+                'message' => "Creating new distributor successfully",
+                'data' => new DistributorResource($distributor),
             ];
             return response()->json($arr, Response::HTTP_CREATED);
         }
@@ -92,27 +65,30 @@ class RoleResourceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
-    {                       
-             
-        $arr =  [
-                    'success' => true,
-                    'status_code' => 200,
-                    'message' => "Role has been found",
-                    'data' => (new RoleResource($role))
-                ];
+    public function show(Distributor $distributor)
+    {
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "Distributor has been found",
+            'data' => new DistributorResource($distributor),
+            ];
         return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Role $role, Request $request )
+    public function update(Request $request, Distributor $distributor)
     {
-        $input = $request -> all();             
+        $input = $request->all();
         $validator = Validator::make($input,[
-            'role_name' => 'required|string|max:50|min:5',
-            'description' => 'string|max:255',
+            'distributor_name' => 'string|max:100|min:5',
+            'address' => 'string|max:255',
+            'representative_name' => 'string|max:70',
+            'phone_number' => "unique:distributors,phone_number|digits:10|numeric",
+            'email' => 'email|unique:distributors,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
+            'business_sector' => 'string|max:10'
         ]);
         if($validator->fails()){
             $arr = [
@@ -122,13 +98,13 @@ class RoleResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{           
-            $update = $role->update($request->all());
+        }else{
+            $update = $distributor->update($request->all());
             if($update){
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
-                    'message' => "Updated successful",                  
+                    'message' => "Updated Distributor successful",                  
                     'data' => 'Success!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
@@ -136,31 +112,27 @@ class RoleResourceController extends Controller
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Update Failed",
-                    //'data' => $role->update($request->all()),
+                    'message' => "Update Distributor Failed",                   
                     'data' => 'Failed!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }
-            
         }
-
-        
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
-    {                          
-        $check_id = DB::table('accounts')->where('role_id', $role->role_id)->get();
+    public function destroy(Distributor $distributor)
+    {
+        $check_id = DB::table('accounts')->where('role_id', $distributor->distributor_id)->get();
         if($check_id->isEmpty()){
-            $delete = $role->delete();
+            $delete = $distributor->delete();
             if($delete){
                 $arr = [
                             'success' => true,
                             'status_code' => 204,
-                            'message' => "Deleted successful",
+                            'message' => "Deleted Distributor successful",
                             'data' => 'Success!',
                         ];
                 return response()->json($arr, Response::HTTP_NO_CONTENT);
@@ -168,7 +140,7 @@ class RoleResourceController extends Controller
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Deleted Failed",
+                    'message' => "Deleted Distributor Failed",
                     'data' => 'Failed!',
                 ];
                 return response()->json($arr, Response::HTTP_OK);
@@ -178,10 +150,9 @@ class RoleResourceController extends Controller
                 'success' => false,
                 'status_code' => 200,
                 'message' => "Deleted Failed",
-                'data' => "This role cannot be deleted because an account is already holding this role.",
+                'data' => "This distributor cannot be deleted because an warehouse is already holding this distributor.",
             ];
             return response()->json($arr, Response::HTTP_OK);
         }
-        
     }
 }

@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('user_token',20)->nullable();
             $table->string('email',255)->unique()->nullable();
             $table->string('phone_number',10)->unique()->nullable();
-            $table->string('first_name',50)->nullable();
-            $table->string('last_name',50)->nullable();
+            $table->string('full_name',50)->nullable();           
             $table->date('date_of_birth')->nullable();
             $table->string('role_id',20);
             $table->foreign('role_id',20)->references('role_id')->on('roles');

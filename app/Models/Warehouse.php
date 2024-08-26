@@ -6,21 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Role extends Model
+class Warehouse extends Model
 {
-    use HasFactory,  Notifiable;
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-
+    use HasFactory, Notifiable;
      /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'role_id';
+    protected $primaryKey = 'warehouse_id';
     /**
      * Indicates if the model's ID is auto-incrementing.
      *
@@ -28,13 +22,13 @@ class Role extends Model
      */
     public $incrementing = false;
     protected $fillable = [
-        'role_id',
-        'role_name',
-        'description',
-        'create_at',
+        'warehouse_id',
+        'warehouse_name',
+        'address',
+        'distributor_id',
+        'product_quantity',     
         'update_at',
+        'create_at',
         'status'
     ];
-
-    
 }
