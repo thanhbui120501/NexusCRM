@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('customer_id',20)->primary();
             $table->string('phone_number',10)->unique();
             $table->string('email',255)->unique();
+            $table->string('full_name',100);
             $table->tinyInteger('gender')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('province',50)->nullable();
