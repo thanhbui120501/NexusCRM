@@ -7,11 +7,41 @@ use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\Failed;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class RoleResourceController extends Controller
 {
+     /**
+     * Display a listing of the resource.
+     *
+     * @return Role[]|\Illuminate\Database\Eloquent\Collection
+     */
+    /**
+     * 
+    * @OA\Info(
+ *      version="1.0.0",
+ *      title="L5 OpenApi",
+ *      description="L5 Swagger OpenApi description"
+ * )
+ * @OA\Get(
+ *    path = "/role"
+ *    summary="Role Data",
+ *    description="Role Page",
+ *    tags={"Role"},
+ *    
+ *   @OA\Response(
+ *     response = 200,
+ *     description="OK",
+ *     @OA\MediaType(
+ *       mediaType={"application/json"},
+ *     )
+ *   ),
+ * @OA\PathItem (
+     *     ),
+ * ),
+ * 
+ */
     /**
      * Display a listing of the resource.
      */
@@ -24,7 +54,8 @@ class RoleResourceController extends Controller
             'message' => "List of system roles",
             'data' => RoleResource::collection($role)
         ];
-        return response()->json($arr,200);
+        return response()->json($arr,Response::HTTP_OK);
+        
     }
 
     /**
@@ -33,19 +64,18 @@ class RoleResourceController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        
-        
         $validator = Validator::make($input,[
-            'role_name' => 'required'
+            'role_name' => 'required|string|max:50|min:5',
+            'description' => 'string|max:255',
         ]);
         if($validator->fails()){
             $arr = [
                 'success' => false,
                 'status_code' => 200,
-                'message' => "Role name cannot be empty",
+                'message' => "Failed",
                 'data' => $validator->errors()
             ];
-            return response()->json($arr, 200);
+            return response()->json($arr, Response::HTTP_OK);
         }else{
             $input['role_id'] = 'R'.Carbon::now()->format('d.m.y.h.i.s');
                         $role = Role::create($input);
@@ -55,90 +85,146 @@ class RoleResourceController extends Controller
                 'message' => "Creating new roles successfully",
                 'data' => new RoleResource($role),
             ];
-            return response()->json($arr, 201);
+            return response()->json($arr, Response::HTTP_CREATED);
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {       
+    public function show(Role $role)
+    {                
         //$role = DB::select('SELECT * FROM ROLES WHERE ROLE_ID = ?',[$id]);
-        $role = DB::table('roles')->where('role_id',$id)->get();
-        if($role->isEmpty()){
-            $arr = [
-                'success' => false,
-                'status_code' => 200,
-                'message' => "Role with code ".$id." not found.",
-                'data' => null,
+        // $role = DB::table('roles')->where('role_id',$id)->get();
+        
+        // if($role->isEmpty()){
+        //     $arr = [
+        //         'success' => false,
+        //         'status_code' => 200,
+        //         'message' => "Role with code ".$id." not found.",
+        //         'data' => null,
                 
-            ];
-            return response()->json($arr, 200);
-        }else{
-            $arr = [
-                'success' => true,
-                'status_code' => 200,
-                'message' => "Role has been found",
-                'data' => $role,
-            ];
-            return response()->json($arr, 200);
-        }
+        //     ];
+        //     return response()->json($arr, Response::HTTP_OK);
+        // }else{
+        //     $arr = [
+        //         'success' => true,
+        //         'status_code' => 200,
+        //         'message' => "Role has been found",
+        //         'data' => $role,
+        //     ];
+        //     return response()->json($arr, Response::HTTP_OK);
+        // }    
+        dd($role);         
+        $arr =  [
+                    'success' => true,
+                    'status_code' => 200,
+                    'message' => "Role has been found",
+                    'data' => (new RoleResource($role))
+                ];
+        return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Role $role, Request $request )
     {
-        $input = $request -> all();      
-        $check_id = DB::table('roles')->where('role_id', $id)->get();            
-        if($check_id->isEmpty()){
+        $input = $request -> all();             
+        $validator = Validator::make($input,[
+            'role_name' => 'required|string|max:50|min:5',
+            'description' => 'string|max:255',
+        ]);
+        if($validator->fails()){
             $arr = [
                 'success' => false,
                 'status_code' => 200,
-                'message' => "Role with code ".$id." not found.",
-                'data' => null,
+                'message' => "Failed",
+                'data' => $validator->errors()
             ];
-            return response()->json($arr, 200);
+            return response()->json($arr, Response::HTTP_OK);
         }else{
-            $update_at = Carbon::now('Asia/Ho_Chi_Minh')->format('y-m-d h:i:s');                               
-            $role = DB::update("UPDATE ROLES SET ROLE_NAME = '{$input['role_name']}' , DESCRIPTION ='{$input['description']}' , UPDATED_AT = '$update_at'  WHERE ROLE_ID = ?",[$id]);          
-            $role = DB::select('SELECT * FROM ROLES WHERE ROLE_ID = ?',[$id]);
-            $arr = [
-                'success' => true,
-                'status_code' => 200,
-                'message' => "Update successful",
-                'data' => $role,
-            ];
-            return response()->json($arr, 200);
+            //dd(new RoleResource($role));
+            $update = $role->update($request->all());
+            if($update){
+                $arr = [
+                    'success' => true,
+                    'status_code' => 200,
+                    'message' => "Updated successful",
+                    //'data' => $role->update($request->all()),
+                    'data' => 'Success!'
+                ];
+                return response()->json($arr, Response::HTTP_OK);
+            }else{
+                $arr = [
+                    'success' => false,
+                    'status_code' => 200,
+                    'message' => "Update Failed",
+                    //'data' => $role->update($request->all()),
+                    'data' => 'Failed!'
+                ];
+                return response()->json($arr, Response::HTTP_OK);
+            }
+            
         }
+
         
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {            
-        $check_id = DB::table('roles')->where('role_id', $id)->get();   
+        // $check_id = DB::table('roles')->where('role_id', $id)->get();   
+        // if($check_id->isEmpty()){
+        //     $arr = [
+        //         'success' => false,
+        //         'status_code' => 200,
+        //         'message' => "Role with code ".$id." not found.",
+        //         'data' => null,
+        //     ];
+        //     return response()->json($arr, Response::HTTP_OK);
+        // }else{          
+        //     $role = DB::delete('DELETE FROM ROLES WHERE ROLE_ID = ?', [$id]);
+        //     $arr = [
+        //         'success' => true,
+        //         'status_code' => 204,
+        //         'message' => "Deleted successful",
+        //         'data' => 'success',
+        //     ];
+        //     return response()->json($arr, Response::HTTP_NO_CONTENT);
+        // }
+        
+        $check_id = DB::table('accounts')->where('role_id', $role->role_id)->get();
         if($check_id->isEmpty()){
+            $delete = $role->delete();
+            if($delete){
+                $arr = [
+                            'success' => true,
+                            'status_code' => 204,
+                            'message' => "Deleted successful",
+                            'data' => 'Success!',
+                        ];
+                return response()->json($arr, Response::HTTP_NO_CONTENT);
+            }else{
+                $arr = [
+                    'success' => false,
+                    'status_code' => 200,
+                    'message' => "Deleted Failed",
+                    'data' => 'Failed!',
+                ];
+                return response()->json($arr, Response::HTTP_OK);
+            }
+        }else{
             $arr = [
                 'success' => false,
                 'status_code' => 200,
-                'message' => "Role with code ".$id." not found.",
-                'data' => null,
+                'message' => "Deleted Failed",
+                'data' => "This role cannot be deleted because an account is already holding this role.",
             ];
-            return response()->json($arr, 200);
-        }else{          
-            $role = DB::delete('DELETE FROM ROLES WHERE ROLE_ID = ?', [$id]);
-            $arr = [
-                'success' => true,
-                'status_code' => 200,
-                'message' => "Deleted successful",
-                'data' => 'success',
-            ];
-            return response()->json($arr, 200);
+            return response()->json($arr, Response::HTTP_OK);
         }
+        
     }
 }

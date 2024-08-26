@@ -14,7 +14,7 @@ class RoleResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    {
+    {       
         return parent::toArray($request);
     }
     
