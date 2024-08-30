@@ -105,7 +105,7 @@ class DistributorResourceController extends Controller
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated Distributor successful",                  
-                    'data' => 'Success!'
+                    'data' => new DistributorResource($distributor)
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{

@@ -100,7 +100,7 @@ class WarehouseResourceController extends Controller
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated Warehouse successful",                  
-                    'data' => 'Success!'
+                    'data' => new WarehouseResource($warehouse)
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{

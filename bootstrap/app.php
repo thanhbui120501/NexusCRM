@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(        
@@ -23,11 +25,15 @@ return Application::configure(basePath: dirname(__DIR__))
         //     \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         //     \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
              \Illuminate\Session\Middleware\StartSession::class,           
-             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+             \Illuminate\View\Middleware\ShareErrorsFromSession::class,            
         //     Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
         //     Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
         //     Illuminate\Cookie\Middleware\EncryptCookies::class,
         //     \App\Http\Middleware\VerifyCsrfToken::class,
+        ]);
+        $middleware->alias([
+            'abilities' => CheckAbilities::class,
+            'ability' => CheckForAnyAbility::class
         ]);
         
     })

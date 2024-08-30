@@ -129,7 +129,7 @@ class RoleResourceController extends Controller
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated successful",                  
-                    'data' => 'Success!'
+                    'data' => new RoleResource($role)
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
