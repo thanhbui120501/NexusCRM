@@ -14,14 +14,14 @@ class AuthController extends Controller
             'username' => ['required'],
             'password' => ['required'],   
             'password_confirm' => ['required','same:password'], 
-            'remember_token' => ['bool']            
+            'remember_token' => ['string']            
         ]);
-        $remember = $request->has('remember_token') ? true : false;
-       
-        if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password])) {         
+        $remember = ($request->has('remember_token') && $request->remember_token == 'true') ? true : false;
+        
+        if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password],$remember)) {         
             $user = Auth::guard('api')->user();
             $request->session()->regenerateToken(); 
-            $token = $user->createToken('authToken')->plainTextToken;                   
+            $token = $request->user('api')->createToken('authToken')->plainTextToken;                  
             $arr = [
                 'success' => true,
                 'status_code' => 200,
@@ -41,11 +41,13 @@ class AuthController extends Controller
         }
         
     }
+
     public function logout(Request $request)
     {
-        Auth::guard('api')->logout();       
+        Auth::guard('api')->logout();
+        $request->user('sanctum')->currentAccessToken()->delete();
         $request->session()->invalidate(); 
-        $request->session()->regenerateToken();
+        $request->session()->regenerateToken();      
         $arr = [
             'success' => true,
             'status_code' => 200,

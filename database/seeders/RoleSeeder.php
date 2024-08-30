@@ -8,19 +8,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-class AccountSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('accounts')->insert([
-            'account_id' => 'AC'.Carbon::now()->format('d.m.y.h.i.s'),
-            'username' => 'thanh',
-            'email' => 'thanh@email.com',
-            'password' => Hash::make('Thanh@123!?'),
-            'role_id' => 'R30.08.24.01.06.43'          
+        DB::table('roles')->insert([
+            'role_id' => 'R'.Carbon::now()->format('d.m.y.h.i.s'),
+            'role_name' => 'Admin',
+            'description' => 'abc',
+                      
         ]);
     }
 }

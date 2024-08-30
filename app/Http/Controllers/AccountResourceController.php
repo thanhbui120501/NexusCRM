@@ -41,12 +41,14 @@ class AccountResourceController extends Controller
         // 5. Unicode characters
         $input = $request->all();
         $validator = Validator::make($input,[
-            'username' => 'required|string|min:5|max:20',
+            'username' => 'required|string|min:5|max:20|unique:accounts,username',
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'password_confirm' => 'required|min:6|same:password|',
             'role_id' => 'required|string|exists:roles,role_id',
             'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
             'email' => 'email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
+            'full_name' => 'required|string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',           
+            'date_of_birth' => 'date',
         ]);
         
         if($validator->fails()){
@@ -114,7 +116,7 @@ class AccountResourceController extends Controller
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated successful",                   
-                    'data' => 'Success!'
+                    'data' => new AccountResource($account)
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
