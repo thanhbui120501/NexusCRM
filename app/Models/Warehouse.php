@@ -20,6 +20,7 @@ class Warehouse extends Model
      *
      * @var bool
      */
+    protected $table = 'warehouses';
     public $incrementing = false;
     protected $fillable = [
         'warehouse_id',

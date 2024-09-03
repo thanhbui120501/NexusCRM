@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
+use PhpParser\Node\Expr\FuncCall;
 
 class AuthController extends Controller
 {    
@@ -56,5 +57,6 @@ class AuthController extends Controller
         ];
         return response()->json($arr, Response::HTTP_OK);
     }
+    
     
 }

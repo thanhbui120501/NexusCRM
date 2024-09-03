@@ -26,6 +26,7 @@ class Distributor extends Model
      *
      * @var bool
      */
+    protected $table = 'distributors';
     public $incrementing = false;
     protected $fillable = [
         'distributor_id',

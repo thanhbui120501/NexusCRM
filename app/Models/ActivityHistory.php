@@ -19,21 +19,23 @@ class ActivityHistory extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'acctivity_id';
+    protected $primaryKey = 'activity_id';
     /**
      * Indicates if the model's ID is auto-incrementing.
      *
      * @var bool
      */
+    protected $table = 'activity_history';
     public $incrementing = false;
     protected $fillable = [
-        'acctivity_id',
-        'acctivity_name',
-        'acctivity_content',
+        'activity_id',
+        'activity_name',
+        'activity_content',
+        'activity_type',
         'account_id',
         'username',
-        'create_at',
-        'update_at',
+        'created_at',
+        'updated_at',
         'status',
     ];
 }

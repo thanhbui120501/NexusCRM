@@ -20,7 +20,7 @@ class AccountSeeder extends Seeder
             'username' => 'thanh',
             'email' => 'thanh@email.com',
             'password' => Hash::make('Thanh@123!?'),
-            'role_id' => 'R30.08.24.01.06.43'          
+            'role_id' => 'R03.09.24.07.10.29'          
         ]);
     }
 }

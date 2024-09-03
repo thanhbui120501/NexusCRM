@@ -2,27 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\WarehouseResource;
-use App\Models\Warehouse;
+use App\Http\Resources\ActivityHistoryResource;
+use App\Http\Controllers\AccountResourceController;
+use App\Models\ActivityHistory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-class WarehouseResourceController extends Controller
+use PhpParser\Node\Expr\FuncCall;
+
+class ActivityHistoryResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $warehouse = Warehouse::all();
+        $activity = ActivityHistory::all();    
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "List of warehouse",
-            'data' => WarehouseResource::collection($warehouse)
+            'message' => "List of acctivity history",
+            'data' => ActivityHistoryResource::collection($activity)
         ];
+        
         return response()->json($arr,Response::HTTP_OK);
     }
 
@@ -30,13 +35,14 @@ class WarehouseResourceController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {         
         $input = $request->all();
         $validator = Validator::make($input,[
-            'warehouse_name' => 'required|string|max:255|min:5',
-            'address' => 'string|max:255',
-            'distributor_id' => 'required|string|exists:distributors,distributor_id',
-            'product_quantity' => "required|numeric",            
+            'activity_name' => 'required|string|max:50|min:5',
+            'activity_type' => 'required|string|max:100',
+            'activity_content' => 'required|string|max:100',
+            'account_id' => 'required|exists:accounts,account_id',
+            'username' => 'required|string|min:5|max:20'
         ]);
         if($validator->fails()){
             $arr = [
@@ -46,45 +52,34 @@ class WarehouseResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{
-            $input['warehouse_id'] = 'WAR'.Carbon::now()->format('d.m.y.h.i.s');
-            $distributor = Warehouse::create($input);
-            dd($distributor);
-            $arr = [
-                'success' => true,
-                'status_code' => 201,
-                'message' => "Creating new warehouse successfully",
-                'data' => new WarehouseResource($distributor),
-            ];
-            return response()->json($arr, Response::HTTP_CREATED);
+        }else{           
+            $activity = ActivityHistory::create($input);           
+            return $activity;
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Warehouse $warehouse)
-    {
+    public function show(ActivityHistory $activityHistory)
+    {       
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "Warehouse has been found",
-            'data' => new WarehouseResource($warehouse),
-        ];
+            'message' => "Activity history has been found",
+            'data' => new ActivityHistoryResource($activityHistory),
+            ];
         return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Warehouse $warehouse)
+    public function getActivityHistoryByType(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input,[
-            'warehouse_name' => 'string|max:255|min:5',
-            'address' => 'string|max:255',
-            'distributor_id' => 'string|exists:distributors,distributor_id',
-            'product_quantity' => "unique:distributors,phone_number|digits:10|numeric",
+            'activity_type' => 'required|string|max:100',          
         ]);
         if($validator->fails()){
             $arr = [
@@ -94,39 +89,40 @@ class WarehouseResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{
-            $update = $warehouse->update($request->all());
-            if($update){
-                $arr = [
-                    'success' => true,
-                    'status_code' => 200,
-                    'message' => "Updated Warehouse successful",                  
-                    'data' => new WarehouseResource($warehouse)
-                ];
-                return response()->json($arr, Response::HTTP_OK);
-            }else{
+        }else{           
+            $activity = DB::table('activity_history')->where('activity_type',$request->activity_type)->get();
+            if($activity->isEmpty()){
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Update Warehouse Failed",                   
-                    'data' => 'Failed!'
-                ];
-                return response()->json($arr, Response::HTTP_OK);
+                    'message' => "No result for type ".$request->activity_type,
+                    'data' => 'Failed'
+                ];  
+            }else{
+                $arr = [
+                    'success' => true,
+                    'status_code' => 200,
+                    'message' => "List of acctivity history by type ".$request->activity_type,
+                    'data' => ActivityHistoryResource::collection($activity)
+                ];  
             }
+                     
+            return response()->json($arr,Response::HTTP_OK);           
         }
+        
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Warehouse $warehouse)
+    public function destroy(ActivityHistory $activityHistory)
     {
-        $delete =  $warehouse->delete();      
+        $delete = $activityHistory->delete();      
             if($delete){
                 $arr = [
                     'success' => true,
                     'status_code' => 204,
-                    'message' => "Warehouse has been deleted",
+                    'message' => "Activity has been deleted",
                     'data' => "Success!",
                 ];
                 return response()->json($arr, Response::HTTP_NO_CONTENT);    
@@ -135,9 +131,9 @@ class WarehouseResourceController extends Controller
                     'success' => false,
                     'status_code' => 200,
                     'message' => "Failed",
-                    'data' => "Deleted Warehouse Failed!",
+                    'data' => "Deleted Activity Failed!",
                 ];
                 return response()->json($arr, Response::HTTP_OK);    
-            }   
+            }
     }
 }

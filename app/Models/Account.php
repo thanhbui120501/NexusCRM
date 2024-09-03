@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\Account as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens as SanctumHasApiTokens;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 //use Illuminate\Foundation\Auth\Account as Authenticatable;
 class Account extends Authenticatable
@@ -23,6 +23,7 @@ class Account extends Authenticatable
      *
      * @var bool
      */
+    protected $table = 'accounts';
     public $incrementing = false;
     protected $fillable = [
         'account_id',
@@ -61,4 +62,5 @@ class Account extends Authenticatable
             'password' => 'hashed',        
         ];
     }
+    
 }
