@@ -2,11 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Role;
+use App\Models\Account;
+use App\Models\ActivityHistory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountResource extends JsonResource
+class ActivityHistoryResource extends JsonResource
 {
     /**
      * Indicates if the resource's collection keys should be preserved.
@@ -21,17 +22,14 @@ class AccountResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //return parent::toArray($request);
-        $role = Role::where('role_id',$this->role_id)->get();
-        
+        $account = Account::where('account_id',$this->account_id)->get();
         return [
-            'account_id' => $this->account_id,
-            'username' => $this->username,            
-            'email' => $this->email,
-            'phone_number' => $this->phone_number,
-            'full_name' => $this->full_name,       
-            'date_of_birth' => $this->date_of_birth,
-            'role' => RoleResource::collection($role),          
+            'activity_id' => $this->activity_id,
+            'activity_name' => $this->activity_name,
+            'activity_content' => $this->activity_content,
+            'activity_type' => $this->activity_type,
+            'username' => $this->username,
+            'account' => AccountResource::collection($account),           
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'status' => $this->status == 1 ? true : false,

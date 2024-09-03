@@ -1,15 +1,12 @@
 <?php
 
 use App\Http\Controllers\AccountResourceController;
+use App\Http\Controllers\ActivityHistoryResourceController;
 use App\Http\Controllers\RoleResourceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DistributorResourceController;
 use App\Http\Controllers\WarehouseResourceController;
 use Illuminate\Support\Facades\Route;
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:api');
 
 //account login route
 Route::post('/account/login',[AuthController::class,'login'])->name('api.auth.login');
@@ -50,6 +47,13 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
         Route::get('/warehouse/get-detail-warehouse/{warehouse}','show')->name('api.warehouse.show'); //show warehouse detail
         Route::patch('/warehouse/update-warehouse/{warehouse}','update')->name('api.warehouse.update'); //update warehouse by id
         Route::delete('/warehouse/delete-warehouse/{warehouse}','destroy')->name('api.warehouse.update'); //delete warehouse by id
+    });
+    //Activity History
+    Route::controller(ActivityHistoryResourceController::class)->group(function(){
+        Route::get('/activity/get-all-activity','index')->name('api.activity.index');
+        Route::get('/activity/get-detail-activity/{activityHistory}','show')->name('api.activity.show'); //get all activity history
+        Route::post('/activity/get-activity-by-type','getActivityHistoryByType')->name('api.activity.getActivityHistoryByType'); 
+        Route::delete('/activity/delete-activity/{activityHistory}','destroy')->name('api.activity.delete'); //delete activity
     });
 });
 

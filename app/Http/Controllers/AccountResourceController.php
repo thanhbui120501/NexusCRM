@@ -9,13 +9,16 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-
+use App\Http\Controllers\ActivityHistoryResourceController;
+use App\Http\Resources\ActivityHistoryResource;
+use App\Models\ActivityHistory;
+use Illuminate\Support\Facades\Auth;
 
 class AccountResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
+     */   
     public function index()
     {
         $account = Account::all();
@@ -92,6 +95,7 @@ class AccountResourceController extends Controller
      */
     public function update(Request $request, Account $account)
     {
+        
         $input = $request->all();
         $validator = Validator::make($input,[                       
             'role_id' => 'string|exists:roles,role_id',
@@ -110,13 +114,29 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{           
-            $update = $account->update($input);            
+            $update = $account->update($input);
+            $user = Auth::guard('api')->user();                                                              
             if($update){
+                $request = new Request([
+                    'activity_id' => 'AH'.Carbon::now()->format('d.m.y.h.i.s'),
+                    'activity_name' => 'Account Updated',
+                    'activity_type' => 'Account',
+                    'activity_content' => 'The user '. $user->username . ' has just updated new information for user ' . $account->username .'.',
+                    'account_id' => $user->account_id,
+                    'username' => $user->username,
+                ]);
+                $result = (new ActivityHistoryResourceController)->store($request);
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated successful",                   
-                    'data' => new AccountResource($account)
+                    'data' => new AccountResource($account),
+                    'activity' => [
+                        'activity_name' => $result->activity_name,
+                        'activity_type' => $result->activity_type,
+                        'activity_content' => $result->activity_content,
+                        'activity_time' => $result->created_at,
+                    ],
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
@@ -155,4 +175,7 @@ class AccountResourceController extends Controller
                 return response()->json($arr, Response::HTTP_OK);    
             }           
     }
+    
+    
+    
 }

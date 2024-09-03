@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('activity_history', function (Blueprint $table) {
             $table->string('activity_id',20)->primary();
             $table->string('activity_name',100);
+            $table->string('activity_type',100);
             $table->string('activity_content',255);
             $table->string('account_id',20);
             $table->foreign('account_id')->references('account_id')->on('accounts');
