@@ -35,8 +35,8 @@ class Distributor extends Model
         'representative_name',
         'phone_number',
         'business_sector',
-        'update_at',
-        'create_at',
+        'updated_at',
+        'created_at',
         'status'
     ];
   

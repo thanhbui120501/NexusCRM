@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('account_id',20);
             $table->foreign('account_id')->references('account_id')->on('accounts');
             $table->dateTime('login_time');
-            $table->dateTime('loout_time');
+            $table->dateTime('logout_time');
             $table->string('ip_address',50);
             $table->string('device_name',50);
             $table->timestamps();

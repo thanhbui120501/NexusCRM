@@ -47,7 +47,7 @@ class WarehouseResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            $input['warehouse_id'] = 'WAR'.Carbon::now()->format('d.m.y.h.i.s');
+            $input['warehouse_id'] = 'WAR'.Carbon::now()->format('dmyhis');
             $distributor = Warehouse::create($input);
             dd($distributor);
             $arr = [

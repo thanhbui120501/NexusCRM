@@ -10,8 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ActivityHistoryResourceController;
-use App\Http\Resources\ActivityHistoryResource;
-use App\Models\ActivityHistory;
 use Illuminate\Support\Facades\Auth;
 
 class AccountResourceController extends Controller
@@ -63,7 +61,7 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            $input['account_id'] = 'AC'.Carbon::now()->format('d.m.y.h.i.s');
+            $input['account_id'] = 'AC'.Carbon::now()->format('dmyhis');
             $input['password'] = Hash::make($input['password']);            
             $account = Account::create($input);
             $arr = [
@@ -118,7 +116,7 @@ class AccountResourceController extends Controller
             $user = Auth::guard('api')->user();                                                              
             if($update){
                 $request = new Request([
-                    'activity_id' => 'AH'.Carbon::now()->format('d.m.y.h.i.s'),
+                    'activity_id' => 'AH'.Carbon::now()->format('dmyhis'),
                     'activity_name' => 'Account Updated',
                     'activity_type' => 'Account',
                     'activity_content' => 'The user '. $user->username . ' has just updated new information for user ' . $account->username .'.',
@@ -150,7 +148,65 @@ class AccountResourceController extends Controller
             }
         }
     }
-
+    public function resetPassword(Request $request, Account $account){
+        $input = $request->all();
+        $validator = Validator::make($input,[           
+            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password_confirm' => 'required|same:password|',          
+        ]);
+        
+        if($validator->fails()){
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }else{          
+            if(!Hash::check($request->password, $account->password)) {
+                $requestInput = new Request([
+                    'password' => Hash::make($input['password'])
+                ]);               
+                $currentPassword = $account->password;    
+                $currentUser = $account->account_id;                     
+                $update = $account->update($requestInput->all());
+                
+                if($update){
+                    $request = new Request([
+                        'reset_id' => 'RES'.Carbon::now()->format('dmyhis'),
+                        'account_id' => $currentUser,
+                        'token' => $currentPassword,                   
+                    ]);
+                    $result = (new PasswordResetResourceController())->store($request);
+                    $arr = [
+                        'success' => true,
+                        'status_code' => 201,
+                        'message' => "Update password successfully",
+                        'data' => new AccountResource($account),
+                    ];
+                    return response()->json($arr, Response::HTTP_CREATED);
+                }else{
+                    $arr = [
+                        'success' => false,
+                        'status_code' => 200,
+                        'message' => "Updated Account Failed",                  
+                        'data' => 'Failed!'
+                    ];
+                    return response()->json($arr, Response::HTTP_OK);
+                }
+            }
+            else{
+                $arr = [
+                    'success' => false,
+                    'status_code' => 200,
+                    'message' => "Reset Password Failed",                  
+                    'data' => 'The new password cannot be the same as the old password.'
+                ];
+                return response()->json($arr, Response::HTTP_OK);
+            }                   
+        }
+    }
     /**
      * Remove the specified resource from storage.
      */

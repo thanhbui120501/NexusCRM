@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         DB::table('roles')->insert([
-            'role_id' => 'R'.Carbon::now()->format('d.m.y.h.i.s'),
+            'role_id' => 'R'.Carbon::now()->format('dmyhis'),
             'role_name' => 'Admin',
             'description' => 'abc',
                       

@@ -28,8 +28,8 @@ class Warehouse extends Model
         'address',
         'distributor_id',
         'product_quantity',     
-        'update_at',
-        'create_at',
+        'updated_at',
+        'created_at',
         'status'
     ];
 }

@@ -3,9 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+use App\Http\Middleware\AdminOnlyAllowed;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(        
@@ -15,8 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->statefulApi();
-         $middleware->use([
+        $middleware->statefulApi();       
+        $middleware->use([
         //     // \Illuminate\Http\Middleware\TrustHosts::class,
         //     \Illuminate\Http\Middleware\TrustProxies::class,
         //     \Illuminate\Http\Middleware\HandleCors::class,
@@ -25,15 +25,17 @@ return Application::configure(basePath: dirname(__DIR__))
         //     \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         //     \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
              \Illuminate\Session\Middleware\StartSession::class,           
-             \Illuminate\View\Middleware\ShareErrorsFromSession::class,            
+             \Illuminate\View\Middleware\ShareErrorsFromSession::class,     
+
         //     Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
         //     Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
         //     Illuminate\Cookie\Middleware\EncryptCookies::class,
-        //     \App\Http\Middleware\VerifyCsrfToken::class,
+            //App\Http\Middleware\AdminOnlyAllowed::class,
         ]);
         $middleware->alias([
             'abilities' => CheckAbilities::class,
-            'ability' => CheckForAnyAbility::class
+            'ability' => CheckForAnyAbility::class,
+            'admin_only_allowed' => AdminOnlyAllowed::class, 
         ]);
         
     })
