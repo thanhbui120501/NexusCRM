@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Role extends Model
+class PasswordReset extends Model
 {
-    use HasFactory,  Notifiable;
+    use HasFactory, Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -20,21 +20,20 @@ class Role extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'role_id';
+    protected $primaryKey = 'reset_id';
     /**
      * Indicates if the model's ID is auto-incrementing.
      *
      * @var bool
      */
-    protected $table = 'roles';
+    protected $table = 'password_reset';
     public $incrementing = false;
     protected $fillable = [
-        'role_id',
-        'role_name',
-        'description',
+        'reset_id',
+        'account_id',
+        'token',
         'created_at',
         'updated_at',
         'status'
     ];
-    
 }

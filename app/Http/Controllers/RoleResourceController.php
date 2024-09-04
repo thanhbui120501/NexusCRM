@@ -77,7 +77,7 @@ class RoleResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            $input['role_id'] = 'R'.Carbon::now()->format('d.m.y.h.i.s');
+            $input['role_id'] = 'R'.Carbon::now()->format('dmyhis');
                         $role = Role::create($input);
             
             $arr = [
@@ -94,8 +94,7 @@ class RoleResourceController extends Controller
      * Display the specified resource.
      */
     public function show(Role $role)
-    {                       
-        dd($role);     
+    {                          
         $arr =  [
                     'success' => true,
                     'status_code' => 200,

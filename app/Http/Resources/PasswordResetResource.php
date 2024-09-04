@@ -6,7 +6,7 @@ use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ActivityHistoryResource extends JsonResource
+class PasswordResetResource extends JsonResource
 {
     /**
      * Indicates if the resource's collection keys should be preserved.
@@ -23,11 +23,8 @@ class ActivityHistoryResource extends JsonResource
     {
         $account = Account::where('account_id',$this->account_id)->get();
         return [
-            'activity_id' => $this->activity_id,
-            'activity_name' => $this->activity_name,
-            'activity_content' => $this->activity_content,
-            'activity_type' => $this->activity_type,
-            'username' => $this->username,
+            'reset_id' => $this->reset_id,    
+            'token' => $this->token,           
             'account' => AccountResource::collection($account),           
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

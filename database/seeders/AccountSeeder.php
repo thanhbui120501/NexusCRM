@@ -16,11 +16,11 @@ class AccountSeeder extends Seeder
     public function run(): void
     {
         DB::table('accounts')->insert([
-            'account_id' => 'AC'.Carbon::now()->format('d.m.y.h.i.s'),
+            'account_id' => 'AC'.Carbon::now()->format('dmyhis'),
             'username' => 'thanh',
             'email' => 'thanh@email.com',
             'password' => Hash::make('Thanh@123!?'),
-            'role_id' => 'R03.09.24.07.10.29'          
+            'role_id' => 'R040924011719'          
         ]);
     }
 }

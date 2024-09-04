@@ -6,35 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Role extends Model
+class LoginHistory extends Model
 {
-    use HasFactory,  Notifiable;
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-
+    use HasFactory, Notifiable;
      /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'role_id';
+    protected $primaryKey = 'history_id';
     /**
      * Indicates if the model's ID is auto-incrementing.
      *
      * @var bool
      */
-    protected $table = 'roles';
+    protected $table = 'login_history';
     public $incrementing = false;
     protected $fillable = [
-        'role_id',
-        'role_name',
-        'description',
-        'created_at',
+        'history_id',
+        'account_id',
+        'login_time',
+        'logout_time',
+        'ip_address',
+        'device_name',     
         'updated_at',
+        'created_at',
         'status'
     ];
-    
 }
