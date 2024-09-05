@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class RoleResourceController extends Controller
 {
@@ -63,11 +64,13 @@ class RoleResourceController extends Controller
      */
     public function store(Request $request)
     {
+        //validate
         $input = $request->all();
         $validator = Validator::make($input,[
             'role_name' => 'required|string|max:50|min:5',
             'description' => 'string|max:255',
         ]);
+        //check validate
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -77,14 +80,32 @@ class RoleResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
+            //create new role
             $input['role_id'] = 'R'.Carbon::now()->format('dmyhis');
-                        $role = Role::create($input);
+            $role = Role::create($input);
             
+            //save activity
+            $user = Auth::guard('api')->user();
+            $newRequest = (new RequestController)->makeActivityRequest(
+                'Role Created',
+                'Role',
+                'The user '. $user->username . (new RequestController)->makeActivityContent("Role Created") . $role->role_name .'.',
+                $user->account_id,
+                $user->username);               
+            $result = (new ActivityHistoryResourceController)->store($newRequest);
+
+            //return json message
             $arr = [
                 'success' => true,
                 'status_code' => 201,
                 'message' => "Creating new roles successfully",
                 'data' => new RoleResource($role),
+                'activity' => [
+                    'activity_name' => $result->activity_name,
+                    'activity_type' => $result->activity_type,
+                    'activity_content' => $result->activity_content,
+                    'activity_time' => $result->created_at,    
+                ],
             ];
             return response()->json($arr, Response::HTTP_CREATED);
         }
@@ -125,19 +146,35 @@ class RoleResourceController extends Controller
         }else{           
             $update = $role->update($request->all());
             if($update){
+                //save activity
+                $user = Auth::guard('api')->user();
+                $newRequest = (new RequestController)->makeActivityRequest(
+                    'Role Updated',
+                    'Role',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Role Updated", $request) . $role->role_name .'.',
+                    $user->account_id,
+                    $user->username);               
+                $result = (new ActivityHistoryResourceController)->store($newRequest);
+
+                //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated successful",                  
-                    'data' => new RoleResource($role)
+                    'data' => new RoleResource($role),
+                    'activity' => [
+                        'activity_name' => $result->activity_name,
+                        'activity_type' => $result->activity_type,
+                        'activity_content' => $result->activity_content,
+                        'activity_time' => $result->created_at,    
+                    ],
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Update Failed",
-                    //'data' => $role->update($request->all()),
+                    'message' => "Update Failed",                   
                     'data' => 'Failed!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);

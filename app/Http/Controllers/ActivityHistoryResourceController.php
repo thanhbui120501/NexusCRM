@@ -40,7 +40,7 @@ class ActivityHistoryResourceController extends Controller
         $validator = Validator::make($input,[
             'activity_name' => 'required|string|max:50|min:5',
             'activity_type' => 'required|string|max:100',
-            'activity_content' => 'required|string|max:100',
+            'activity_content' => 'required|string|max:255',
             'account_id' => 'required|exists:accounts,account_id',
             'username' => 'required|string|min:5|max:20'
         ]);

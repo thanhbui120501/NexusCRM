@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 class WarehouseResourceController extends Controller
 {
     /**
@@ -16,6 +16,7 @@ class WarehouseResourceController extends Controller
      */
     public function index()
     {
+        //get all warehouse
         $warehouse = Warehouse::all();
         $arr = [
             'success' => true,
@@ -31,6 +32,7 @@ class WarehouseResourceController extends Controller
      */
     public function store(Request $request)
     {
+        //validate
         $input = $request->all();
         $validator = Validator::make($input,[
             'warehouse_name' => 'required|string|max:255|min:5',
@@ -38,6 +40,7 @@ class WarehouseResourceController extends Controller
             'distributor_id' => 'required|string|exists:distributors,distributor_id',
             'product_quantity' => "required|numeric",            
         ]);
+        //check validate
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -47,14 +50,32 @@ class WarehouseResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
+            //create new warehouse
             $input['warehouse_id'] = 'WAR'.Carbon::now()->format('dmyhis');
-            $distributor = Warehouse::create($input);
-            dd($distributor);
+            $warehouse = Warehouse::create($input);
+            
+            //save activity
+            $user = Auth::guard('api')->user();
+            $newRequest = (new RequestController)->makeActivityRequest(
+                'Warehouse Created',
+                'Warehouse',
+                'The user '. $user->username . (new RequestController)->makeActivityContent("Warehouse Created") . $warehouse->warehouse_name .'.',
+                $user->account_id,
+                $user->username);               
+            $result = (new ActivityHistoryResourceController)->store($newRequest);
+            
+            //return json message
             $arr = [
                 'success' => true,
                 'status_code' => 201,
                 'message' => "Creating new warehouse successfully",
-                'data' => new WarehouseResource($distributor),
+                'data' => new WarehouseResource($warehouse),
+                'activity' => [
+                    'activity_name' => $result->activity_name,
+                    'activity_type' => $result->activity_type,
+                    'activity_content' => $result->activity_content,
+                    'activity_time' => $result->created_at,    
+                ],
             ];
             return response()->json($arr, Response::HTTP_CREATED);
         }
@@ -97,11 +118,28 @@ class WarehouseResourceController extends Controller
         }else{
             $update = $warehouse->update($request->all());
             if($update){
+                //save activity
+                $user = Auth::guard('api')->user();
+                $newRequest = (new RequestController)->makeActivityRequest(
+                    'Warehouse Updated',
+                    'Warehouse',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Warehouse Updated",$request) . $warehouse->warehouse_name .'.',
+                    $user->account_id,
+                    $user->username);               
+                $result = (new ActivityHistoryResourceController)->store($newRequest);
+                
+                //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated Warehouse successful",                  
-                    'data' => new WarehouseResource($warehouse)
+                    'data' => new WarehouseResource($warehouse),
+                    'activity' => [
+                        'activity_name' => $result->activity_name,
+                        'activity_type' => $result->activity_type,
+                        'activity_content' => $result->activity_content,
+                        'activity_time' => $result->created_at,    
+                    ],
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
@@ -123,11 +161,28 @@ class WarehouseResourceController extends Controller
     {
         $delete =  $warehouse->delete();      
             if($delete){
+                //save activity
+                $user = Auth::guard('api')->user();
+                $newRequest = (new RequestController)->makeActivityRequest(
+                    'Warehouse Created',
+                    'Warehouse',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Warehouse Created") . $warehouse->warehouse_name .'.',
+                    $user->account_id,
+                    $user->username);               
+                $result = (new ActivityHistoryResourceController)->store($newRequest);
+
+                //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 204,
                     'message' => "Warehouse has been deleted",
                     'data' => "Success!",
+                    'activity' => [
+                        'activity_name' => $result->activity_name,
+                        'activity_type' => $result->activity_type,
+                        'activity_content' => $result->activity_content,
+                        'activity_time' => $result->created_at,    
+                    ],
                 ];
                 return response()->json($arr, Response::HTTP_NO_CONTENT);    
             }else{

@@ -13,8 +13,7 @@ use Carbon\Carbon;
 class AuthController extends Controller
 {    
     public function login(Request $request)
-    {
-        
+    {       
         $credentials = $request->validate([
             'username' => ['required'],
             'password' => ['required'],   
@@ -23,6 +22,7 @@ class AuthController extends Controller
         ]);
         $remember = ($request->has('remember_token') && $request->remember_token == 'true') ? true : false;
         
+        //check username and password
         if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password],$remember)) {         
             $user = Auth::guard('api')->user();
             $request->session()->regenerateToken(); 

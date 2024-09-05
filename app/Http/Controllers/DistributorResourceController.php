@@ -9,6 +9,7 @@ use App\Http\Resources\DistributorResource;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DistributorResourceController extends Controller
 {
@@ -32,6 +33,7 @@ class DistributorResourceController extends Controller
      */
     public function store(Request $request)
     {
+        //validate
         $input = $request->all();
         $validator = Validator::make($input,[
             'distributor_name' => 'required|string|max:100|min:5',
@@ -41,6 +43,7 @@ class DistributorResourceController extends Controller
             'email' => 'email|unique:distributors,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
             'business_sector' => 'string|max:10'
         ]);
+        //check validate
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -50,13 +53,32 @@ class DistributorResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            $input['distributor_id'] = 'DIS'.Carbon::now()->format('d.m.y.h.i.s');
+            //crate new distributor
+            $input['distributor_id'] = 'DIS'.Carbon::now()->format('dmyhis');
             $distributor = Distributor::create($input);
+            
+            //save activity
+            $user = Auth::guard('api')->user();
+            $newRequest = (new RequestController)->makeActivityRequest(
+                'Distributor Created',
+                'Distributor',
+                'The user '. $user->username . (new RequestController)->makeActivityContent("Distributor Created") . $distributor->distributor_name .'.',
+                $user->account_id,
+                $user->username);               
+            $result = (new ActivityHistoryResourceController)->store($newRequest);
+            
+            //return json message
             $arr = [
                 'success' => true,
                 'status_code' => 201,
                 'message' => "Creating new distributor successfully",
                 'data' => new DistributorResource($distributor),
+                'activity' => [
+                    'activity_name' => $result->activity_name,
+                    'activity_type' => $result->activity_type,
+                    'activity_content' => $result->activity_content,
+                    'activity_time' => $result->created_at,    
+                ],
             ];
             return response()->json($arr, Response::HTTP_CREATED);
         }
@@ -81,6 +103,7 @@ class DistributorResourceController extends Controller
      */
     public function update(Request $request, Distributor $distributor)
     {
+        //validate
         $input = $request->all();
         $validator = Validator::make($input,[
             'distributor_name' => 'string|max:100|min:5',
@@ -90,6 +113,7 @@ class DistributorResourceController extends Controller
             'email' => 'email|unique:distributors,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
             'business_sector' => 'string|max:10'
         ]);
+        //check validate
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -99,13 +123,31 @@ class DistributorResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
+            //update distributor
             $update = $distributor->update($request->all());
             if($update){
+                //save activity
+                $user = Auth::guard('api')->user();
+                $newRequest = (new RequestController)->makeActivityRequest(
+                    'Distributor Updated',
+                    'Distributor',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Distributor Updated",$request) . $distributor->distributor_name .'.',
+                    $user->account_id,
+                    $user->username);               
+                $result = (new ActivityHistoryResourceController)->store($newRequest);
+
+                //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated Distributor successful",                  
-                    'data' => new DistributorResource($distributor)
+                    'data' => new DistributorResource($distributor),
+                    'activity' => [
+                        'activity_name' => $result->activity_name,
+                        'activity_type' => $result->activity_type,
+                        'activity_content' => $result->activity_content,
+                        'activity_time' => $result->created_at,    
+                    ],
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
@@ -129,12 +171,28 @@ class DistributorResourceController extends Controller
         if($check_id->isEmpty()){
             $delete = $distributor->delete();
             if($delete){
+                //save activity
+                $user = Auth::guard('api')->user();
+                $newRequest = (new RequestController)->makeActivityRequest(
+                    'Distributor Deleted',
+                    'Distributor',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Distributor Deleted") . $distributor->distributor_name .'.',
+                    $user->account_id,
+                    $user->username);               
+                $result = (new ActivityHistoryResourceController)->store($newRequest);
+                //return json message
                 $arr = [
-                            'success' => true,
-                            'status_code' => 204,
-                            'message' => "Deleted Distributor successful",
-                            'data' => 'Success!',
-                        ];
+                    'success' => true,
+                    'status_code' => 204,
+                    'message' => "Deleted Distributor successful",
+                    'data' => 'Success!',
+                    'activity' => [
+                        'activity_name' => $result->activity_name,
+                        'activity_type' => $result->activity_type,
+                        'activity_content' => $result->activity_content,
+                        'activity_time' => $result->created_at,    
+                    ],        
+                ];
                 return response()->json($arr, Response::HTTP_NO_CONTENT);
             }else{
                 $arr = [
