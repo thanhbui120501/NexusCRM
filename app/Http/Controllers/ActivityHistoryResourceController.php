@@ -116,24 +116,27 @@ class ActivityHistoryResourceController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(ActivityHistory $activityHistory)
-    {
-        $delete = $activityHistory->delete();      
-            if($delete){
-                $arr = [
-                    'success' => true,
-                    'status_code' => 204,
-                    'message' => "Activity has been deleted",
-                    'data' => "Success!",
-                ];
-                return response()->json($arr, Response::HTTP_NO_CONTENT);    
-            }else{
-                $arr = [
-                    'success' => false,
-                    'status_code' => 200,
-                    'message' => "Failed",
-                    'data' => "Deleted Activity Failed!",
-                ];
-                return response()->json($arr, Response::HTTP_OK);    
-            }
+    {       
+        //delete: update -> 0
+        $delete = DB::table('activity_history')->where('activity_id',$activityHistory->activity_id)->update(['status' => 0]);
+        
+        //check update
+        if($delete == 1){
+            $arr = [
+                'success' => true,
+                'status_code' => 204,
+                'message' => "Activity has been deleted",
+                'data' => "Success!",
+            ];
+            return response()->json($arr, Response::HTTP_NO_CONTENT);    
+        }else{
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => "Deleted Activity Failed!",
+            ];
+            return response()->json($arr, Response::HTTP_OK);    
+        }    
     }
 }
