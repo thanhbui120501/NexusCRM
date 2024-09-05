@@ -27,7 +27,7 @@ class AdminOnlyAllowed
                     'success' => false,
                     'status_code' => 200,
                     'message' => "Unauthenticated",
-                    'data' => "Your account does not have this permission."
+                    'data' => "Your account does not have this permission!"
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }         

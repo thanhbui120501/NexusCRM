@@ -25,31 +25,44 @@ class AuthController extends Controller
         //check username and password
         if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password],$remember)) {         
             $user = Auth::guard('api')->user();
-            $request->session()->regenerateToken(); 
-            $token = $request->user('api')->createToken('authToken')->plainTextToken;    
-            $ip = $request->ip();
-            $userAgent = $request->header('User-Agent');
+            if($user->status == 0){
+                //return json message if account has blocked
+                $arr = [
+                    'success' => false,
+                    'status_code' => 200,
+                    'message' => "Account disabled",                   
+                    'data' => "Your account has been disabled",
+                ];
+                return response()->json($arr, Response::HTTP_OK);
+            }else{
+                
+                //generate token, session, ip adress and user agent
+                $request->session()->regenerateToken(); 
+                $token = $request->user('api')->createToken('authToken')->plainTextToken;    
+                $ip = $request->ip();
+                $userAgent = $request->header('User-Agent');
 
-            //create login history
-            $request = new Request([
-                'history_id' => 'HIS'.Carbon::now()->format('dmyhis'),
-                'account_id' => $user->account_id,
-                'login_time' => Carbon::now(),
-                'logout_time' => null,
-                'ip_address' => $ip,
-                'device_name' => $userAgent,               
-                'status' => 1
-            ]);
-            $this->createLoginHistory($request);
-            //create json message
-            $arr = [
-                'success' => true,
-                'status_code' => 200,
-                'message' => "Login Account Success!",
-                'Bearer-token' => $token,
-                'data' => (new AccountResource($user))
-            ];
-            return response()->json($arr, Response::HTTP_OK);
+                //create login history
+                $request = new Request([
+                    'history_id' => 'HIS'.Carbon::now()->format('dmyhis'),
+                    'account_id' => $user->account_id,
+                    'login_time' => Carbon::now(),
+                    'logout_time' => null,
+                    'ip_address' => $ip,
+                    'device_name' => $userAgent,               
+                    'status' => 1
+                ]);
+                $this->createLoginHistory($request);
+                //create json message
+                $arr = [
+                    'success' => true,
+                    'status_code' => 200,
+                    'message' => "Login Account Success!",
+                    'Bearer-token' => $token,
+                    'data' => (new AccountResource($user))
+                ];
+                return response()->json($arr, Response::HTTP_OK);
+            }           
         }else{
             $arr = [
                 'success' => false,

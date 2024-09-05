@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ActivityHistoryResourceController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AccountResourceController extends Controller
 {   
@@ -18,17 +19,38 @@ class AccountResourceController extends Controller
      * Display a listing of the resource.
      */   
     
-    public function index()
+    public function index(Request $request)
     {
-        //show all account
-        $account = Account::all();
-        $arr = [
-            'success' => true,
-            'status_code' => 200,
-            'message' => "List of system account",
-            'data' => AccountResource::collection($account)
-        ];
-        return response()->json($arr,Response::HTTP_OK);
+        $input = $request->all();
+        $validator = Validator::make($input,[           
+            'offset' => 'min:0|numeric',
+            'limit'=> 'min:1|numeric',
+        ]);
+
+        if($validator->fails()){
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }else{
+            //set offset and limit
+            $offset = !$request->has('limit')  ? 0 : $request->offset;
+            $limit = !$request->has('limit') ? 50 : $request->limit;
+            //select enable account
+            $account = DB::table('accounts')->where('status', 1)->offset($offset)->limit($limit)->get();
+            
+            //return json message      
+            $arr = [
+                'success' => true,
+                'status_code' => 200,
+                'message' => "List of system account",
+                'data' => AccountResource::collection($account)
+            ];
+            return response()->json($arr,Response::HTTP_OK);
+        }        
     }
 
     /**
@@ -259,13 +281,15 @@ class AccountResourceController extends Controller
      */
     public function destroy(Account $account)
     {   
-        $delete =  $account->delete(); 
+        //delete: update status -> 0        
+        $delete =  DB::table('accounts')->where('account_id',$account->account_id)->update(['status' => 0]); 
+
         //check delete     
-        if($delete){
+        if($delete == 1){
             //save activity
             $user = Auth::guard('api')->user();
             $newRequest = (new RequestController)->makeActivityRequest(
-                'Account Updated',
+                'Account Deleted',
                 'Account',
                 'The user '. $user->username . (new RequestController)->makeActivityContent("Account Deleted") . $account->username .'.',
                 $user->account_id,
@@ -278,6 +302,12 @@ class AccountResourceController extends Controller
                 'status_code' => 204,
                 'message' => "Account has been deleted",
                 'data' => "Success!",
+                'activity' => [
+                    'activity_name' => $result->activity_name,
+                    'activity_type' => $result->activity_type,
+                    'activity_content' => $result->activity_content,
+                    'activity_time' => $result->created_at,
+                ],
             ];
             return response()->json($arr, Response::HTTP_NO_CONTENT);    
         }else{

@@ -17,7 +17,7 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
     Route::group(['middleware' => ['admin_only_allowed']], function(){
         //Role routes
         Route::controller(RoleResourceController::class)-> group( function() {
-            Route::get('/role/get-all-role','index')-> name('api.role.index'); //get all role
+            Route::post('/role/get-all-role','index')-> name('api.role.index'); //get all role
             Route::post('/role/create-new-role','store')-> name('api.role.store'); //create new role
             Route::get('/role/get-detail-role/{role}','show')->name('api.role.show'); //show role detail
             Route::patch('/role/update-role/{role}','update')->name('api.role.update'); //update role by id
@@ -25,7 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
         });
         //Account routes
         Route::controller(AccountResourceController::class)->group(function(){        
-            Route::get('/account/get-all-account','index')->name('api.account.index'); //get account role
+            Route::post('/account/get-all-account','index')->name('api.account.index'); //get account role
             Route::post('/account/create-new-account','store')->name('api.account.store'); //create account role
             Route::get('/account/get-detail-account/{account}','show')->name('api.account.show'); //show account detail
             Route::patch('/account/update-account/{account}','update')->name('api.account.update'); //update account by id
@@ -41,13 +41,13 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
         });
         //Login, Logout History
         Route::controller(LoginHistoryResourceController::class)->group(function(){
-            Route::get('/login-history/get-all-history','index')->name('api.login.history.index'); //get all login and logout history
+            Route::post('/login-history/get-all-history','index')->name('api.login.history.index'); //get all login and logout history
             Route::post('/login-history/get-login-or-logout-history','showHistoryLoginOrLogout')->name('api.login.history.showHistoryLoginOrLogout'); //get login or logout history
             Route::get('/login-history/get-detail-history/{loginHistory}','show')->name('api.login.history.show'); //show detail history
             Route::delete('/login-history/delete-history/{loginHistory}','destroy')->name('api.login.history.destroy'); //delete history
         });
         Route::controller(PasswordResetResourceController::class)->group(function(){
-            Route::get('/password-reset/get-all-password-reset','index')->name('api.password.reset.index'); //get all password reset  
+            Route::post('/password-reset/get-all-password-reset','index')->name('api.password.reset.index'); //get all password reset  
         });
     });
     
@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
     
     //Distrbutor routes
     Route::controller(DistributorResourceController::class)->group( function(){        
-        Route::get('/distributor/get-all-distributor','index')->name('api.distributor.index'); //get all distributor
+        Route::post('/distributor/get-all-distributor','index')->name('api.distributor.index'); //get all distributor
         Route::post('/distributor/create-new-distributor','store')->name('api.distributor.store'); //create new distributor
         Route::get('/distributor/get-detail-distributor/{distributor}','show')->name('api.distributor.show'); //show distributor detail
         Route::patch('/distributor/update-distributor/{distributor}','update')->name('api.distributor.update'); //update distributor by id
@@ -66,7 +66,7 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
     });
     //Warehouse routes
     Route::controller(WarehouseResourceController::class)->group(function(){                
-        Route::get('/warehouse/get-all-warehouse','index')->name('api.warehouse.index'); //get all warehouse
+        Route::post('/warehouse/get-all-warehouse','index')->name('api.warehouse.index'); //get all warehouse
         Route::post('/warehouse/create-new-warehouse','store')->name('api.warehouse.store'); //create new warehouse
         Route::get('/warehouse/get-detail-warehouse/{warehouse}','show')->name('api.warehouse.show'); //show warehouse detail
         Route::patch('/warehouse/update-warehouse/{warehouse}','update')->name('api.warehouse.update'); //update warehouse by id

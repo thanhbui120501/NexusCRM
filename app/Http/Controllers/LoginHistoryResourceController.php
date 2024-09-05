@@ -13,16 +13,40 @@ class LoginHistoryResourceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $loginHistory = LoginHistory::all();
-        $arr = [
-            'success' => true,
-            'status_code' => 200,
-            'message' => "List of login and logout history",
-            'data' => LoginHistoryResource::collection($loginHistory)
-        ];
-        return response()->json($arr,Response::HTTP_OK);
+        //validate
+        $input = $request->all();
+        $validator = Validator::make($input,[           
+            'offset' => 'min:0|numeric',
+            'limit'=> 'min:1|numeric',
+        ]); 
+        //checking validate
+        if($validator->fails()){
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }else{
+            //set offset and limit
+            $offset = !$request->has('limit')  ? 0 : $request->offset;
+            $limit = !$request->has('limit') ? 50 : $request->limit;
+
+            //select enable account
+            $loginHistory = DB::table('login_history')->where('status', 1)->offset($offset)->limit($limit)->get();
+             
+            //return json message
+            $arr = [
+                'success' => true,
+                'status_code' => 200,
+                'message' => "List of login and logout history",
+                'data' => LoginHistoryResource::collection($loginHistory)
+            ];
+            return response()->json($arr,Response::HTTP_OK);
+        }       
     }
 
     /**
@@ -34,6 +58,8 @@ class LoginHistoryResourceController extends Controller
         $validator = Validator::make($input, [
             'login' => 'string',
             'logout' => 'string',
+            'offset' => 'min:0|numeric',
+            'limit'=> 'min:1|numeric',
         ]);
         if($validator->fails()){
             $arr = [
@@ -53,8 +79,13 @@ class LoginHistoryResourceController extends Controller
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
+                //set offset and limit
+                $offset = !$request->has('limit')  ? 0 : $request->offset;
+                $limit = !$request->has('limit') ? 50 : $request->limit;
+
+                //check type request login or logout
                 if($request->login == 'true'){
-                    $login = DB::table('login_history')->where('logout_time',null)->get();
+                    $login = DB::table('login_history')->where('logout_time',null)->offset($offset)->limit($limit)->get();
                     $arr = [
                         'success' => true,
                         'status_code' => 200,
@@ -64,7 +95,7 @@ class LoginHistoryResourceController extends Controller
                     return response()->json($arr, Response::HTTP_OK);
                 }
                 if($request->logout == 'true'){
-                    $logout = DB::table('login_history')->where('login_time',null)->get();
+                    $logout = DB::table('login_history')->where('login_time',null)->offset($offset)->limit($limit)->get();
                     $arr = [
                         'success' => true,
                         'status_code' => 200,
@@ -103,9 +134,12 @@ class LoginHistoryResourceController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(LoginHistory $loginHistory)
-    {
-        $delete = $loginHistory->delete();
-        if($delete){
+    {       
+        //delete: update status -> 0
+        $delete = DB::table('login_history')->where('history_id',$loginHistory->history_id)->update(['status' => 0]);
+        
+        //check update
+        if($delete == 1){
             $arr = [
                 'success' => true,
                 'status_code' => 204,

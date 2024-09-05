@@ -6,23 +6,47 @@ use App\Models\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\PasswordResetResource;
-use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class PasswordResetResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reset = PasswordReset::all();        
-        $arr = [
-            'success' => true,
-            'status_code' => 200,
-            'message' => "List of system roles",
-            'data' => PasswordResetResource::collection($reset)
-        ];
-        return response()->json($arr,Response::HTTP_OK);
+        //validate
+        $input = $request->all();
+        $validator = Validator::make($input,[           
+            'offset' => 'min:0|numeric',
+            'limit'=> 'min:1|numeric',
+        ]); 
+        //checking validate
+        if($validator->fails()){
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }else{
+            //set offset and limit
+            $offset = !$request->has('limit')  ? 0 : $request->offset;
+            $limit = !$request->has('limit') ? 50 : $request->limit;
+            //select enable account
+            $reset = DB::table('password_reset')->where('status', 1)->offset($offset)->limit($limit)->get();
+             
+            //return json message         
+            $arr = [
+                'success' => true,
+                'status_code' => 200,
+                'message' => "List of system password reset",
+                'data' => PasswordResetResource::collection($reset)
+            ];
+            return response()->json($arr,Response::HTTP_OK);
+        }     
     }
 
     /**

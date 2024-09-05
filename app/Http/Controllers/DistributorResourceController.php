@@ -16,16 +16,39 @@ class DistributorResourceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $distributor = Distributor::all();
-        $arr = [
-            'success' => true,
-            'status_code' => 200,
-            'message' => "List of distributor",
-            'data' => DistributorResource::collection($distributor)
-        ];
-        return response()->json($arr,Response::HTTP_OK);
+        //validate
+        $input = $request->all();
+        $validator = Validator::make($input,[           
+            'offset' => 'min:0|numeric',
+            'limit'=> 'min:1|numeric',
+        ]);
+        if($validator->fails()){
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }else{
+            //set offset and limit
+            $offset = !$request->has('limit')  ? 0 : $request->offset;
+            $limit = !$request->has('limit') ? 50 : $request->limit;
+            //select enable account
+            $distributor = DB::table('distributors')->where('status', 1)->offset($offset)->limit($limit)->get();
+            
+            //return json message 
+            $arr = [
+                'success' => true,
+                'status_code' => 200,
+                'message' => "List of distributor",
+                'data' => DistributorResource::collection($distributor)
+            ];
+            return response()->json($arr,Response::HTTP_OK);
+        }
+        
     }
 
     /**
@@ -167,10 +190,16 @@ class DistributorResourceController extends Controller
      */
     public function destroy(Distributor $distributor)
     {
-        $check_id = DB::table('accounts')->where('role_id', $distributor->distributor_id)->get();
-        if($check_id->isEmpty()){
-            $delete = $distributor->delete();
-            if($delete){
+        //check warehouse.distributor_id are holding distributor
+        $check_id = DB::table('warehouses')->where('distributor_id', $distributor->distributor_id)->get();
+
+        //check empty distributor_id
+        if($check_id->isEmpty()){   
+            //delete: update status -> 0        
+            $delete = DB::table('distributors')->where('distributor_id', $distributor->distributor_id)->update(['status'  => 0]);       
+            
+            //checking update
+            if($delete == 1){
                 //save activity
                 $user = Auth::guard('api')->user();
                 $newRequest = (new RequestController)->makeActivityRequest(
