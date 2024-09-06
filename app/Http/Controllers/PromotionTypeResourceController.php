@@ -2,52 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PromotionTypeResource;
+use App\Models\PromotionType;
 use Illuminate\Http\Request;
-use App\Http\Resources\RoleResource;
-use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class RoleResourceController extends Controller
+class PromotionTypeResourceController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     *
-     * @return Role[]|\Illuminate\Database\Eloquent\Collection
-     */
-    /**
-     * 
-    * @OA\Info(
- *      version="1.0.0",
- *      title="L5 OpenApi",
- *      description="L5 Swagger OpenApi description"
- * )
- * @OA\Get(
- *    path = "/role"
- *    summary="Role Data",
- *    description="Role Page",
- *    tags={"Role"},
- *    
- *   @OA\Response(
- *     response = 200,
- *     description="OK",
- *     @OA\MediaType(
- *       mediaType={"application/json"},
- *     )
- *   ),
- * @OA\PathItem (
-     *     ),
- * ),
- * 
- */
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        //get promotion type
+        //validate
         $input = $request->all();
         $validator = Validator::make($input,[           
             'offset' => 'min:0|numeric',
@@ -66,20 +38,18 @@ class RoleResourceController extends Controller
             $offset = !$request->has('limit')  ? 0 : $request->offset;
             $limit = !$request->has('limit') ? 50 : $request->limit;
 
-            //select enable role
-            $role = DB::table('roles')->where('status', 1)->offset($offset)->limit($limit)->get();
+            //select enable promotion type
+            $role = DB::table('promotion_types')->where('status', 1)->offset($offset)->limit($limit)->get();
             
             //return json message
             $arr = [
                 'success' => true,
                 'status_code' => 200,
-                'message' => "List of system roles",
-                'data' => RoleResource::collection($role)
+                'message' => "List of promotion type",
+                'data' => PromotionTypeResource::collection($role)
             ];
             return response()->json($arr,Response::HTTP_OK);
         }
-        
-        
     }
 
     /**
@@ -90,8 +60,7 @@ class RoleResourceController extends Controller
         //validate
         $input = $request->all();
         $validator = Validator::make($input,[
-            'role_name' => 'required|string|max:50|min:5',
-            'description' => 'string|max:255',
+            'promotion_type_name' => 'required|string|max:255|min:5',            
         ]);
         //check validate
         if($validator->fails()){
@@ -103,16 +72,17 @@ class RoleResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            //create new role
-            $input['role_id'] = 'R'.Carbon::now()->format('dmyhis');
-            $role = Role::create($input);
+            //create new promotion type
+            $input['promotion_type_id'] = 'PRT'.Carbon::now()->format('dmyhis');
+            $promotion_type = PromotionType::create($input);
             
             //save activity
             $user = Auth::guard('api')->user();
+            
             $newRequest = (new RequestController)->makeActivityRequest(
-                'Role Created',
-                'Role',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Role Created") . $role->role_name .'.',
+                'Promotion Type Created',
+                'Promotion Type',
+                'The user '. $user->username . (new RequestController)->makeActivityContent("Promotion Type Created") . $promotion_type->promotion_type_name .'.',
                 $user->account_id,
                 $user->username);               
             $result = (new ActivityHistoryResourceController)->store($newRequest);
@@ -121,8 +91,8 @@ class RoleResourceController extends Controller
             $arr = [
                 'success' => true,
                 'status_code' => 201,
-                'message' => "Creating new roles successfully",
-                'data' => new RoleResource($role),
+                'message' => "Creating new promotion type successfully",
+                'data' => new PromotionTypeResource($promotion_type),
                 'activity' => [
                     'activity_name' => $result->activity_name,
                     'activity_type' => $result->activity_type,
@@ -137,13 +107,13 @@ class RoleResourceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
-    {                          
+    public function show(PromotionType $promotionType)
+    {
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "Role has been found",
-            'data' => (new RoleResource($role))
+            'message' => "Promotion type has been found",
+            'data' => (new PromotionTypeResource($promotionType))
         ];
         return response()->json($arr, Response::HTTP_OK);
     }
@@ -151,13 +121,16 @@ class RoleResourceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Role $role, Request $request )
+    public function update(Request $request, PromotionType $promotionType)
     {
+        //validate
         $input = $request -> all();             
         $validator = Validator::make($input,[
-            'role_name' => 'required|string|max:50|min:5',
-            'description' => 'string|max:255',
+            'promotion_type_name' => 'string|max:255|min:5',
+            
         ]);
+
+        //checking validate
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -167,14 +140,17 @@ class RoleResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{           
-            $update = $role->update($request->all());
+            
+            
+            $update = $promotionType->update($request->all());
             if($update){
+
                 //save activity
                 $user = Auth::guard('api')->user();
                 $newRequest = (new RequestController)->makeActivityRequest(
-                    'Role Updated',
-                    'Role',
-                    'The user '. $user->username . (new RequestController)->makeActivityContent("Role Updated", $request) . $role->role_name .'.',
+                    'Promotion Type Updated',
+                    'Promotion Type',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Promotion Type Updated", $request) . $promotionType->promotion_type_name .'.',
                     $user->account_id,
                     $user->username);               
                 $result = (new ActivityHistoryResourceController)->store($newRequest);
@@ -184,7 +160,7 @@ class RoleResourceController extends Controller
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated successful",                  
-                    'data' => new RoleResource($role),
+                    'data' => new PromotionTypeResource($promotionType),
                     'activity' => [
                         'activity_name' => $result->activity_name,
                         'activity_type' => $result->activity_type,
@@ -203,24 +179,30 @@ class RoleResourceController extends Controller
                 return response()->json($arr, Response::HTTP_OK);
             }
             
-        }      
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
-    {                          
-        $check_id = DB::table('accounts')->where('role_id', $role->role_id)->get();
+    public function destroy(PromotionType $promotionType)
+    {
+        //delete: update status -> 0
+        $check_id = DB::table('promotions')->where('promotion_type_id', $promotionType->promotion_type_id)->get();
+        
+        //check promotion_type_id in promotions table
         if($check_id->isEmpty()){
-            $delete = $role->delete();
-            if($delete){
+            //update status
+            $delete = DB::table('promotion_types')->where('promotion_type_id', $promotionType->promotion_type_id)->update(['status'  => 0]); 
+            
+            //check update done
+            if($delete == 1){
                 //save activity
                 $user = Auth::guard('api')->user();
                 $newRequest = (new RequestController)->makeActivityRequest(
-                    'Role Deleted',
-                    'Role',
-                    'The user '. $user->username . (new RequestController)->makeActivityContent("Role Deleted") . $role->role_name .'.',
+                    'Promotion Type Deleted',
+                    'Promotion Type',
+                    'The user '. $user->username . (new RequestController)->makeActivityContent("Promotion Type Deleted") . $promotionType->promotion_type_name .'.',
                     $user->account_id,
                     $user->username);               
                 $result = (new ActivityHistoryResourceController)->store($newRequest);
@@ -253,9 +235,9 @@ class RoleResourceController extends Controller
                 'success' => false,
                 'status_code' => 200,
                 'message' => "Deleted Failed",
-                'data' => "This role cannot be deleted because an account is already holding this role.",
+                'data' => "This promotion type cannot be deleted because an promotion is already holding this type.",
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }      
+        }
     }
 }
