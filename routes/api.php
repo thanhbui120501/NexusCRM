@@ -4,10 +4,13 @@ use App\Http\Controllers\AccountResourceController;
 use App\Http\Controllers\ActivityHistoryResourceController;
 use App\Http\Controllers\RoleResourceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerResourceController;
 use App\Http\Controllers\DistributorResourceController;
 use App\Http\Controllers\LoginHistoryResourceController;
 use App\Http\Controllers\WarehouseResourceController;
 use App\Http\Controllers\PasswordResetResourceController;
+use App\Http\Controllers\PromotionTypeResourceController;
+use App\Http\Controllers\PromotionResourceController;
 use Illuminate\Support\Facades\Route;
 
 //account login route
@@ -72,7 +75,33 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
         Route::patch('/warehouse/update-warehouse/{warehouse}','update')->name('api.warehouse.update'); //update warehouse by id
         Route::delete('/warehouse/delete-warehouse/{warehouse}','destroy')->name('api.warehouse.update'); //delete warehouse by id
     });
-    
+
+    //Customer routes
+    Route::controller(CustomerResourceController::class)->group(function(){
+        Route::post('/customer/create-new-customer','store')->name('api.customer.store'); //create new customer  
+        Route::post('/customer/get-list-customer','index')->name('api.customer.get.list.customer'); // get list customer by status
+        Route::get('/customer/get-customer-by-id/{customer}','show')->name('api.customer.get.customer.by.id'); // get customer by id
+        Route::patch('/customer/update-customer/{customer}','update')->name('api.customer.update.customer'); // update customer by id
+        Route::delete('/customer/delete-customer/{customer}','destroy')->name('api.customer.delete.customer'); // delete customer by id
+    });
+
+    //Promotion Type routes
+    Route::controller(PromotionTypeResourceController::class)->group(function(){
+        Route::post('/promotion-type/get-all-promotion-type','index')->name('api.promotion.type.index'); // show all promotion type
+        Route::post('/promotion-type/create-new-promotion-type','store')->name('api.promotion.type.store'); // create new promotion type 
+        Route::get('/promotion-type/get-promotion-type-by-id/{promotionType}','show')->name('api.promotion.type.show'); // get promotion type by id
+        Route::patch('/promotion-type/update-promotion-type/{promotionType}','update')->name('api.promotion.type.update'); // update promotion type by id
+        Route::delete('/promotion-type/delete-promotion-type/{promotionType}','destroy')->name('api.promotion.type.delete'); // delete promotion type by id
+    });
+
+    //Promotion routes
+    Route::controller(PromotionResourceController::class)->group(function(){
+        Route::post('/promotion/get-all-promotion','index')->name('api.promotion.index'); // show all promotion 
+        Route::post('/promotion/create-new-promotion','store')->name('api.promotion.store'); // create new promotion  
+        Route::get('/promotion/get-promotion-by-id/{promotion}','show')->name('api.promotion.show'); // get promotion by id
+        Route::patch('/promotion/update-promotion/{promotion}','update')->name('api.promotion.update'); // update promotion by id
+        Route::delete('/promotion/delete-promotion/{promotion}','destroy')->name('api.promotion.delete'); // delete promotion by id
+    });
 });
 
 

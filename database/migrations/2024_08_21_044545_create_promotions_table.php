@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {     
         Schema::create('promotions', function (Blueprint $table) {
             $table->string('promotion_id',20)->primary();
             $table->string('promotion_name',100);
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('type',255);
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
-            $table->string('comdition',100)->nullable();
+            $table->string('condition',100)->nullable();
             $table->float('amount');
             $table->integer('percentage');
             $table->integer('maximum_limit');

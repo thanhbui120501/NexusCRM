@@ -48,6 +48,24 @@ class RequestController extends Controller
             case "Role Updated" : return ' has just updated new information(' . $content . ') for role ';break;           
             case "Role Created" : return ' has just created new role ' ;break;
             case "Role Deleted" : return ' has just deleted role ' ;break;
+
+            //Customer content
+            case "Customer Created" : return ' has just created new customer ' ;break;
+            case "Customer Updated" : return ' has just updated new infomation(' . $content . ') for customer ' ;break;
+            case "Customer Deleted" : return ' has just deleted customer ' ;break;
+
+            //Promotion Type content
+            case "Promotion Type Created" : return ' has just created new poromotion type ' ;break;
+            case "Promotion Type Updated" : return ' has just updated new infomation(' . $content . ') for poromotion type ' ;break;
+            case "Promotion Type Deleted" : return ' has just deleted poromotion type ' ;break;
+            
+            //Promotion Type content
+            case "Promotion Created" : return ' has just created new poromotion ' ;break;
+            case "Promotion Updated" : return ' has just updated new infomation(' . $content . ') for poromotion ' ;break;
+            case "Promotion Deleted" : return ' has just deleted poromotion ' ;break;
+            
+            //default
+            default: return "No content!";
         }
     }
 

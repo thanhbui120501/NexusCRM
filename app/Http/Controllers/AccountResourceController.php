@@ -21,12 +21,14 @@ class AccountResourceController extends Controller
     
     public function index(Request $request)
     {
+        //validate
         $input = $request->all();
         $validator = Validator::make($input,[           
             'offset' => 'min:0|numeric',
             'limit'=> 'min:1|numeric',
         ]);
 
+        //checking validate
         if($validator->fails()){
             $arr = [
                 'success' => false,
@@ -96,11 +98,12 @@ class AccountResourceController extends Controller
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Account Created',
                 'Account',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Account Created",$request) . $account->username .'.',
+                'The user '. $user->username . (new RequestController)->makeActivityContent("Account Created") . $account->username .'.',
                 $user->account_id,
                 $user->username);               
             $result = (new ActivityHistoryResourceController)->store($newRequest);
-            //return json message
+            
+            //return json message           
             $arr = [
                 'success' => true,
                 'status_code' => 201,
@@ -319,8 +322,5 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);    
         }               
-    }
-    
-    
-    
+    }   
 }
