@@ -7,6 +7,7 @@ use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use App\Http\Middleware\AdminOnlyAllowed;
 
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(        
         web: __DIR__.'/../routes/web.php',
@@ -19,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->use([
         //     // \Illuminate\Http\Middleware\TrustHosts::class,
         //     \Illuminate\Http\Middleware\TrustProxies::class,
-        //     \Illuminate\Http\Middleware\HandleCors::class,
+             \Illuminate\Http\Middleware\HandleCors::class,
         //     \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
         //     \Illuminate\Http\Middleware\ValidatePostSize::class,
         //     \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
@@ -35,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
-            'admin_only_allowed' => AdminOnlyAllowed::class, 
+            'admin_only_allowed' => AdminOnlyAllowed::class,            
         ]);
         
     })
