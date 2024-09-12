@@ -16,9 +16,10 @@ class AuthController extends Controller
     {       
         $credentials = $request->validate([
             'username' => ['required'],
-            'password' => ['required'],   
-            'password_confirm' => ['required','same:password'], 
-            'remember_token' => ['string']            
+            'password' => ['required'],              
+            'remember_token' => ['string'],
+            'user-agent' => ['string'],
+            'ipaddress'  => ['string']          
         ]);
         $remember = ($request->has('remember_token') && $request->remember_token == 'true') ? true : false;
         
@@ -29,7 +30,7 @@ class AuthController extends Controller
                 //return json message if account has blocked
                 $arr = [
                     'success' => false,
-                    'status_code' => 200,
+                    'status_code' => 403,
                     'message' => "Account disabled",                   
                     'data' => "Your account has been disabled",
                 ];
@@ -38,9 +39,21 @@ class AuthController extends Controller
                 
                 //generate token, session, ip adress and user agent
                 $request->session()->regenerateToken(); 
-                $token = $request->user('api')->createToken('authToken')->plainTextToken;    
-                $ip = $request->ip();
-                $userAgent = $request->header('User-Agent');
+                $token = $request->user('api')->createToken('authToken')->plainTextToken;   
+
+                // //get ipadress 
+                // if($request->has('ip_address')){
+                //     $ip = $request->ipaddress;
+                // }else{
+                //     $ip = $request->ip();
+                // }                
+
+                // //get user-agent
+                // if($request->has('user_agent')){
+                //     $userAgent = $request->user_agent;
+                // }else{
+                //     $userAgent = $request->header('User-Agent');
+                // }                
 
                 //create login history
                 $request = new Request([
@@ -48,8 +61,8 @@ class AuthController extends Controller
                     'account_id' => $user->account_id,
                     'login_time' => Carbon::now(),
                     'logout_time' => null,
-                    'ip_address' => $ip,
-                    'device_name' => $userAgent,               
+                    'ip_address' => null,
+                    'device_name' => null,               
                     'status' => 1
                 ]);
                 $this->createLoginHistory($request);
@@ -57,8 +70,8 @@ class AuthController extends Controller
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
-                    'message' => "Login Account Success!",
-                    'Bearer-token' => $token,
+                    'message' => "Success!",
+                    'Bearer_token' => $token,
                     'data' => (new AccountResource($user))
                 ];
                 return response()->json($arr, Response::HTTP_OK);
@@ -66,39 +79,38 @@ class AuthController extends Controller
         }else{
             $arr = [
                 'success' => false,
-                'status_code' => 200,
+                'status_code' => 401,
                 'message' => "Failed",
                 'data' => "The provided credentials do not match our records."
             ];
             return response()->json($arr, Response::HTTP_OK);
         }
         
-    }
-
+    }   
     public function logout(Request $request)
     {
         $user = Auth::guard('api')->user();
-        $ip = $request->ip();
-        $userAgent = $request->header('User-Agent');
+        // $ip = $request->ip();
+        // $userAgent = $request->header('User-Agent');
         
         //logout
         Auth::guard('api')->logout();
         //delete current user
         $request->user('sanctum')->currentAccessToken()->delete();       
         //regenerate token
-        $request->session()->invalidate(); 
-        $request->session()->regenerateToken();      
+        // $request->session()->invalidate(); 
+        // $request->session()->regenerateToken();      
         //create logout history
-        $request = new Request([
-            'history_id' => 'HIS'.Carbon::now()->format('d.m.y.h.i.s'),
-            'account_id' => $user->account_id,
-            'login_time' => null,
-            'logout_time' => Carbon::now(),
-            'ip_address' => $ip,
-            'device_name' => $userAgent,               
-            'status' => 1
-        ]);
-        $this->createLoginHistory($request);   
+        // $request = new Request([
+        //     'history_id' => 'HIS'.Carbon::now()->format('d.m.y.h.i.s'),
+        //     'account_id' => $user->account_id,
+        //     'login_time' => null,
+        //     'logout_time' => Carbon::now(),
+        //     'ip_address' => null,
+        //     'device_name' => null,               
+        //     'status' => 1
+        // ]);
+        // $this->createLoginHistory($request);   
         
         //create json message
         $arr = [

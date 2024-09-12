@@ -11,10 +11,11 @@ use App\Http\Controllers\WarehouseResourceController;
 use App\Http\Controllers\PasswordResetResourceController;
 use App\Http\Controllers\PromotionTypeResourceController;
 use App\Http\Controllers\PromotionResourceController;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Support\Facades\Route;
 
 //account login route
-Route::post('/account/login',[AuthController::class,'login'])->name('api.auth.login');
+Route::post('/account/login',[AuthController::class,'login'])->middleware(HandleCors::class)->name('api.auth.login');
 //['auth:sanctum'] middleware routes
 Route::group(['middleware' => ['auth:sanctum']] ,function () {
     Route::group(['middleware' => ['admin_only_allowed']], function(){
