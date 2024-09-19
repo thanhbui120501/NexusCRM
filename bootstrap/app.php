@@ -6,7 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use App\Http\Middleware\AdminOnlyAllowed;
-
+use App\Http\Middleware\UserOnlyAllowed;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(        

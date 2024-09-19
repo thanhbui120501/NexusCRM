@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ActivityHistoryResourceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AccountResourceController extends Controller
 {   
@@ -74,9 +75,10 @@ class AccountResourceController extends Controller
             'password_confirm' => 'required|min:6|same:password|',
             'role_id' => 'required|string|exists:roles,role_id',
             'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
-            'email' => 'email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
+            'email' => 'required|email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
             'full_name' => 'required|string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',           
-            'date_of_birth' => 'date',
+            'date_of_birth' => 'date',            
+            'images'=> 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         //check vailidate
         if($validator->fails()){
@@ -88,13 +90,27 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
-            //create new account
+            //create account id, hash password
             $input['account_id'] = 'AC'.Carbon::now()->format('dmyhis');
-            $input['password'] = Hash::make($input['password']);            
+            $input['password'] = Hash::make($input['password']);    
+            
+            //create avatar
+            if($request->has('images')){
+                $image = $request->file('images');
+                    //set filename
+                    $fileName = Str::random(32).".".$image->getClientOriginalExtension();
+                    
+                    $image->move('uploads/', $fileName);
+
+                    //set image file
+                    $input['image_name'] = $fileName;                      
+            }
+            
             $account = Account::create($input);
             
             //save activity
-            $user = Auth::guard('api')->user();
+            $user = $request->user();
+            
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Account Created',
                 'Account',

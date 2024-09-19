@@ -17,9 +17,7 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'username' => ['required'],
             'password' => ['required'],              
-            'remember_token' => ['string'],
-            'user-agent' => ['string'],
-            'ipaddress'  => ['string']          
+            'remember_token' => ['string'],                  
         ]);
         $remember = ($request->has('remember_token') && $request->remember_token == 'true') ? true : false;
         
@@ -56,16 +54,16 @@ class AuthController extends Controller
                 // }                
 
                 //create login history
-                $request = new Request([
-                    'history_id' => 'HIS'.Carbon::now()->format('dmyhis'),
-                    'account_id' => $user->account_id,
-                    'login_time' => Carbon::now(),
-                    'logout_time' => null,
-                    'ip_address' => null,
-                    'device_name' => null,               
-                    'status' => 1
-                ]);
-                $this->createLoginHistory($request);
+                // $request = new Request([
+                //     'history_id' => 'HIS'.Carbon::now()->format('dmyhis'),
+                //     'account_id' => $user->account_id,
+                //     'login_time' => Carbon::now(),
+                //     'logout_time' => null,
+                //     'ip_address' => null,
+                //     'device_name' => null,               
+                //     'status' => 1
+                // ]);
+                // $this->createLoginHistory($request);
                 //create json message
                 $arr = [
                     'success' => true,
@@ -95,11 +93,7 @@ class AuthController extends Controller
         
         //logout
         Auth::guard('api')->logout();
-        //delete current user
-        $request->user('sanctum')->currentAccessToken()->delete();       
-        //regenerate token
-        // $request->session()->invalidate(); 
-        // $request->session()->regenerateToken();      
+
         //create logout history
         // $request = new Request([
         //     'history_id' => 'HIS'.Carbon::now()->format('d.m.y.h.i.s'),
@@ -110,7 +104,13 @@ class AuthController extends Controller
         //     'device_name' => null,               
         //     'status' => 1
         // ]);
-        // $this->createLoginHistory($request);   
+        // $this->createLoginHistory($request);  
+        //delete current user
+        $request->user('sanctum')->currentAccessToken()->delete();       
+        //regenerate token
+        // $request->session()->invalidate(); 
+        // $request->session()->regenerateToken();      
+         
         
         //create json message
         $arr = [

@@ -3,13 +3,10 @@ import axios from "axios";
 const axiosClient = axios.create({
     baseURL: 'http://127.0.0.1:8000/api',
     headers:{       
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        'Content-Type': 'application/json',  
-        //'Authorization':
+        'Content-Type': 'multipart/form-data',      
+        'Accept': 'application/json',
     },
     withCredentials: true,
-    withXSRFToken:true
 });
 
     axiosClient.interceptors.request.use((config)=>{
@@ -29,8 +26,9 @@ axiosClient.interceptors.response.use(
                 localStorage.removeItem("ACCESS_TOKEN");                
             }
             
+        // eslint-disable-next-line no-unused-vars
         } catch (err){           
-            console.error(err);
+            alert('ERROR CONNECTION REFUSED');
         }
         
         throw error;

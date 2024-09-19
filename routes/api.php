@@ -55,7 +55,8 @@ Route::group(['middleware' => ['auth:sanctum']] ,function () {
         });
     });
     
-    //Auth routes
+
+    //Auth logout
     Route::controller(AuthController::class)->group(function(){        
         Route::get('/account/logout','logout')->name('api.auth.logout');
     });
