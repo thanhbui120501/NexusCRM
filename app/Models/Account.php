@@ -33,6 +33,7 @@ class Account extends Authenticatable
         'email',
         'phone_number',
         'full_name',       
+        'image_name',
         'date_of_birth',
         'role_id',
         'created_at',

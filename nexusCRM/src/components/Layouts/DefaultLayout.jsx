@@ -1,30 +1,31 @@
-//import { useEffect } from "react";
-import axiosClient from "../../axiosClient";
+import { useState } from "react";
 import { useStateContext } from "../../contexts/contextprovider";
-import { Navigate, Outlet } from "react-router-dom";
-
-export default function DefaultLayout(){
+import SideBar from "../Sidebar/sidebar";
+import { Outlet, Navigate } from "react-router-dom";
+import Header from "./header";
+import Footer from "./footer";
+export default function DefaultLayout() {
     // eslint-disable-next-line no-unused-vars
-    const {user, token, setUser, setToken} = useStateContext();
-    if(!token){
-        return <Navigate to='/login' />
+    const { user, token, setUser, setToken } = useStateContext();
+
+    const [dataFromChild, setDataFromChild] = useState("");
+
+    const handleDataFromChild = (data) => {
+        setDataFromChild(data);
+    };
+
+    if (!token) {
+        return <Navigate to="/login" />;
     }
 
-    const onLogout = (ev) => {
-        ev.preventDefault();
-        axiosClient.get('/account/logout').then(() => {
-            setUser(null)
-            setToken(null)
-        });       
-    }
-    // useEffect(() => {
-
-    // })
-    return(
-        <div>
-            <h1 className="text-3xl font-bold underline"> User name: {token}</h1>                   
-            <Outlet />
-            <a href="#" onClick={onLogout}>Logout</a>
-        </div>
+    return (
+        <main className="flex h-screen font-sans">
+            <SideBar onData={handleDataFromChild} />
+            <div className="flex flex-col items-start gap-[10px] flex-1">
+                <Header title={dataFromChild}></Header>
+                <Outlet />
+                <Footer />
+            </div>
+        </main>
     );
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('user_token',20)->nullable();
             $table->string('email',255)->unique()->nullable();
             $table->string('phone_number',10)->unique()->nullable();
+            $table->string('image_name')->nullable();
             $table->string('full_name',50)->nullable();           
             $table->date('date_of_birth')->nullable();
             $table->string('role_id',20);

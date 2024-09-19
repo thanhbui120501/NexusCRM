@@ -101,14 +101,19 @@ function LoginForm() {
     ev.preventDefault(); 
     setError(Validation(values));
     
-    const payload = JSON.stringify({
-      username: usernameRef.current.value,
-      password: passwordRef.current.value,
-      remember_token: values.rememberPassword ? 'true':'false',          
-    });
+    // const payload = JSON.stringify({
+    //   username: usernameRef.current.value,
+    //   password: passwordRef.current.value,
+    //   remember_token: values.rememberPassword ? 'true':'false',          
+    // });
     
+    const data = new FormData();
+        data.append("username",usernameRef.current.value);
+        data.append("password",passwordRef.current.value);
+        data.append("remember_token",values.rememberPassword ? 'true':'false');
+        
 
-    axiosClient.post("/account/login", payload).then(({data}) => {                 
+    axiosClient.post("/account/login", data).then(({data}) => {                 
       if(data.status_code == 401){
         setValuesDialog({
           ...dialog,
