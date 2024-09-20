@@ -71,8 +71,7 @@ class RequestController extends Controller
 
     public function makeActivityRequest($activityName,$activityType,$activityContent,$accountId,$username)
     {       
-        $request = new Request([
-            'activity_id' => 'AH'.Carbon::now()->format('dmyhis'),
+        $request = new Request([            
             'activity_name' => $activityName,
             'activity_type' => $activityType,
             'activity_content' => $activityContent,

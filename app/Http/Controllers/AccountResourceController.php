@@ -43,7 +43,7 @@ class AccountResourceController extends Controller
             $offset = !$request->has('limit')  ? 0 : $request->offset;
             $limit = !$request->has('limit') ? 50 : $request->limit;
             //select enable account
-            $account = DB::table('accounts')->where('status', 1)->offset($offset)->limit($limit)->get();
+            $account = DB::table('accounts')->where('deleted_status', 0)->offset($offset)->limit($limit)->get();
             
             //return json message      
             $arr = [
@@ -251,7 +251,7 @@ class AccountResourceController extends Controller
                     $result = (new PasswordResetResourceController)->store($request);
                     
                     //save activity
-                    $user = Auth::guard('api')->user();
+                    $user = $request->user();
                     $newRequest = (new RequestController())->makeActivityRequest(
                         'Account Reset Password',
                         'Account',
@@ -298,45 +298,52 @@ class AccountResourceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Account $account)
+    public function destroy(Request $request)
     {   
+        $validator = Validator::make($request->all(),[                       
+            'users' => 'required|array',                       
+        ]);
         //delete: update status -> 0        
-        $delete =  DB::table('accounts')->where('account_id',$account->account_id)->update(['status' => 0]); 
-
-        //check delete     
-        if($delete == 1){
-            //save activity
-            $user = Auth::guard('api')->user();
-            $newRequest = (new RequestController)->makeActivityRequest(
-                'Account Deleted',
-                'Account',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Account Deleted") . $account->username .'.',
-                $user->account_id,
-                $user->username);               
-            $result = (new ActivityHistoryResourceController)->store($newRequest);
-            
-            //return json message
-            $arr = [
-                'success' => true,
-                'status_code' => 204,
-                'message' => "Account has been deleted",
-                'data' => "Success!",
-                'activity' => [
-                    'activity_name' => $result->activity_name,
-                    'activity_type' => $result->activity_type,
-                    'activity_content' => $result->activity_content,
-                    'activity_time' => $result->created_at,
-                ],
-            ];
-            return response()->json($arr, Response::HTTP_NO_CONTENT);    
-        }else{
+        if($validator->fails()){
             $arr = [
                 'success' => false,
                 'status_code' => 200,
                 'message' => "Failed",
-                'data' => "Deleted Failed!",
+                'data' => $validator->errors()
             ];
-            return response()->json($arr, Response::HTTP_OK);    
-        }               
+            return response()->json($arr, Response::HTTP_OK);
+        }
+        $users = $request->input('users');
+        $userRequest = $request->user();
+        
+        foreach ($users as $user) {            
+            $delete =  DB::table('accounts')->where('account_id',$user)->update(['deleted_status' => true]);  
+            
+            //save acctivity
+            $account = Account::where('account_id',$user)->first();     
+            
+            $newRequest = (new RequestController)->makeActivityRequest(
+                'Account Deleted',
+                'Account',
+                'The user '. $userRequest->username . (new RequestController)->makeActivityContent("Account Deleted") . $account->username .'.',
+                $userRequest->account_id,
+                $userRequest->username);               
+            $result = (new ActivityHistoryResourceController)->store($newRequest);                // Thực hiện các xử lý cần thiết
+        }
+         
+        //return json message
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Account has been deleted",
+            'data' => "Success!",
+            'activity' => [
+                'activity_name' => $result->activity_name,
+                'activity_type' => $result->activity_type,
+                'activity_content' => $result->activity_content,
+                'activity_time' => $result->created_at,
+            ],
+        ];
+        return response()->json($arr, Response::HTTP_NO_CONTENT);                
     }   
 }
