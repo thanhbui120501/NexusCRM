@@ -24,6 +24,7 @@ class AuthController extends Controller
         //check username and password
         if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password],$remember)) {         
             $user = Auth::guard('api')->user();
+            
             if($user->status == 0){
                 //return json message if account has blocked
                 $arr = [
@@ -32,11 +33,11 @@ class AuthController extends Controller
                     'message' => "Account disabled",                   
                     'data' => "Your account has been disabled",
                 ];
-                return response()->json($arr, Response::HTTP_OK);
+                return response()->json($arr, Response::HTTP_FORBIDDEN);
             }else{
                 
                 //generate token, session, ip adress and user agent
-                $request->session()->regenerateToken(); 
+                //$request->session()->regenerateToken(); 
                 $token = $request->user('api')->createToken('authToken')->plainTextToken;   
 
                 // //get ipadress 
@@ -81,7 +82,7 @@ class AuthController extends Controller
                 'message' => "Failed",
                 'data' => "The provided credentials do not match our records."
             ];
-            return response()->json($arr, Response::HTTP_OK);
+            return response()->json($arr, Response::HTTP_UNAUTHORIZED);
         }
         
     }   
@@ -92,7 +93,7 @@ class AuthController extends Controller
         // $userAgent = $request->header('User-Agent');
         
         //logout
-        Auth::guard('api')->logout();
+        //Auth::guard('api')->logout();
 
         //create logout history
         // $request = new Request([

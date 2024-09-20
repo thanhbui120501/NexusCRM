@@ -35,16 +35,8 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 .dropDownData{
-  position:fixed;
-  top: 37.5rem;
-  right: 71rem;
-  width: 55px;  
-  padding: 15px;
-  border-radius: 8px;
-  background-color: white;
-  /* border: 1px solid gray; */
-  z-index: 100;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+    position: absolute;
+    z-index: 10;
 }
 
 
@@ -57,4 +49,23 @@
 input[type="checkbox"]:checked {
   background-color: #2563eb; /* Tailwind màu xanh: bg-blue-600 */
   border-color: #2563eb;
+}
+
+/* Đảm bảo body và html chiếm toàn bộ chiều cao màn hình */
+html, body {
+  height: 100%;
+  margin: 0; /* Loại bỏ margin mặc định */
+   /* Ngăn cuộn dọc */
+}
+
+/* Đảm bảo thẻ root của ứng dụng cũng chiếm toàn bộ chiều cao */
+#root {
+  height: 100%;
+  display: flex; /* Có thể sử dụng flexbox nếu cần */
+  flex-direction: column; /* Nếu bạn có nhiều thành phần con */
+}
+
+/* Nếu bạn cần cho nội dung bên trong #root chiếm toàn bộ không gian */
+.main-content {
+  flex: 1; /* Chiếm không gian còn lại */
 }

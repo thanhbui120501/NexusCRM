@@ -4,7 +4,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import PropTypes from 'prop-types';
 // eslint-disable-next-line react/prop-types, no-unused-vars
-export default function Example({ open, setOpen, onClickToOpen, onClickToClose, title, description, color, bgColor, hoverColor}) {
+export default function DialogComponent({ open, setOpen, onClickToOpen, onClickToClose, title, description, color, bgColor, hoverColor}) {
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
       <DialogBackdrop
@@ -57,7 +57,7 @@ export default function Example({ open, setOpen, onClickToOpen, onClickToClose, 
     </Dialog>
   )
 }
-Example.prototype = {
+DialogComponent.prototype = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   onClickToOpen: PropTypes.func.isRequired,

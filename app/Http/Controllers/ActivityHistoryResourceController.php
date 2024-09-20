@@ -53,6 +53,7 @@ class ActivityHistoryResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{           
+            $input['activity_id'] = 'AH'.Carbon::now()->format('dmyhis').substr(Carbon::now()->format('u'), 0, 3);;            
             $activity = ActivityHistory::create($input);           
             return $activity;
         }
