@@ -7,12 +7,20 @@ export default function Account() {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
-    const [showRowNumber, setShowRowNumber] = useState(5);
     const [users, setUsers] = useState([]);
+    // eslint-disable-next-line no-unused-vars
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [showRowNumber, setShowRowNumber] = useState(5);
+    // eslint-disable-next-line no-unused-vars
     const [loading, setLoading] = useState(true);
+    // eslint-disable-next-line no-unused-vars
     const [accecpt, setAccecpt] = useState(false);
     const [open, setOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
     //set value show dialog
+    // eslint-disable-next-line no-unused-vars
     const [dialog, setValuesDialog] = useState({
         title: "",
         description: "",
@@ -34,300 +42,8 @@ export default function Account() {
     };
     const handleSeclectRowNumber = (row) => {
         setShowRowNumber(row);
+        setCurrentPage(1);
     };
-
-    const handldAccecptDeleted = (val) => {
-        setAccecpt(val);
-    };
-    //fake user
-    // const users = [
-    //     {
-    //         account_id: "AC150924031213",
-    //         username: "thanh",
-    //         email: "thanh@email.com",
-    //         phone_number: null,
-    //         full_name: "Bùi Kim Thanh",
-    //         image_name: null,
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150924031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: null,
-    //         updated_at: null,
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC160924025305",
-    //         username: "linh123",
-    //         email: "linh@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Thị Linh",
-    //         image_name: "Lwio9xcqYzGl5UjELcPrYnUb7nJqjhzB.png",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150924031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-16 14:53:05",
-    //         updated_at: "2024-09-16 14:53:05",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC190924015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150924031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC190924015753",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150924031052",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC193924015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R15092403105",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC130924015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R1509d4031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC19092d015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R1d0924031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC190s24015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R15s0924031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC190s24s015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R15092s031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC19092015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150924031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC190924s15758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R15092403103s5",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC1909245015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150924ss31055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    //     {
-    //         account_id: "AC190929015758",
-    //         username: "duy123",
-    //         email: "duy123@gmail.com",
-    //         phone_number: null,
-    //         full_name: "Nguyễn Anh Duy",
-    //         image_name: "DvUkSGZ1sAgtPbFt1q01yoqCdJg1OBZP.jpg",
-    //         date_of_birth: null,
-    //         role: [
-    //             {
-    //                 role_id: "R150124031055",
-    //                 role_name: "Admin",
-    //                 description: "abc",
-    //                 create_at: null,
-    //                 update_at: null,
-    //                 status: true,
-    //             },
-    //         ],
-    //         created_at: "2024-09-19 01:57:58",
-    //         updated_at: "2024-09-19 01:57:58",
-    //         status: true,
-    //     },
-    // ];
 
     const handleCheckboxChange = (id) => {
         if (selectedUsers.includes(id)) {
@@ -347,10 +63,12 @@ export default function Account() {
         setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
     };
 
-    const getUsers = async () => {
+    const getUsers = async (page, limit) => {
         try {
+            const offset = (page - 1) * limit;
             const data = new FormData();
-            data.append("limit", showRowNumber);
+            data.append("limit", limit);
+            data.append("offset", offset);
             setLoading(true);
             const response = await axiosClient.post(
                 "/account/get-all-account",
@@ -358,6 +76,10 @@ export default function Account() {
             );
 
             setUsers(response.data.data);
+            setTotalRecords(response.data.totalRecords);
+
+            const pages = Math.ceil(response.data.totalRecords / limit);
+            setTotalPages(pages);
             setLoading(false);
         } catch (err) {
             const response = err.response;
@@ -373,12 +95,7 @@ export default function Account() {
         });
 
         try {
-            // eslint-disable-next-line no-unused-vars
-            const response = await axiosClient.post(
-                "/account/delete-account",
-                data
-            );
-            getUsers();
+            getUsers(currentPage, showRowNumber);
             setSelectedUsers([]);
         } catch (err) {
             const response = err.response;
@@ -387,11 +104,180 @@ export default function Account() {
     };
     //get user by number row
     useEffect(() => {
-        getUsers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showRowNumber]);
+        getUsers(currentPage, showRowNumber);
+    }, [currentPage, showRowNumber]);
     // if (loading) return <p>Loading...</p>;
     // if (error) return <p>Error: {error}</p>;
+
+    //const currentItems = users.slice((currentPage - 1) * 20, currentPage * 20);
+
+    const handlePageChange = (page) => {
+        if (page !== currentPage) {
+            // Kiểm tra để tránh vòng lặp vô hạn
+            setCurrentPage(page);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePrev = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const renderPagination = () => {
+        const pages = [];
+
+        if (totalPages <= 4) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(
+                    <button
+                        key={i}
+                        className={`flex ${
+                            currentPage === totalPages
+                                ? "bg-gray-900 text-white"
+                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                        }w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                        type="button"
+                        onClick={() => handlePageChange(i)}
+                    >
+                        {i}
+                    </button>
+                );
+            }
+        } else {
+            if (currentPage < 4) {
+                for (let i = 1; i <= 4; i++) {
+                    pages.push(
+                        <button
+                            key={i}
+                            className={`flex ${
+                                currentPage === i
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(i)}
+                        >
+                            {i}
+                        </button>
+                    );
+                }
+                pages.push(
+                    <div
+                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                        type="text"
+                    >
+                        ...
+                    </div>
+                );
+                pages.push(
+                    <button
+                        key={totalPages}
+                        className={`flex ${
+                            currentPage === totalPages
+                                ? "bg-gray-900 text-white"
+                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                        }
+                            
+                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                        type="button"
+                        onClick={() => handlePageChange(totalPages)}
+                    >
+                        {totalPages}
+                    </button>
+                );
+            } else {
+                if (currentPage == totalPages) {
+                    pages.push(
+                        <button
+                            key={totalPages}
+                            className={`flex ${
+                                currentPage === totalPages
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            }
+                                
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(totalPages)}
+                        >
+                            {totalPages}
+                        </button>
+                    );
+                } else {
+                    if (currentPage >= totalPages - 3) {
+                        for (let i = totalPages - 3; i <= totalPages; i++) {
+                            pages.push(
+                                <button
+                                    key={i}
+                                    className={`flex ${
+                                        currentPage === i
+                                            ? "bg-gray-900 text-white"
+                                            : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    type="button"
+                                    onClick={() => handlePageChange(i)}
+                                >
+                                    {i}
+                                </button>
+                            );
+                        }
+                    } else {
+                        for (let i = currentPage; i <= currentPage + 3; i++) {
+                            pages.push(
+                                <button
+                                    key={i}
+                                    className={`flex ${
+                                        currentPage === i
+                                            ? "bg-gray-900 text-white"
+                                            : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    type="button"
+                                    onClick={() => handlePageChange(i)}
+                                >
+                                    {i}
+                                </button>
+                            );
+                        }
+                        pages.push(
+                            <div
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                                type="text"
+                            >
+                                ...
+                            </div>
+                        );
+                        pages.push(
+                            <button
+                                key={totalPages}
+                                className={`flex ${
+                                    currentPage === totalPages
+                                        ? "bg-gray-900 text-white"
+                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                }
+                                    
+                                 w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                type="button"
+                                onClick={() => handlePageChange(totalPages)}
+                            >
+                                {totalPages}
+                            </button>
+                        );
+                    }
+                }
+            }
+        }
+        return pages;
+    };
+    //get statrindex in table
+    const startIndex = (currentPage - 1) * showRowNumber + 1;
+
     return (
         <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6">
             <div className="flex justify-between items-end self-stretch">
@@ -466,17 +352,13 @@ export default function Account() {
                     )}
                 </div>
             </div>
-            {loading ? (
-                <div className="flex flex-1 justify-center items-center h-full w-full p-10">
-                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-                </div>
-            ) : (
-                <div className="flex pb-6 pl-6 pr-6 flex-col items-start gap-3 self-stretch ">
-                    <div className="flex items-start self-stretch  overflow-auto max-h-[400px]">
-                        <table className="min-w-full bg-white ">
+            {
+                <div className="flex pb-6 pl-6 pr-6 flex-col items-start gap-3 self-stretch">
+                    <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto max-h-[400px] max-w-full">
+                        <table className="w-full table-fixed bg-white ">
                             <thead className="rounded-t-lg sticky top-0 z-10">
                                 <tr className="bg-gray-50 text-gray-500 text-sm font-medium">
-                                    <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg">
+                                    <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg w-[5%]">
                                         <input
                                             type="checkbox"
                                             checked={isAllSelected}
@@ -484,26 +366,28 @@ export default function Account() {
                                             className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
                                         />
                                     </th>
-                                    <th className="py-3 px-6 text-left">#</th>
-                                    <th className="py-3 px-6 text-left">
+                                    <th className="py-3 px-6 text-center w-[5%]">
+                                        #
+                                    </th>
+                                    <th className="py-3 px-6 text-left w-[12%] whitespace-nowrap">
                                         Ảnh đại diện
                                     </th>
-                                    <th className="py-3 px-6 text-left">
+                                    <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Tên tài khoản
                                     </th>
-                                    <th className="py-3 px-6 text-left">
+                                    <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Tên nhân viên
                                     </th>
-                                    <th className="py-3 px-6 text-left">
+                                    <th className="py-3 px-6 text-left w-[15%] whitespace-nowrap">
                                         Số điện thoại
                                     </th>
-                                    <th className="py-3 px-6 text-left">
+                                    <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Email
                                     </th>
-                                    <th className="py-3 px-6 text-left">
+                                    <th className="py-3 px-6 text-left w-[10%] whitespace-nowrap">
                                         Chức vụ
                                     </th>
-                                    <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg">
+                                    <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg w-[20%] whitespace-nowrap">
                                         Trạng thái
                                     </th>
                                 </tr>
@@ -535,7 +419,7 @@ export default function Account() {
                                             />
                                         </td>
                                         <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
-                                            {index + 1}
+                                            {startIndex + index}
                                         </td>
                                         <td className="py-3 px-6 text-left">
                                             {user.image_name ? (
@@ -552,19 +436,19 @@ export default function Account() {
                                                 />
                                             )}
                                         </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900">
+                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
                                             {user.username}
                                         </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900">
+                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
                                             {user.full_name}
                                         </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900">
+                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
                                             {user.phone_number}
                                         </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900">
+                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
                                             {user.email}
                                         </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900">
+                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
                                             <ul>
                                                 {user.role.map((r) => (
                                                     <li key={r.role_id}>
@@ -573,7 +457,7 @@ export default function Account() {
                                                 ))}
                                             </ul>
                                         </td>
-                                        <td className="py-3 px-6 text-left">
+                                        <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
                                             {user.status == 1 ? (
                                                 <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
                                                     <li className="font-medium text-sm text-[#16A34A]">
@@ -591,11 +475,11 @@ export default function Account() {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>{" "}
+                        </table>
                     </div>
                     <div className="flex justify-between items-center self-stretch">
-                        <div className="flex items-start gap-3">
-                            <div className="relative flex flex-col items-start gap-1">
+                        <div className=" flex items-start gap-3">
+                            <div className="relative overflow-visible flex flex-col items-start gap-1 max-h-none">
                                 <div
                                     className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-gray-200"
                                     onClick={() =>
@@ -624,13 +508,14 @@ export default function Account() {
                             </h1>
                         </div>
                         <div className="flex items-center gap-2">
-                            {/* <div className="flex ">
-
-                        </div> */}
-                            <button className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50">
+                            <button
+                                onClick={() => handlePageChange(1)}
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                            >
                                 Đầu tiên
                             </button>
                             <button
+                                onClick={() => handlePrev()}
                                 className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
@@ -647,43 +532,10 @@ export default function Account() {
                                     />
                                 </svg>
                             </button>
+                            {renderPagination()}
+
                             <button
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50"
-                                type="button"
-                            >
-                                1
-                            </button>
-                            <button
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50"
-                                type="button"
-                            >
-                                2
-                            </button>
-                            <button
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50"
-                                type="button"
-                            >
-                                3
-                            </button>
-                            <button
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50"
-                                type="button"
-                            >
-                                4
-                            </button>
-                            <div
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
-                                type="text"
-                            >
-                                ...
-                            </div>
-                            <button
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50"
-                                type="button"
-                            >
-                                5
-                            </button>
-                            <button
+                                onClick={() => handleNext()}
                                 className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
@@ -700,13 +552,16 @@ export default function Account() {
                                     />
                                 </svg>
                             </button>
-                            <button className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50">
+                            <button
+                                onClick={() => handlePageChange(totalPages)}
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                            >
                                 Cuối cùng
                             </button>
                         </div>
                     </div>
                 </div>
-            )}
+            }
             <DialogComponent
                 open={open}
                 setOpen={setOpen}
