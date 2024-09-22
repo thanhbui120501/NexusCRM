@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
-export default function SideBar({ onData }) {
+export default function SideBar() {
     const [open, setOpen] = useState(true);
     const [openSubMenu, setOpenSubMenu] = useState(false);
     const [selectedTap, setTapSelected] = useState(0);
@@ -16,10 +15,6 @@ export default function SideBar({ onData }) {
 
     const handleNavigation = (path) => {
         navigate(path);
-    };
-
-    const sendData = (val) => {
-        onData(val);
     };
 
     const [selectedSubMenuTap, setselectedSubMenuTap] = useState(0);
@@ -61,7 +56,7 @@ export default function SideBar({ onData }) {
         { title: "Trợ giúp", subject: false, icon: "/icons/help.svg" },
     ];
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen ">
             <nav
                 className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-gray-50  transition-all ${
                     open ? "w-72" : "w-20"
@@ -143,7 +138,6 @@ export default function SideBar({ onData }) {
                     onClick={() => {
                         setTapSelected(0);
                         handleNavigation("/");
-                        sendData("Thống kê");
                     }}
                 >
                     <img
@@ -205,7 +199,6 @@ export default function SideBar({ onData }) {
                             onClick={() => {
                                 setselectedSubMenuTap(0);
                                 handleNavigation("/account");
-                                sendData("Tài khoản");
                             }}
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
@@ -223,7 +216,6 @@ export default function SideBar({ onData }) {
                             onClick={() => {
                                 setselectedSubMenuTap(1);
                                 handleNavigation("/role");
-                                sendData("Chức vụ");
                             }}
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
@@ -241,7 +233,6 @@ export default function SideBar({ onData }) {
                             onClick={() => {
                                 setselectedSubMenuTap(2);
                                 handleNavigation("/customer");
-                                sendData("Khách hàng");
                             }}
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
@@ -265,7 +256,6 @@ export default function SideBar({ onData }) {
                     onClick={() => {
                         setTapSelected(2);
                         handleNavigation("/selling");
-                        sendData("Bán hàng");
                     }}
                 >
                     <img
@@ -291,7 +281,6 @@ export default function SideBar({ onData }) {
                     onClick={() => {
                         setTapSelected(3);
                         handleNavigation("/sell-program");
-                        sendData("Chương trình");
                     }}
                 >
                     <img
@@ -328,7 +317,6 @@ export default function SideBar({ onData }) {
                     onClick={() => {
                         setTapSelected(4);
                         handleNavigation("/setting");
-                        sendData("Cài đặt");
                     }}
                 >
                     <img
@@ -354,7 +342,6 @@ export default function SideBar({ onData }) {
                     onClick={() => {
                         setTapSelected(5);
                         handleNavigation("/help");
-                        sendData("Trợ giúp");
                     }}
                 >
                     <img

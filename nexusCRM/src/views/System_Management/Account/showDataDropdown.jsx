@@ -8,7 +8,7 @@ export default function ShowDataDropDown({ onData, onCloseDropdow }) {
         onCloseDropdow();
     };
     return (
-        <div className="absolute flex flex-col gap-4 items-center max-h-20 overflow-y-auto overflow-x-hidden p-2 bg-gray-50 rounded-lg shadow-lg dropDownData">
+        <div className="absolute flex flex-col  gap-4 items-center max-h-20 overflow-y-auto overflow-x-hidden p-2 bg-gray-50 rounded-lg shadow-lg dropDownData">
             {[5, 10, 15, 20].map((number) => (
                 <div
                     key={number}

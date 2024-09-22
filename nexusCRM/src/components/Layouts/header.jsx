@@ -1,34 +1,102 @@
 import { useState } from "react";
 import DropDownProfile from "./dropdown";
+import { useLocation } from "react-router-dom";
 // eslint-disable-next-line react/prop-types
-export default function Header({ title }) {
+export default function Header() {
     const [localUser] = useState(JSON.parse(localStorage.getItem("USER")));
 
     const [openProfile, setOpenProfile] = useState(false);
 
+    const location = useLocation();
+
+    // Kiểm tra route và xác định tiêu đề
+    const getTitle = () => {
+        switch (location.pathname) {
+            case "/":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-900">
+                            Thống kê
+                        </h1>
+                    </>
+                );
+            case "/account":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Quản lí hệ thống</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Tài khoản
+                            </span>
+                        </h1>
+                    </>
+                );
+            // Thêm các route khác nếu cần
+            case "/customer":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Quản lí hệ thống</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Khách hàng
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/role":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Quản lí hệ thống</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Chức vụ
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/setting":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-900">
+                            Cài đặt
+                        </h1>
+                    </>
+                );
+            case "/selling":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-900">
+                            Bán hàng
+                        </h1>
+                    </>
+                );
+            case "/sell-program":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-900">
+                            Chương trình
+                        </h1>
+                    </>
+                );
+            case "/help":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-900">
+                            Trợ giúp
+                        </h1>
+                    </>
+                );
+            default:
+                return "Trang chính";
+        }
+    };
     return (
         <div className="flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 border-b-2 border-gray-200">
             <div className="flex flex-col items-start w-[798px] gap-[10px]">
-                {title == "Tài khoản" ||
-                title == "Chức vụ" ||
-                title == "Khách hàng" ? (
-                    <h1 className="font-medium text-sm text-gray-400">
-                        <span className="pr-3">Quản lí hệ thống</span>{" "}
-                        <span>/</span>{" "}
-                        <span className="font-medium text-sm text-gray-900 pl-3">
-                            {" "}
-                            {title}{" "}
-                        </span>
-                    </h1>
-                ) : title == "" ? (
-                    <h1 className="font-medium text-sm text-gray-900">
-                        Thống kê
-                    </h1>
-                ) : (
-                    <h1 className="font-medium text-sm text-gray-900">
-                        {title}
-                    </h1>
-                )}
+                {getTitle()}
             </div>
             <div className="flex">
                 <div className="flex p-[10px] justify-center items-center gap-2 border border-b-[#E5E5E5] bg-[#FFFFFF] rounded-lg cursor-pointer">

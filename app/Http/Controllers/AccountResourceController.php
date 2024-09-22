@@ -39,18 +39,23 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }else{
+            //count total record
+            $count = DB::table('accounts')->where('deleted_status', 0)->count();
             //set offset and limit
-            $offset = !$request->has('limit')  ? 0 : $request->offset;
-            $limit = !$request->has('limit') ? 50 : $request->limit;
+            $offset = !$request->has('offset')  ? 0 : $request->input('offset');            
             //select enable account
-            $account = DB::table('accounts')->where('deleted_status', 0)->offset($offset)->limit($limit)->get();
-            
+            $accountQuery = DB::table('accounts')->where('deleted_status', 0)->offset($offset)->limit(100000);
+            if($request->has('limit')){
+                $accountQuery = $accountQuery->limit($request->input('limit'));
+            }
+            $account = $accountQuery->get();
             //return json message      
             $arr = [
                 'success' => true,
                 'status_code' => 200,
                 'message' => "List of system account",
-                'data' => AccountResource::collection($account)
+                'data' => AccountResource::collection($account),
+                'totalRecords' => $count
             ];
             return response()->json($arr,Response::HTTP_OK);
         }        
