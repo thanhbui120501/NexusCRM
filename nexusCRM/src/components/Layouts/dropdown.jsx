@@ -9,7 +9,7 @@ export default function DropDownProfile(){
 
     const onLogout = (ev) => {
         ev.preventDefault();
-        axiosClient.get('/account/logout').then(() => {          
+        axiosClient.post('/account/logout').then(() => {          
             setUser(null)
             setToken(null)
         });       

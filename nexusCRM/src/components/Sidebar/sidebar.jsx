@@ -5,6 +5,7 @@ export default function SideBar() {
     const [open, setOpen] = useState(true);
     const [openSubMenu, setOpenSubMenu] = useState(false);
     const [selectedTap, setTapSelected] = useState(0);
+    const localUser = JSON.parse(localStorage.getItem("USER"));
 
     const setTapManageSelected = () => {
         setOpenSubMenu(!openSubMenu);
@@ -155,97 +156,113 @@ export default function SideBar() {
                         </h1>
                     )}
                 </div>
-                <div
-                    key={1}
-                    className={`flex p-4 items-center justify-between ${
-                        !open && "w-[52px] h-[52px]"
-                    } self-stretch cursor-pointer hover:bg-white ${
-                        selectedTap == 1 && "bg-white"
-                    }`}
-                    onClick={setTapManageSelected}
-                >
-                    <div className="flex items-center gap-2">
-                        <img
-                            src="/icons/system_manage_icon.svg"
-                            alt="icon-statistics"
-                            className="flex flex-col justify-center w-5 h-5"
-                        />
-                        <h1
-                            className={`text-sm font-medium text-gray-900 duration-300 ${
-                                !open && "scale-0"
-                            } `}
-                        >
-                            Quản lí hệ thống
-                        </h1>
-                    </div>
-                    <button
-                        className="flex flex-col justify-center items-center gap-[10px]"
-                        onClick={() => setOpenSubMenu(!openSubMenu)}
+                {localUser.role[0].role_name === "Quản lí" && (
+                    <div
+                        key={1}
+                        className={`flex p-4 items-center justify-between ${
+                            !open && "w-[52px] h-[52px]"
+                        } self-stretch cursor-pointer hover:bg-white ${
+                            selectedTap == 1 && "bg-white"
+                        }`}
+                        onClick={setTapManageSelected}
                     >
-                        <img
-                            src="/icons/statis_more_icon.svg"
-                            alt="icon-statistics"
-                            className={`flex flex-col justify-center w-4 h-4 ${
-                                !open && "scale-0"
-                            } ${openSubMenu && "rotate-90"}`}
-                        />
-                    </button>
-                </div>
-                {openSubMenu && open && (
-                    <div className="flex flex-col items-start animate-fade-in">
-                        <div
-                            key={0}
-                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
-                            onClick={() => {
-                                setselectedSubMenuTap(0);
-                                handleNavigation("/account");
-                            }}
-                        >
-                            <img src="/icons/line.svg" alt="icon-statistics" />
+                        <div className="flex items-center gap-2">
+                            <img
+                                src="/icons/system_manage_icon.svg"
+                                alt="icon-statistics"
+                                className="flex flex-col justify-center w-5 h-5"
+                            />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSubMenuTap == 0 && "text-gray-900"
-                                }`}
+                                className={`text-sm font-medium text-gray-900 duration-300 ${
+                                    !open && "scale-0"
+                                } `}
                             >
-                                Tài khoản
+                                Quản lí hệ thống
                             </h1>
                         </div>
-                        <div
-                            key={1}
-                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
-                            onClick={() => {
-                                setselectedSubMenuTap(1);
-                                handleNavigation("/role");
-                            }}
+                        <button
+                            className="flex flex-col justify-center items-center gap-[10px]"
+                            onClick={() => setOpenSubMenu(!openSubMenu)}
                         >
-                            <img src="/icons/line.svg" alt="icon-statistics" />
-                            <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSubMenuTap == 1 && "text-gray-900"
-                                }`}
-                            >
-                                Chức vụ
-                            </h1>
-                        </div>
-                        <div
-                            key={2}
-                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
-                            onClick={() => {
-                                setselectedSubMenuTap(2);
-                                handleNavigation("/customer");
-                            }}
-                        >
-                            <img src="/icons/line.svg" alt="icon-statistics" />
-                            <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSubMenuTap == 2 && "text-gray-900"
-                                }`}
-                            >
-                                Khách hàng
-                            </h1>
-                        </div>
+                            <img
+                                src="/icons/statis_more_icon.svg"
+                                alt="icon-statistics"
+                                className={`flex flex-col justify-center w-4 h-4 ${
+                                    !open && "scale-0"
+                                } ${openSubMenu && "rotate-90"}`}
+                            />
+                        </button>
                     </div>
                 )}
+                {localUser.role[0].role_name === "Quản lí" &&
+                    openSubMenu &&
+                    open && (
+                        <div className="flex flex-col items-start animate-fade-in">
+                            <div
+                                key={0}
+                                className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                                onClick={() => {
+                                    setselectedSubMenuTap(0);
+                                    handleNavigation("/account");
+                                }}
+                            >
+                                <img
+                                    src="/icons/line.svg"
+                                    alt="icon-statistics"
+                                />
+                                <h1
+                                    className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                        selectedSubMenuTap == 0 &&
+                                        "text-gray-900"
+                                    }`}
+                                >
+                                    Tài khoản
+                                </h1>
+                            </div>
+                            <div
+                                key={1}
+                                className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                                onClick={() => {
+                                    setselectedSubMenuTap(1);
+                                    handleNavigation("/role");
+                                }}
+                            >
+                                <img
+                                    src="/icons/line.svg"
+                                    alt="icon-statistics"
+                                />
+                                <h1
+                                    className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                        selectedSubMenuTap == 1 &&
+                                        "text-gray-900"
+                                    }`}
+                                >
+                                    Chức vụ
+                                </h1>
+                            </div>
+                            <div
+                                key={2}
+                                className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                                onClick={() => {
+                                    setselectedSubMenuTap(2);
+                                    handleNavigation("/customer");
+                                }}
+                            >
+                                <img
+                                    src="/icons/line.svg"
+                                    alt="icon-statistics"
+                                />
+                                <h1
+                                    className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                        selectedSubMenuTap == 2 &&
+                                        "text-gray-900"
+                                    }`}
+                                >
+                                    Khách hàng
+                                </h1>
+                            </div>
+                        </div>
+                    )}
                 <div
                     key={2}
                     className={`flex p-4 gap-2 items-center ${

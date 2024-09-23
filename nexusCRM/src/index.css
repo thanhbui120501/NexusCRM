@@ -69,3 +69,29 @@ html, body {
 .main-content {
   flex: 1; /* Chiếm không gian còn lại */
 }
+
+.img-container {
+  width: 40px; /* Hoặc kích thước bạn muốn */
+  height: 40px; /* Hoặc kích thước bạn muốn */
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  background-color: #f0f0f0; /* Màu nền nếu cần */
+  background-size: cover; /* Lấp đầy không gian */
+  background-position: center; /* Căn giữa */
+  border-radius: 8px;
+}
+
+.img-container img {
+  width: auto; /* Không giới hạn chiều rộng của ảnh */
+  max-width: none;
+  height: 100%; /* Chiều cao 100% của container */
+  object-fit: cover; /* Lấp đầy không gian mà không làm méo */
+}
+
+.fillter{
+  box-shadow: 0px 4px 8px 0px rgba(15, 15, 41, 0.04);
+  z-index: 100;
+  right: 8.25rem;
+  top:2.75rem;
+}
