@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ShowDataDropDown from "./showDataDropdown";
 import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
-
+import ShowFillter from "./showFillter";
 export default function Account() {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
@@ -18,6 +18,13 @@ export default function Account() {
     const [accecpt, setAccecpt] = useState(false);
     const [open, setOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    //show fillter
+    const [openFillter, setOpenFillter] = useState(false);
+
+    //callback from showfillter
+    const callbackFillTer = (val) => {
+        setOpenFillter(val);
+    };
 
     //set value show dialog
     // eslint-disable-next-line no-unused-vars
@@ -66,18 +73,20 @@ export default function Account() {
     const getUsers = async (page, limit) => {
         try {
             const offset = (page - 1) * limit;
-            const data = new FormData();
-            data.append("limit", limit);
-            data.append("offset", offset);
-            setLoading(true);
-            const response = await axiosClient.post(
-                "/account/get-all-account",
-                data
-            );
 
+            setLoading(true);
+            const response = await axiosClient.get("/account/get-all-account", {
+                params: {
+                    limit: limit,
+                    offset: offset,
+                },
+            });
+
+            //set user and records
             setUsers(response.data.data);
             setTotalRecords(response.data.totalRecords);
 
+            //set pages
             const pages = Math.ceil(response.data.totalRecords / limit);
             setTotalPages(pages);
             setLoading(false);
@@ -170,6 +179,7 @@ export default function Account() {
                 }
                 pages.push(
                     <div
+                        key={0}
                         className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
                         type="text"
                     >
@@ -247,6 +257,7 @@ export default function Account() {
                         }
                         pages.push(
                             <div
+                                key={0}
                                 className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
                                 type="text"
                             >
@@ -289,7 +300,7 @@ export default function Account() {
                         Quản lí tất cả tài khoản tại đây
                     </h1>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="relative flex items-center gap-2">
                     <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
                         <img
                             src="/icons/search.svg"
@@ -307,7 +318,7 @@ export default function Account() {
                     <img src="/icons/line.svg" alt="icon-statistics" />
                     <div
                         className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                        onClick={() => {}}
+                        onClick={() => setOpenFillter(!openFillter)}
                     >
                         <img
                             src="/icons/sliders.svg"
@@ -315,6 +326,9 @@ export default function Account() {
                             className="flex flex-col items-center w-5 h-5 "
                         />
                     </div>
+                    {openFillter && (
+                        <ShowFillter onCloseFillter={callbackFillTer} />
+                    )}
                     {selectedUsers.length == 0 ? (
                         <div className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 cursor-pointer onClick={()=>{}}">
                             <div className="flex w-5 h-5 flex-col justify-center  ">
@@ -426,13 +440,13 @@ export default function Account() {
                                                 <img
                                                     src={`http://127.0.0.1:8000/uploads/${user.image_name}`}
                                                     alt="Avatar"
-                                                    className="w-10 h-10 rounded-lg"
+                                                    className="w-10 h-10 rounded-xl object-fill"
                                                 />
                                             ) : (
                                                 <img
                                                     src={`/images/avatar.png`}
                                                     alt="Avatar"
-                                                    className="w-10 h-10 rounded-lg"
+                                                    className="w-10 h-10 rounded-xl object-fill"
                                                 />
                                             )}
                                         </td>

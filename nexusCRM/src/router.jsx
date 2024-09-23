@@ -10,6 +10,7 @@ import Setting from './views/Setting/setting_page'
 import Sell from './views/Sell/selling_page'
 import Program from './views/Sales_Program/program_page'
 import Help from './views/Help/help_page'
+import ProtectedRoute from './components/protected_route'
 
 const router = createBrowserRouter (
     [
@@ -23,11 +24,11 @@ const router = createBrowserRouter (
                 },
                 {
                     path:'/account',
-                    element: <Account />,
+                    element: <ProtectedRoute> <Account /> </ProtectedRoute> ,
                 },
                 {
                     path:'/customer',
-                    element: <Customer />,
+                    element: <ProtectedRoute> <Customer /> </ProtectedRoute>,
                 },
                 {
                     path:'/statistic',
@@ -35,7 +36,7 @@ const router = createBrowserRouter (
                 },
                 {
                     path:'/role',
-                    element: <Role />,
+                    element: <ProtectedRoute> <Role /> </ProtectedRoute>,
                 },
                 {
                     path:'/setting',

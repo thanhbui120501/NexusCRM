@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DropDownProfile from "./dropdown";
 import { useLocation } from "react-router-dom";
-// eslint-disable-next-line react/prop-types
+
 export default function Header() {
     const [localUser] = useState(JSON.parse(localStorage.getItem("USER")));
 
@@ -94,7 +94,7 @@ export default function Header() {
         }
     };
     return (
-        <div className="flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 border-b-2 border-gray-200">
+        <div className="relative flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 border-b-2 border-gray-200">
             <div className="flex flex-col items-start w-[798px] gap-[10px]">
                 {getTitle()}
             </div>
@@ -109,7 +109,7 @@ export default function Header() {
                 <img src="/icons/line.svg" alt="icon-statistics" />
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                        <div className="rounded-xl w-10 h-10">
+                        <div className=" w-10 h-10">
                             <img
                                 src={`${
                                     localUser.image_name == null
@@ -118,7 +118,7 @@ export default function Header() {
                                           localUser.image_name
                                 }`}
                                 alt="avatar"
-                                className="w-full h-full object-contain"
+                                className="w-10 h-10 rounded-xl object-cover"
                             />
                         </div>
                         <div className="flex flex-col items-start w-[126px] gap-[2px]">
@@ -138,6 +138,29 @@ export default function Header() {
                         } cursor-pointer`}
                         onClick={() => setOpenProfile(!openProfile)}
                     />
+
+                    {/* <select
+                            id="options"
+                            value={selectedOption}
+                            onChange={handleChange}
+                            
+                        >
+                            <option value="">
+                                <img
+                                    src="/icons/statis_more_icon.svg"
+                                    alt="icon-selected"
+                                    className={`w-5 h-5 ${
+                                        openProfile ? "rotate-90" : "rotate-0"
+                                    } cursor-pointer`}
+                                    
+                                />
+                            </option>
+                            {options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select> */}
                 </div>
             </div>
             {openProfile && <DropDownProfile />}
