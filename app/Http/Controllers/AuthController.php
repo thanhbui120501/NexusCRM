@@ -11,34 +11,34 @@ use Carbon\Carbon;
 
 
 class AuthController extends Controller
-{    
+{
     public function login(Request $request)
-    {       
+    {
         $credentials = $request->validate([
             'username' => ['required'],
-            'password' => ['required'],              
-            'remember_token' => ['string'],                  
+            'password' => ['required'],
+            'remember_token' => ['string'],
         ]);
         $remember = ($request->has('remember_token') && $request->remember_token == 'true') ? true : false;
-        
+
         //check username and password
-        if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password],$remember)) {         
+        if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password], $remember)) {
             $user = Auth::guard('api')->user();
-            
-            if($user->status == 0){
+
+            if ($user->status == 0) {
                 //return json message if account has blocked
                 $arr = [
                     'success' => false,
                     'status_code' => 403,
-                    'message' => "Account disabled",                   
+                    'message' => "Account disabled",
                     'data' => "Your account has been disabled",
                 ];
                 return response()->json($arr, Response::HTTP_FORBIDDEN);
-            }else{
-                
+            } else {
+
                 //generate token, session, ip adress and user agent
                 //$request->session()->regenerateToken(); 
-                $token = $request->user('api')->createToken('authToken')->plainTextToken;   
+                $token = $request->user('api')->createToken('authToken')->plainTextToken;
 
                 // //get ipadress 
                 // if($request->has('ip_address')){
@@ -74,8 +74,8 @@ class AuthController extends Controller
                     'data' => (new AccountResource($user))
                 ];
                 return response()->json($arr, Response::HTTP_OK);
-            }           
-        }else{
+            }
+        } else {
             $arr = [
                 'success' => false,
                 'status_code' => 401,
@@ -84,14 +84,13 @@ class AuthController extends Controller
             ];
             return response()->json($arr, Response::HTTP_UNAUTHORIZED);
         }
-        
-    }   
+    }
     public function logout(Request $request)
     {
-        $user = Auth::guard('api')->user();
+        //$user = $request->user();
         // $ip = $request->ip();
         // $userAgent = $request->header('User-Agent');
-        
+
         //logout
         //Auth::guard('api')->logout();
 
@@ -105,14 +104,13 @@ class AuthController extends Controller
         //     'device_name' => null,               
         //     'status' => 1
         // ]);
-        // $this->createLoginHistory($request);  
-        //delete current user
-        $request->user('sanctum')->currentAccessToken()->delete();       
+        // $this->createLoginHistory($request);         
+        $request->user('sanctum')->currentAccessToken()->delete();
         //regenerate token
         // $request->session()->invalidate(); 
         // $request->session()->regenerateToken();      
-         
-        
+
+
         //create json message
         $arr = [
             'success' => true,
@@ -122,8 +120,9 @@ class AuthController extends Controller
         ];
         return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
-    
-    public function createLoginHistory(Request $request){       
+
+    public function createLoginHistory(Request $request)
+    {
         $input = $request->all();
         $history = LoginHistory::create($input);
         return $history;
