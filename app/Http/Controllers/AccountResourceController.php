@@ -15,57 +15,33 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class AccountResourceController extends Controller
-{   
+{
     /**
      * Display a listing of the resource.
-     */   
-    
+     */
+
     public function index(Request $request)
     {
-        //validate
-        $input = $request->all();
-        $validator = Validator::make($input,[           
-            'offset' => 'min:0|numeric',
-            'limit'=> 'min:1|numeric',
-        ]);
+        $limit = $request->query('limit', 100000);
+        $offset = $request->query('offset', 0);
+        $account = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->offset($offset)->limit($limit)->get();
+        $count = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->count();
 
-        //checking validate
-        if($validator->fails()){
-            $arr = [
-                'success' => false,
-                'status_code' => 200,
-                'message' => "Failed",
-                'data' => $validator->errors()
-            ];
-            return response()->json($arr, Response::HTTP_OK);
-        }else{
-            //count total record
-            $count = DB::table('accounts')->where('deleted_status', 0)->count();
-            //set offset and limit
-            $offset = !$request->has('offset')  ? 0 : $request->input('offset');            
-            //select enable account
-            $accountQuery = DB::table('accounts')->where('deleted_status', 0)->offset($offset)->limit(100000);
-            if($request->has('limit')){
-                $accountQuery = $accountQuery->limit($request->input('limit'));
-            }
-            $account = $accountQuery->get();
-            //return json message      
-            $arr = [
-                'success' => true,
-                'status_code' => 200,
-                'message' => "List of system account",
-                'data' => AccountResource::collection($account),
-                'totalRecords' => $count
-            ];
-            return response()->json($arr,Response::HTTP_OK);
-        }        
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "List of system account",
+            'data' => AccountResource::collection($account),
+            'totalRecords' => $count
+        ];
+        return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
+    {
         //validate
         //The password contains characters from at least three of the following five categories:          
         // 1. English uppercase characters (A – Z)
@@ -74,19 +50,19 @@ class AccountResourceController extends Controller
         // 4. Non-alphanumeric (For example: !, $, #, or %)
         // 5. Unicode characters
         $input = $request->all();
-        $validator = Validator::make($input,[
+        $validator = Validator::make($input, [
             'username' => 'required|string|min:5|max:20|unique:accounts,username',
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'password_confirm' => 'required|min:6|same:password|',
             'role_id' => 'required|string|exists:roles,role_id',
             'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
             'email' => 'required|email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
-            'full_name' => 'required|string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',           
-            'date_of_birth' => 'date',            
-            'images'=> 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'full_name' => 'required|string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',
+            'date_of_birth' => 'date',
+            'images' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         //check vailidate
-        if($validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -94,36 +70,37 @@ class AccountResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{
+        } else {
             //create account id, hash password
-            $input['account_id'] = 'AC'.Carbon::now()->format('dmyhis');
-            $input['password'] = Hash::make($input['password']);    
-            
-            //create avatar
-            if($request->has('images')){
-                $image = $request->file('images');
-                    //set filename
-                    $fileName = Str::random(32).".".$image->getClientOriginalExtension();
-                    
-                    $image->move('uploads/', $fileName);
+            $input['account_id'] = 'AC' . Carbon::now()->format('dmyhis');
+            $input['password'] = Hash::make($input['password']);
 
-                    //set image file
-                    $input['image_name'] = $fileName;                      
+            //create avatar
+            if ($request->has('images')) {
+                $image = $request->file('images');
+                //set filename
+                $fileName = Str::random(32) . "." . $image->getClientOriginalExtension();
+
+                $image->move('uploads/', $fileName);
+
+                //set image file
+                $input['image_name'] = $fileName;
             }
-            
+
             $account = Account::create($input);
-            
+
             //save activity
             $user = $request->user();
-            
+
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Account Created',
                 'Account',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Account Created") . $account->username .'.',
+                'The user ' . $user->username . (new RequestController)->makeActivityContent("Account Created") . $account->username . '.',
                 $user->account_id,
-                $user->username);               
+                $user->username
+            );
             $result = (new ActivityHistoryResourceController)->store($newRequest);
-            
+
             //return json message           
             $arr = [
                 'success' => true,
@@ -134,7 +111,7 @@ class AccountResourceController extends Controller
                     'activity_name' => $result->activity_name,
                     'activity_type' => $result->activity_type,
                     'activity_content' => $result->activity_content,
-                    'activity_time' => $result->created_at,    
+                    'activity_time' => $result->created_at,
                 ],
             ];
             return response()->json($arr, Response::HTTP_CREATED);
@@ -145,13 +122,13 @@ class AccountResourceController extends Controller
      * Display the specified resource.
      */
     public function show(Account $account)
-    {      
+    {
         $arr = [
             'success' => true,
             'status_code' => 200,
             'message' => "Account has been found",
             'data' => new AccountResource($account),
-            ];
+        ];
         return response()->json($arr, Response::HTTP_OK);
     }
 
@@ -159,44 +136,45 @@ class AccountResourceController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Account $account)
-    {   
+    {
         //validate
         $input = $request->all();
-        $validator = Validator::make($input,[                       
+        $validator = Validator::make($input, [
             'role_id' => 'string|exists:roles,role_id',
             'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
             'email' => 'email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
-            'full_name' => 'string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',           
-            'date_of_birth' => 'date',           
+            'full_name' => 'string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',
+            'date_of_birth' => 'date',
         ]);
         //check validate
-        if( $validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
                 'message' => "Updated Account Failed",
-                'data' => $validator->errors()   
+                'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{           
+        } else {
             //update user
             $update = $account->update($input);
-            $user = Auth::guard('api')->user();                                                              
-            if($update){
+            $user = Auth::guard('api')->user();
+            if ($update) {
                 //save activity
                 $newRequest = (new RequestController)->makeActivityRequest(
                     'Account Updated',
                     'Account',
-                    'The user '. $user->username . (new RequestController)->makeActivityContent("Account Updated",$request) . $account->username .'.',
+                    'The user ' . $user->username . (new RequestController)->makeActivityContent("Account Updated", $request) . $account->username . '.',
                     $user->account_id,
-                    $user->username);               
+                    $user->username
+                );
                 $result = (new ActivityHistoryResourceController)->store($newRequest);
-                
+
                 //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
-                    'message' => "Updated successful",                   
+                    'message' => "Updated successful",
                     'data' => new AccountResource($account),
                     'activity' => [
                         'activity_name' => $result->activity_name,
@@ -206,12 +184,12 @@ class AccountResourceController extends Controller
                     ],
                 ];
                 return response()->json($arr, Response::HTTP_OK);
-            }else{
+            } else {
                 //failed message
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Updated Account Failed",                  
+                    'message' => "Updated Account Failed",
                     'data' => 'Failed!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
@@ -219,15 +197,16 @@ class AccountResourceController extends Controller
         }
     }
     //Reset password function
-    public function resetPassword(Request $request, Account $account){
+    public function resetPassword(Request $request, Account $account)
+    {
         //validate
         $input = $request->all();
-        $validator = Validator::make($input,[           
+        $validator = Validator::make($input, [
             'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            'password_confirm' => 'required|same:password|',          
+            'password_confirm' => 'required|same:password|',
         ]);
         //check validate
-        if($validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -235,36 +214,37 @@ class AccountResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{        
+        } else {
             //check old and new password are same?  
-            if(!Hash::check($request->password, $account->password)) {
+            if (!Hash::check($request->password, $account->password)) {
                 //update new password
                 $requestInput = new Request([
                     'password' => Hash::make($input['password'])
-                ]);               
-                $currentPassword = $account->password;    
-                $currentUser = $account->account_id;                     
+                ]);
+                $currentPassword = $account->password;
+                $currentUser = $account->account_id;
                 $update = $account->update($requestInput->all());
                 //check update
-                if($update){
+                if ($update) {
                     //save old password
                     $request = new Request([
-                        'reset_id' => 'RES'.Carbon::now()->format('dmyhis'),
+                        'reset_id' => 'RES' . Carbon::now()->format('dmyhis'),
                         'account_id' => $currentUser,
-                        'token' => $currentPassword,                   
-                    ]);                  
+                        'token' => $currentPassword,
+                    ]);
                     $result = (new PasswordResetResourceController)->store($request);
-                    
+
                     //save activity
                     $user = $request->user();
                     $newRequest = (new RequestController())->makeActivityRequest(
                         'Account Reset Password',
                         'Account',
-                        'The user '. $user->username . (new RequestController)->makeActivityContent("Account Reset Password",$request) . $account->username .'.',
+                        'The user ' . $user->username . (new RequestController)->makeActivityContent("Account Reset Password", $request) . $account->username . '.',
                         $user->account_id,
-                        $user->username);               
+                        $user->username
+                    );
                     $result = (new ActivityHistoryResourceController)->store($newRequest);
-                    
+
                     //return json message
                     $arr = [
                         'success' => true,
@@ -279,37 +259,36 @@ class AccountResourceController extends Controller
                         ],
                     ];
                     return response()->json($arr, Response::HTTP_CREATED);
-                }else{
+                } else {
                     $arr = [
                         'success' => false,
                         'status_code' => 200,
-                        'message' => "Updated Account Failed",                  
+                        'message' => "Updated Account Failed",
                         'data' => 'Failed!'
                     ];
                     return response()->json($arr, Response::HTTP_OK);
                 }
-            }
-            else{
+            } else {
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Reset Password Failed",                  
+                    'message' => "Reset Password Failed",
                     'data' => 'The new password cannot be the same as the old password.'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
-            }                   
+            }
         }
     }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request)
-    {   
-        $validator = Validator::make($request->all(),[                       
-            'users' => 'required|array',                       
+    {
+        $validator = Validator::make($request->all(), [
+            'users' => 'required|array',
         ]);
         //delete: update status -> 0        
-        if($validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -320,22 +299,23 @@ class AccountResourceController extends Controller
         }
         $users = $request->input('users');
         $userRequest = $request->user();
-        
-        foreach ($users as $user) {            
-            $delete =  DB::table('accounts')->where('account_id',$user)->update(['deleted_status' => true]);  
-            
+
+        foreach ($users as $user) {
+            $delete =  DB::table('accounts')->where('account_id', $user)->update(['deleted_status' => true]);
+
             //save acctivity
-            $account = Account::where('account_id',$user)->first();     
-            
+            $account = Account::where('account_id', $user)->first();
+
             $newRequest = (new RequestController)->makeActivityRequest(
                 'Account Deleted',
                 'Account',
-                'The user '. $userRequest->username . (new RequestController)->makeActivityContent("Account Deleted") . $account->username .'.',
+                'The user ' . $userRequest->username . (new RequestController)->makeActivityContent("Account Deleted") . $account->username . '.',
                 $userRequest->account_id,
-                $userRequest->username);               
+                $userRequest->username
+            );
             $result = (new ActivityHistoryResourceController)->store($newRequest);                // Thực hiện các xử lý cần thiết
         }
-         
+
         //return json message
         $arr = [
             'success' => true,
@@ -349,6 +329,6 @@ class AccountResourceController extends Controller
                 'activity_time' => $result->created_at,
             ],
         ];
-        return response()->json($arr, Response::HTTP_NO_CONTENT);                
-    }   
+        return response()->json($arr, Response::HTTP_NO_CONTENT);
+    }
 }
