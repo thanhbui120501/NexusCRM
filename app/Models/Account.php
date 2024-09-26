@@ -36,6 +36,7 @@ class Account extends Authenticatable
         'image_name',
         'date_of_birth',
         'role_id',
+        'created_by',
         'created_at',
         'updated_at',
         'status',

@@ -7,7 +7,7 @@ use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountResource extends JsonResource
+class CreatedByResource extends JsonResource
 {
     /**
      * Indicates if the resource's collection keys should be preserved.
@@ -23,10 +23,7 @@ class AccountResource extends JsonResource
     public function toArray(Request $request): array
     {
         //return parent::toArray($request);
-        $role = Role::where('role_id',$this->role_id)->get();
-        if($this->account_id != null){
-            $account = Account::where('account_id',$this->created_by)->get();
-        }
+        $role = Role::where('role_id',$this->role_id)->get();        
         
         return [
             'account_id' => $this->account_id,
@@ -37,7 +34,6 @@ class AccountResource extends JsonResource
             'image_name' => $this->image_name,      
             'date_of_birth' => $this->date_of_birth,
             'role' => RoleResource::collection($role),     
-            'created_by' => $this->created_by != null ? CreatedByResource::collection($account) : $this->created_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'status' => $this->status == 1 ? true : false,            

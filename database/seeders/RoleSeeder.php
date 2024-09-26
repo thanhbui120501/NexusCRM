@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+
 class RoleSeeder extends Seeder
 {
     /**
@@ -16,10 +17,11 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         DB::table('roles')->insert([
-            'role_id' => 'R'.Carbon::now()->format('dmyhis'),
-            'role_name' => 'Admin',
-            'description' => 'abc',
-                      
+            'role_id' => 'R' . Carbon::now()->format('dmyhis'),
+            'role_name' => 'Quản lí',
+            'description' => 'Quản lí hệ thống',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }

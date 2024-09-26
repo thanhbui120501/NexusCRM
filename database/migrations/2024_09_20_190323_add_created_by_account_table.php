@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->boolean('deleted_status')->default(false); // Thêm cột status
+            $table->string('created_by',20)->nullable();
+            $table->foreign('created_by')->references('account_id')->on('accounts');
         });
     }
    

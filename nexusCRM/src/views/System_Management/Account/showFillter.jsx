@@ -1,85 +1,133 @@
-// eslint-disable-next-line react/prop-types
-export default function ShowFillter({ onData, onCloseFillter }) {
-    const getData = (val) => {
-        onData(val);
-    };
+/* eslint-disable react/prop-types */
+import { useState } from "react";
+
+// eslint-disable-next-line no-unused-vars
+export default function ShowFillter({ onData, onCloseFillter, listFillter }) {
+    const timeFillter = listFillter.find((filter) => filter.type === 'time');
+    const roleFillter = listFillter.find((fillter) => fillter.type === 'role');
+    //get list Role
+    const [listRole] = useState(roleFillter?roleFillter.searchBy:[]);
+    const [listRoleItem] = useState(listRole[0]);
+    //get list time
+    const [listTime] = useState(timeFillter?timeFillter.searchBy:[]);
+    const [listTimeItem] = useState(listTime[0]);
+
+    const getTitileSearchBy = (by) => {
+        switch(by){
+            case 'time': return 'Tạo vào';
+            case 'role': return 'Tạo bởi';
+            default: 'Không xác định';
+        }
+    }
+    const getSubTitileSearchBy = (by) => {
+        switch(by){
+            case 'time': return listTimeItem;
+            case 'role': return listRoleItem;
+            default: 'Không xác định';
+        }
+    }
+    const getThirdTitleSearchBy = (by) => {
+        switch(by){
+            case 'time':{
+                if(timeFillter){
+                    if(timeFillter==='Khoảng'){
+                        return timeFillter.time + " " + timeFillter.time;
+                    }else{
+                        return timeFillter.time;
+                    }
+                }else{
+                    return '';
+                }
+            } 
+            case 'role': return listRoleItem;
+            default: 'Không xác định';
+        }
+    }
+    // const getData = (val) => {
+    //     onData(val);
+    // };
 
     const handleCloseFillter = (val) => {
         onCloseFillter(val);
     };
+
     return (
         <div className="absolute fillter flex flex-col p-3 items-start gap-2 border rounded-xl bg-[#FFF] shadow-[0px 4px 8px 0px] ">
             <div className="flex flex-col items-start gap-2">
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-3">
-                        <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
-                            <div className="flex flex-col items-start gap-1.5 self-stretch">
-                                <div className="flex px-3 py-2 items-center gap-2 self-stretch">
-                                    {/* <input
+                {listFillter.map((fillter, index) => (
+                    
+                    <div key={index} className="flex items-center gap-3">
+                        <div className="flex items-center gap-3">
+                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
+                                <div className="flex flex-col items-start gap-1.5 self-stretch">
+                                    <div className="flex px-3 py-2 items-center gap-2 self-stretch">
+                                        {/* <input
                                         type="text"
                                         className="flex items-center gap-0.5 flex-1 font-normal text-base text-gray-900"
                                     /> */}
-                                    <div className="w-[180px] min-w-0 flex items-center">
+                                        <div className="w-[180px] min-w-0 flex items-center">
+                                            <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                {getTitileSearchBy(fillter.type)}
+                                            </h1>
+                                        </div>
+
+                                        <div className="flex w-4 h-5 flex-col justify-center items-center gap-2.5">
+                                            <img
+                                                src="/icons/statis_more_icon.svg"
+                                                alt="icon-selected"
+                                                className={`flex flec-col justify-center w-5 h-5 rotate-90 cursor-pointer`}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
+                                <div className="flex flex-col items-start gap-1.5 self-stretch">
+                                    <div className="flex px-3 py-2 items-center gap-2 self-stretch min-w-[0]">
+                                        {/* <input
+                                        type="text"
+                                        className="flex items-center gap-0.5 flex-1 font-normal text-base text-gray-900"
+                                    /> */}
                                         <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
-                                            Tạo vào
+                                            {getSubTitileSearchBy(fillter.type)}
                                         </h1>
                                     </div>
-
-                                    <div className="flex w-4 h-5 flex-col justify-center items-center gap-2.5">
-                                        <img
-                                            src="/icons/statis_more_icon.svg"
-                                            alt="icon-selected"
-                                            className={`flex flec-col justify-center w-5 h-5 rotate-90 cursor-pointer`}
-                                        />
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
-                            <div className="flex flex-col items-start gap-1.5 self-stretch">
-                                <div className="flex px-3 py-2 items-center gap-2 self-stretch min-w-[0]">
-                                    {/* <input
+                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
+                                <div className="flex flex-col items-start gap-1.5 self-stretch">
+                                    <div className="flex px-3 py-2 items-center gap-2 self-stretch">
+                                        {/* <input
                                         type="text"
                                         className="flex items-center gap-0.5 flex-1 font-normal text-base text-gray-900"
                                     /> */}
-                                    <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
-                                        Khoảng
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
-                            <div className="flex flex-col items-start gap-1.5 self-stretch">
-                                <div className="flex px-3 py-2 items-center gap-2 self-stretch">
-                                    {/* <input
-                                        type="text"
-                                        className="flex items-center gap-0.5 flex-1 font-normal text-base text-gray-900"
-                                    /> */}
-                                    <div className="w-[180px] min-w-0 flex items-center">
-                                        <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
-                                            12/05/2001
-                                        </h1>
-                                    </div>
+                                        <div className="w-[180px] min-w-0 flex items-center">
+                                            <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                {getThirdTitleSearchBy(fillter.type)}
+                                            </h1>
+                                        </div>
 
-                                    <div className="flex w-5 h-5 flex-col justify-center items-center gap-2.5 ">
-                                        <img
-                                            src="/icons/calendar.svg"
-                                            alt="icon-selected"
-                                            className={`flex flec-col justify-center w-5 h-5 rotate-90 cursor-pointer `}
-                                        />
+                                        <div className="flex w-5 h-5 flex-col justify-center items-center gap-2.5 ">
+                                            <img
+                                                src="/icons/calendar.svg"
+                                                alt="icon-selected"
+                                                className={`flex flec-col justify-center w-5 h-5 rotate-90 cursor-pointer `}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div className="flex flex-col justify-center items-center gap-2.5 w-4 h-4 cursor-pointer">
+                            <img
+                                src="/icons/xmark.svg"
+                                alt="delete-x"
+                                className={`flex flec-col justify-center`}
+                            />
+                        </div>
                     </div>
-                    <div className="flex flex-col justify-center items-center gap-2.5 w-4 h-4 cursor-pointer">
-                        <img
-                            src="/icons/xmark.svg"
-                            alt="delete-x"
-                            className={`flex flec-col justify-center`}
-                        />
-                    </div>
-                </div>
+                ))}
+                
             </div>
             <div className="flex py-2 flex-col items-start gap-2.5 w-[88px]">
                 <div className="flex justify-center items-center self-stretch gap-y-0.5 cursor-pointer">
