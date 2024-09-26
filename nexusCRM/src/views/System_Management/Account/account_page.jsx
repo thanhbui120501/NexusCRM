@@ -21,6 +21,22 @@ export default function Account() {
     //show fillter
     const [openFillter, setOpenFillter] = useState(false);
 
+    // eslint-disable-next-line no-unused-vars
+    const [listFillter, setListFillter] = useState([
+        {
+            type: "time",
+            searchBy: ['Khoảng', 'Ngày'],
+            time: new Date().toLocaleDateString("vi-VN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            }),
+        },
+        {
+            type:"role",
+            searchBy:['Admin','Giám đốc'],
+        }
+    ]);
     //callback from showfillter
     const callbackFillTer = (val) => {
         setOpenFillter(val);
@@ -286,11 +302,12 @@ export default function Account() {
         }
         return pages;
     };
+
     //get statrindex in table
     const startIndex = (currentPage - 1) * showRowNumber + 1;
 
     return (
-        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6">
+        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2">
                     <h1 className="self-stretch text-gray-900 font-semibold text-3xl">
@@ -327,7 +344,7 @@ export default function Account() {
                         />
                     </div>
                     {openFillter && (
-                        <ShowFillter onCloseFillter={callbackFillTer} />
+                        <ShowFillter onCloseFillter={callbackFillTer} listFillter={listFillter}/>
                     )}
                     {selectedUsers.length == 0 ? (
                         <div className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 cursor-pointer onClick={()=>{}}">
@@ -368,7 +385,7 @@ export default function Account() {
             </div>
             {
                 <div className="flex pb-6 pl-6 pr-6 flex-col items-start gap-3 self-stretch">
-                    <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto max-h-[400px] max-w-full">
+                    <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto  max-w-full">
                         <table className="w-full table-fixed bg-white ">
                             <thead className="rounded-t-lg sticky top-0 z-10">
                                 <tr className="bg-gray-50 text-gray-500 text-sm font-medium">

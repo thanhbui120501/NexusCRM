@@ -11,6 +11,7 @@ use App\Http\Controllers\WarehouseResourceController;
 use App\Http\Controllers\PasswordResetResourceController;
 use App\Http\Controllers\PromotionTypeResourceController;
 use App\Http\Controllers\PromotionResourceController;
+use App\Http\Controllers\SearchResourceController;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +55,9 @@ Route::group(['prefix' => 'v1'], function () {
             });
             Route::controller(PasswordResetResourceController::class)->group(function () {
                 Route::post('/password-reset/get-all-password-reset', 'index')->name('api.password.reset.index'); //get all password reset  
+            });
+            Route::controller(SearchResourceController::class)->group(function () {
+                Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
             });
         });
 

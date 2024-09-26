@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('full_name',50)->nullable();           
             $table->date('date_of_birth')->nullable();
             $table->string('role_id',20);
-            $table->foreign('role_id',20)->references('role_id')->on('roles');
+            $table->foreign('role_id',20)->references('role_id')->on('roles');                       
             $table->rememberToken();
             $table->timestamps();
+            $table->boolean('deleted_status')->default(false);
             $table->tinyInteger('status')->default(1);
         });
 
@@ -32,10 +33,10 @@ return new class extends Migration
             $table->string('history_id',20);
             $table->string('account_id',20);
             $table->foreign('account_id')->references('account_id')->on('accounts');
-            $table->dateTime('login_time');
-            $table->dateTime('logout_time');
-            $table->string('ip_address',50);
-            $table->string('device_name',50);
+            $table->dateTime('login_time')->nullable();
+            $table->dateTime('logout_time')->nullable();
+            $table->string('ip_address',50)->nullable();
+            $table->string('device_name',50)->nullable();
             $table->timestamps();
             $table->tinyInteger('status')->default(1);
         });
