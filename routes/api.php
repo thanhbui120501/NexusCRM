@@ -58,6 +58,7 @@ Route::group(['prefix' => 'v1'], function () {
             });
             Route::controller(SearchResourceController::class)->group(function () {
                 Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
+                Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
             });
         });
 

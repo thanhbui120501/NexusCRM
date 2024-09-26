@@ -122,10 +122,10 @@ export default function Header() {
                             />
                         </div>
                         <div className="flex flex-col items-start w-[126px] gap-[2px]">
-                            <h1 className="self-stretch text-sm font-medium text-gray-900">
+                            <h1 className="self-stretch text-sm font-medium text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
                                 {localUser.full_name}
                             </h1>
-                            <h1 className="self-stretch text-xs font-medium text-gray-400">
+                            <h1 className="self-stretch text-xs font-medium text-gray-400 text-ellipsis whitespace-nowrap overflow-hidden">
                                 {localUser.email}
                             </h1>
                         </div>
