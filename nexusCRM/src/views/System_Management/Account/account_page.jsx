@@ -20,12 +20,12 @@ export default function Account() {
     const [currentPage, setCurrentPage] = useState(1);
     //show fillter
     const [openFillter, setOpenFillter] = useState(false);
-
+    const [listAdmin, setListAdmin] = useState([]);
     // eslint-disable-next-line no-unused-vars
     const [listFillter, setListFillter] = useState([
         {
             type: "time",
-            searchBy: ['Khoảng', 'Ngày'],
+            searchBy: ["Ngày", "Khoảng"],
             time: new Date().toLocaleDateString("vi-VN", {
                 day: "2-digit",
                 month: "2-digit",
@@ -33,10 +33,24 @@ export default function Account() {
             }),
         },
         {
-            type:"role",
-            searchBy:['Admin','Giám đốc'],
-        }
+            type: "role",
+            searchBy: ["Admin", "Giám đốc"],
+        },
     ]);
+    //callback data fillter
+    const [dataCallback, onCallBackDataFillter] = useState({
+        startD: null,
+        endD: null,
+        account_id: null,
+    });
+
+    const onCallbackFillter = (val) => {
+        onCallBackDataFillter({
+            startD: val.startD,
+            endD: val.endD,
+            account_id: val.id,
+        });
+    };
     //callback from showfillter
     const callbackFillTer = (val) => {
         setOpenFillter(val);
@@ -85,7 +99,30 @@ export default function Account() {
         }
         setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
     };
-
+    const getFillterData = async () =>{
+        try {           
+            const response = await axiosClient.get("/account/account-fillter",{               
+                params:{
+                    start_date: dataCallback.startD,
+                    end_date: dataCallback.end_date,
+                    created_by: dataCallback.account_id
+                }
+            });
+            setUsers(response.data.data);
+        } catch (err) {
+            const response = err.response;
+            console.log(response.message);
+        }
+    }
+    const getListAdmin = async () => {
+        try {
+            const response = await axiosClient.get("/account/get-list-admin");
+            setListAdmin(response.data.data);
+        } catch (err) {
+            const response = err.response;
+            console.log(response.message);
+        }
+    };
     const getUsers = async (page, limit) => {
         try {
             const offset = (page - 1) * limit;
@@ -130,6 +167,7 @@ export default function Account() {
     //get user by number row
     useEffect(() => {
         getUsers(currentPage, showRowNumber);
+        getListAdmin();
     }, [currentPage, showRowNumber]);
     // if (loading) return <p>Loading...</p>;
     // if (error) return <p>Error: {error}</p>;
@@ -158,7 +196,7 @@ export default function Account() {
     const renderPagination = () => {
         const pages = [];
 
-        if (totalPages <= 4) {
+        if (totalPages <= 5) {
             for (let i = 1; i <= totalPages; i++) {
                 pages.push(
                     <button
@@ -176,8 +214,8 @@ export default function Account() {
                 );
             }
         } else {
-            if (currentPage < 4) {
-                for (let i = 1; i <= 4; i++) {
+            if (currentPage <= 4) {
+                for (let i = 1; i <= 5; i++) {
                     pages.push(
                         <button
                             key={i}
@@ -195,7 +233,7 @@ export default function Account() {
                 }
                 pages.push(
                     <div
-                        key={0}
+                        key={"more_0"}
                         className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
                         type="text"
                     >
@@ -219,7 +257,99 @@ export default function Account() {
                     </button>
                 );
             } else {
-                if (currentPage == totalPages) {
+                if (currentPage > totalPages - 5) {
+                    pages.push(
+                        <button
+                            key={1}
+                            className={`flex ${
+                                currentPage === 1
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            }
+                                
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(1)}
+                        >
+                            {1}
+                        </button>
+                    );
+                    pages.push(
+                        <div
+                            key={"more_1"}
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            type="text"
+                        >
+                            ...
+                        </div>
+                    );
+                    for (let i = totalPages - 4; i <= totalPages; i++) {
+                        pages.push(
+                            <button
+                                key={i}
+                                className={`flex ${
+                                    currentPage === i
+                                        ? "bg-gray-900 text-white"
+                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                type="button"
+                                onClick={() => handlePageChange(i)}
+                            >
+                                {i}
+                            </button>
+                        );
+                    }
+                } else {
+                    pages.push(
+                        <button
+                            key={1}
+                            className={`flex ${
+                                currentPage === 1
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            }
+                                
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(1)}
+                        >
+                            {1}
+                        </button>
+                    );
+                    pages.push(
+                        <div
+                            key={"more_2"}
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            type="text"
+                        >
+                            ...
+                        </div>
+                    );
+                    for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                        pages.push(
+                            <button
+                                key={i}
+                                className={`flex ${
+                                    currentPage === i
+                                        ? "bg-gray-900 text-white"
+                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                type="button"
+                                onClick={() => handlePageChange(i)}
+                            >
+                                {i}
+                            </button>
+                        );
+                    }
+                    pages.push(
+                        <div
+                            key={"more_3"}
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            type="text"
+                        >
+                            ...
+                        </div>
+                    );
                     pages.push(
                         <button
                             key={totalPages}
@@ -227,76 +357,13 @@ export default function Account() {
                                 currentPage === totalPages
                                     ? "bg-gray-900 text-white"
                                     : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            }
-                                
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(totalPages)}
                         >
                             {totalPages}
                         </button>
                     );
-                } else {
-                    if (currentPage >= totalPages - 3) {
-                        for (let i = totalPages - 3; i <= totalPages; i++) {
-                            pages.push(
-                                <button
-                                    key={i}
-                                    className={`flex ${
-                                        currentPage === i
-                                            ? "bg-gray-900 text-white"
-                                            : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                    } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
-                                    type="button"
-                                    onClick={() => handlePageChange(i)}
-                                >
-                                    {i}
-                                </button>
-                            );
-                        }
-                    } else {
-                        for (let i = currentPage; i <= currentPage + 3; i++) {
-                            pages.push(
-                                <button
-                                    key={i}
-                                    className={`flex ${
-                                        currentPage === i
-                                            ? "bg-gray-900 text-white"
-                                            : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                    } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
-                                    type="button"
-                                    onClick={() => handlePageChange(i)}
-                                >
-                                    {i}
-                                </button>
-                            );
-                        }
-                        pages.push(
-                            <div
-                                key={0}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
-                                type="text"
-                            >
-                                ...
-                            </div>
-                        );
-                        pages.push(
-                            <button
-                                key={totalPages}
-                                className={`flex ${
-                                    currentPage === totalPages
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                }
-                                    
-                                 w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
-                                type="button"
-                                onClick={() => handlePageChange(totalPages)}
-                            >
-                                {totalPages}
-                            </button>
-                        );
-                    }
                 }
             }
         }
@@ -344,7 +411,12 @@ export default function Account() {
                         />
                     </div>
                     {openFillter && (
-                        <ShowFillter onCloseFillter={callbackFillTer} listFillter={listFillter}/>
+                        <ShowFillter
+                            onCloseFillter={callbackFillTer}
+                            listFillter={listFillter}
+                            listAdmin={listAdmin}
+                            onData = {onCallbackFillter}
+                        />
                     )}
                     {selectedUsers.length == 0 ? (
                         <div className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 cursor-pointer onClick={()=>{}}">
