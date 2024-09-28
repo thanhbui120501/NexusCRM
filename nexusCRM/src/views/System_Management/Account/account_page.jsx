@@ -3,7 +3,13 @@ import ShowDataDropDown from "./showDataDropdown";
 import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
 import ShowFillter from "./showFillter";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 export default function Account() {
+    //change url with no reload
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    //
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
@@ -21,6 +27,7 @@ export default function Account() {
     //show fillter
     const [openFillter, setOpenFillter] = useState(false);
     const [listAdmin, setListAdmin] = useState([]);
+    const [isSubmitFillter, submitFillter] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [listFillter, setListFillter] = useState([
         {
@@ -99,21 +106,42 @@ export default function Account() {
         }
         setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
     };
-    const getFillterData = async () =>{
-        try {           
-            const response = await axiosClient.get("/account/account-fillter",{               
-                params:{
-                    start_date: dataCallback.startD,
-                    end_date: dataCallback.end_date,
-                    created_by: dataCallback.account_id
+    const callbackSubmitfillter = (val) => {
+        submitFillter(val);
+    };
+    const getUserByKeyword = async () => {
+        if (!keywordFromUrl || keywordFromUrl == "") return;
+        try {
+            const response = await axiosClient.get(
+                "/account/search-by-keyword",
+                {
+                    params: {
+                        keyword: keywordFromUrl,
+                    },
                 }
-            });
+            );
             setUsers(response.data.data);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
         }
-    }
+    };
+    const getFillterData = async () => {
+        try {
+            const response = await axiosClient.get("/account/account-fillter", {
+                params: {
+                    start_date: dataCallback.startD,
+                    end_date: dataCallback.end_date,
+                    created_by: dataCallback.account_id,
+                },
+            });
+            submitFillter(false);
+            setUsers(response.data.data);
+        } catch (err) {
+            const response = err.response;
+            console.log(response.message);
+        }
+    };
     const getListAdmin = async () => {
         try {
             const response = await axiosClient.get("/account/get-list-admin");
@@ -164,6 +192,16 @@ export default function Account() {
             console.log(response.message);
         }
     };
+    // Lấy keyword từ URL (nếu có)
+    const keywordFromUrl = searchParams.get("keyword") || "";
+    useEffect(() => {
+        getUserByKeyword();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [keywordFromUrl]);
+    useEffect(() => {
+        isSubmitFillter && getFillterData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSubmitFillter]);
     //get user by number row
     useEffect(() => {
         getUsers(currentPage, showRowNumber);
@@ -172,8 +210,15 @@ export default function Account() {
     // if (loading) return <p>Loading...</p>;
     // if (error) return <p>Error: {error}</p>;
 
-    //const currentItems = users.slice((currentPage - 1) * 20, currentPage * 20);
-
+    //change url
+    const handleSearch = (keyword) => {
+        // Cập nhật URL với keyword trong query string
+        if (keyword.trim()) {
+            navigate(`?keyword=${keyword}`);
+        } else {
+            navigate("/account"); // Nếu không có keyword, điều hướng về trang chính
+        }
+    };
     const handlePageChange = (page) => {
         if (page !== currentPage) {
             // Kiểm tra để tránh vòng lặp vô hạn
@@ -193,6 +238,9 @@ export default function Account() {
         }
     };
 
+    const handleNavigation = (path) => {
+        navigate(path);
+    };
     const renderPagination = () => {
         const pages = [];
 
@@ -390,11 +438,15 @@ export default function Account() {
                             src="/icons/search.svg"
                             alt="icon-search"
                             className={`w-5 h-5 cursor-pointer`}
-                            onClick={() => {}}
+                            onClick={() => {
+                                handleSearch(keywordFromUrl);
+                            }}
                         />
                         <div className="flex items-center gap-[2px] ml-2 flex-1">
                             <input
                                 type="text"
+                                value={keywordFromUrl}
+                                onChange={(e) => handleSearch(e.target.value)}
                                 placeholder="Tìm kiếm tài khoản"
                             />
                         </div>
@@ -415,11 +467,17 @@ export default function Account() {
                             onCloseFillter={callbackFillTer}
                             listFillter={listFillter}
                             listAdmin={listAdmin}
-                            onData = {onCallbackFillter}
+                            onData={onCallbackFillter}
+                            onSubmit={callbackSubmitfillter}
                         />
                     )}
                     {selectedUsers.length == 0 ? (
-                        <div className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 cursor-pointer onClick={()=>{}}">
+                        <div
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 cursor-pointer"
+                            onClick={() => {
+                                handleNavigation("/account/create");
+                            }}
+                        >
                             <div className="flex w-5 h-5 flex-col justify-center  ">
                                 <img
                                     src="/icons/addnew.svg"
@@ -499,6 +557,11 @@ export default function Account() {
                                 {users.map((user, index) => (
                                     <tr
                                         key={user.account_id}
+                                        onDoubleClick={() => {
+                                            handleNavigation(
+                                                `/account/${user.account_id}`
+                                            );
+                                        }}
                                         className={`border-b border-gray-200 hover:bg-orange-100 ${
                                             selectedUsers.includes(
                                                 user.account_id

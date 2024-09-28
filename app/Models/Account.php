@@ -32,7 +32,7 @@ class Account extends Authenticatable
         'user_token',
         'email',
         'phone_number',
-        'full_name',       
+        'full_name',
         'image_name',
         'date_of_birth',
         'role_id',
@@ -48,9 +48,9 @@ class Account extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',    
+        'password',
         'remember_token',
-        'user_token'        
+        'user_token'
     ];
 
     /**
@@ -60,9 +60,12 @@ class Account extends Authenticatable
      */
     protected function casts(): array
     {
-        return [           
-            'password' => 'hashed',        
+        return [
+            'password' => 'hashed',
         ];
     }
-    
+    public function roles()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }

@@ -68,4 +68,25 @@ class SearchResourceController extends Controller
         ];
         return response()->json($arr, Response::HTTP_OK);
     }
+    public function searchUserByKeyWord(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $accounts = Account::where('username', 'like', "%{$keyword}%")
+            ->orWhere('phone_number', 'like', "%{$keyword}%")
+            ->orWhere('full_name', 'like', "%{$keyword}%")
+            ->orWhere('email', 'like', "%{$keyword}%")
+            ->orWhereHas('roles', function ($query) use ($keyword) {
+                $query->where('role_name', 'like', "%{$keyword}%");
+            })
+            ->get();
+
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "List of accounts result",
+            'data' => AccountResource::collection($accounts)
+        ];
+        return response()->json($arr, Response::HTTP_OK);
+    }
 }
