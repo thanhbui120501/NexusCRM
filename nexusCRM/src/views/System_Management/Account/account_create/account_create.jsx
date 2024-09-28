@@ -1,10 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { vi } from "date-fns/locale";
 import { format } from "date-fns";
 import DatePicker from "react-datepicker";
 import axiosClient from "../../../../axiosClient";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
 
 export default function AccountCreate() {
+    //set navigate
+    const navigate = useNavigate();
+    //set form ref
+    const formRef = useRef(null);
     //set avartar display
     const [avatar, setAvatar] = useState("/icons/avatar_empty.svg");
     //set image file
@@ -23,11 +30,17 @@ export default function AccountCreate() {
     const [openCalendar, setOpenCalendar] = useState(false);
     //set Role
     const [role, setRole] = useState([]);
-    const [roleItem, setRoleItem] = useState("");
+    const [roleItem, setRoleItem] = useState({});
     //set email
     const [email, setEmail] = useState("");
     //set phone number
     const [phoneNumber, setPhoneNumber] = useState("");
+    //get list username, phone number and email to validate
+    const [listUsername, getListUsername] = useState([]);
+    const [listEmail, getListEmail] = useState([]);
+    const [listPhoneNumber, getListPhoneNumber] = useState([]);
+    // Error states for validation
+    const [errors, setErrors] = useState({});
     //handlde date change
     const handleDateChange = (date) => {
         setBirthDay(date); // Cập nhật ngày sinh
@@ -52,23 +65,117 @@ export default function AccountCreate() {
             }
         }
     };
+
+    //phone number input only number
+    const handleKeyDown = (e) => {
+        if (!/[0-9]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
+            e.preventDefault();
+        }
+    };
     //get role
     useEffect(() => {
         getRoles();
-    });
+        getListUsernameEmailPhoneNumber();
+    }, []);
     const getRoles = async () => {
         try {
             const response = await axiosClient.get("/role/get-all-role");
             setRole(response.data.data);
-            setRoleItem(role ? role[0] : "");
+            setRoleItem(response.data.data ? response.data.data[0] : "");
         } catch (err) {
             const response = err.response;
             console.log(response.message);
         }
     };
+    const getListUsernameEmailPhoneNumber = async () => {
+        try {
+            const response = await axiosClient.get(
+                "/account/get-username-email-phone"
+            );
+            getListEmail(response.data.emails);
+            getListUsername(response.data.usernames);
+            getListPhoneNumber(response.data.phone_numbers);
+        } catch (err) {
+            const response = err.response;
+            console.log(response.message);
+        }
+    };
+    //Submit form
+    const onSubmit = async (ev) => {
+        ev.preventDefault();
+        try {
+            const validationErrors = Validation({
+                image: image,
+                username: username,
+                password: password,
+                fullname: fullname,
+                birthDay: birthDay,
+                email: email,
+                phone: phoneNumber,
+                listEmail: listEmail,
+                listPhoneNumber: listPhoneNumber,
+                listUsername: listUsername,
+            });
+            setErrors(validationErrors);
+            if (!validationErrors.status) {
+                toast.error("Vui lòng nhập đúng và đầy đủ thông tin", {
+                    position: "top-right",
+                    autoClose: 5000, // thời gian tự động đóng (mili giây)
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+                });
+                return;
+            }
+            const data = new FormData();
+            data.append("username", username);
+            data.append("password", password);
+            data.append("password_confirm", password);
+            data.append("role_id", roleItem.role_id);
+            data.append("full_name", fullname);
+            data.append("images", image);
+            data.append("email", email);
+            data.append("date_of_birth", format(birthDay, "yyyy-MM-dd"));
+            data.append("phone_number", phoneNumber);
+
+            const response = await axiosClient.post(
+                "account/create-new-account",
+                data
+            );
+            if (response.data.status_code === 201) {
+                toast.success("Tạo mới tài khoản thành công!", {
+                    position: "top-right",
+                    autoClose: 5000, // thời gian tự động đóng (mili giây)
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+                });
+                setTimeout(() => {
+                    navigate('/account');
+                }, 5000); 
+            }
+        // eslint-disable-next-line no-unused-vars
+        } catch (err) {
+            toast.error("Đã có lỗi xảy ra khi tạo tài khoản", {
+                position: "top-right",
+                autoClose: 5000, // thời gian tự động đóng (mili giây)
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+            });
+        }
+    };
+    //HandleExternalSubmit
+    const handleExternalSubmit = () => {
+        formRef.current.dispatchEvent(new Event("submit", { bubbles: true }));
+    };
     return (
         <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch overflow-y-auto overflow-x-hidden">
-            <div className="flex p-6 flex-col items-start gap-3 self-stretch">
+            <ToastContainer />
+            <div className="flex pl-6 pr-6 pb-6 pt-3 flex-col items-start gap-3 self-stretch">
                 <div className="flex justify-between items-end self-stretch">
                     <div className="flex flex-col items-start gap-2 flex-1">
                         <h1 className="font-semibold text-3xl text-[#171717]">
@@ -78,8 +185,11 @@ export default function AccountCreate() {
                             Thêm mới tài khoản để sẵn sàng sử dụng website
                         </h1>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-[#EA580C] rounded-lg cursor-pointer">
+                    <div
+                        className="flex items-center gap-3 cursor-pointer"
+                        onClick={handleExternalSubmit}
+                    >
+                        <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-[#EA580C] rounded-lg hover:bg-[#C2410C]">
                             <img
                                 src="/icons/save.svg"
                                 alt="save"
@@ -94,8 +204,10 @@ export default function AccountCreate() {
             </div>
             <div className="flex px-6 pb-6 flex-col items-start gap-6 self-stretch">
                 <form
-                    className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200"
+                    ref={formRef}
+                    className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-gray-200"
                     encType="multipart/form-data"
+                    onSubmit={onSubmit}
                 >
                     <h1 className="text-xl font-semibold text-[#171717]">
                         Thông tin tài khoản
@@ -113,7 +225,7 @@ export default function AccountCreate() {
                                         avatar === "/icons/avatar_empty.svg" &&
                                         "p-6"
                                     } items-center gap-2.5 rounded-lg border ${
-                                        errorMessage
+                                        errorMessage || errors.image
                                             ? "border-[#DC2626]"
                                             : "border-gray-200"
                                     }  border-dashed h-[68px] w-[68px]`}
@@ -137,7 +249,7 @@ export default function AccountCreate() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#171717] px-3 py-2 justify-center"
+                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#171717] px-3 py-2 justify-center hover:bg-[#262626]"
                                         onClick={() =>
                                             document
                                                 .getElementById("avatarInput")
@@ -157,9 +269,12 @@ export default function AccountCreate() {
                                     />
                                     <div
                                         className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#fff] px-3 py-2 justify-center border border-[#E5E5E5]"
-                                        onClick={() =>
-                                            setAvatar("/icons/avatar_empty.svg")
-                                        }
+                                        onClick={() => {
+                                            setAvatar(
+                                                "/icons/avatar_empty.svg"
+                                            );
+                                            setImage(null);
+                                        }}
                                     >
                                         <h1 className="font-semibold text-xs text-[#171717]">
                                             Xóa ảnh
@@ -167,14 +282,18 @@ export default function AccountCreate() {
                                     </div>
                                 </div>
                             </div>
-
-                            {errorMessage && (
-                                <div className="flex flex-col items-start gap-2.5 self-stretch">
-                                    <h1 className="font-medium text-sm text-[#DC2626]">
-                                        {errorMessage}
-                                    </h1>
-                                </div>
-                            )}
+                            <div
+                                className={`flex flex-col items-start gap-2.5 self-stretch ${
+                                    errorMessage || errors.image
+                                        ? "visible"
+                                        : "invisible"
+                                }`}
+                            >
+                                <h1 className="font-medium text-sm text-[#DC2626]">
+                                    {errorMessage && errorMessage}
+                                    {errors.image && errors.image}
+                                </h1>
+                            </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
@@ -182,7 +301,13 @@ export default function AccountCreate() {
                             <h1 className="font-medium text-sm text-[#171717]">
                                 Tên tài khoản
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
+                                    errors.username
+                                        ? "border-[#DC2626]"
+                                        : "border-[#E5E5E5]"
+                                }`}
+                            >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         type="text"
@@ -195,12 +320,31 @@ export default function AccountCreate() {
                                     />
                                 </div>
                             </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] ${
+                                    errors.username ? "visible" : "invisible"
+                                }`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    {errors.username
+                                        ? errors.username
+                                        : "username"}
+                                </h1>
+                            </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
                             <h1 className="font-medium text-sm text-[#171717]">
                                 Mật khẩu
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
+                                    errors.password
+                                        ? "border-[#DC2626]"
+                                        : "border-[#E5E5E5]"
+                                } `}
+                            >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         type={
@@ -229,6 +373,19 @@ export default function AccountCreate() {
                                     }
                                 />
                             </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] ${
+                                    errors.password ? "visible" : "invisible"
+                                }`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    {errors.password
+                                        ? errors.password
+                                        : "password"}
+                                </h1>
+                            </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
@@ -236,7 +393,13 @@ export default function AccountCreate() {
                             <h1 className="font-medium text-sm text-[#171717]">
                                 Tên nhân viên
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
+                                    errors.fullname
+                                        ? "border-[#DC2626]"
+                                        : "border-[#E5E5E5]"
+                                } `}
+                            >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         type="text"
@@ -249,12 +412,31 @@ export default function AccountCreate() {
                                     />
                                 </div>
                             </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] ${
+                                    errors.fullname ? "visible" : "invisible"
+                                }`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    {errors.fullname
+                                        ? errors.fullname
+                                        : "fullname"}
+                                </h1>
+                            </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
                             <h1 className="font-medium text-sm text-[#171717]">
                                 Ngày sinh
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5] relative">
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
+                                    errors.birthDay
+                                        ? "border-[#DC2626]"
+                                        : "border-[#E5E5E5]"
+                                } relative`}
+                            >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         type="text"
@@ -290,6 +472,19 @@ export default function AccountCreate() {
                                     </div>
                                 )}
                             </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] ${
+                                    errors.birthDay ? "visible" : "invisible"
+                                }`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    {errors.birthDay
+                                        ? errors.birthDay
+                                        : "birthday"}
+                                </h1>
+                            </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
@@ -301,14 +496,18 @@ export default function AccountCreate() {
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
                                         className="w-full font-medium text-sm text-[#171717]"
-                                        onChange={(e) =>
-                                            setRoleItem(e.target.value)
-                                        }
+                                        onChange={(e) => {
+                                            const selectedRole = role.find(
+                                                (r) =>
+                                                    r.role_id === e.target.value
+                                            );
+                                            setRoleItem(selectedRole);
+                                        }}
                                     >
                                         {role.map((option, index) => (
                                             <option
                                                 key={index}
-                                                value={option.value}
+                                                value={option.role_id}
                                             >
                                                 {option.role_name}
                                             </option>
@@ -316,15 +515,30 @@ export default function AccountCreate() {
                                     </select>
                                 </div>
                             </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] `}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    Mã chức vụ: {roleItem.role_id}
+                                </h1>
+                            </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
                             <h1 className="font-medium text-sm text-[#171717]">
                                 Email
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
+                                    errors.email
+                                        ? "border-[#DC2626]"
+                                        : "border-[#E5E5E5]"
+                                } `}
+                            >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
-                                        type="email"
+                                        type="text"
                                         value={email}
                                         onChange={(e) =>
                                             setEmail(e.target.value)
@@ -333,6 +547,17 @@ export default function AccountCreate() {
                                         className="w-full"
                                     />
                                 </div>
+                            </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] ${
+                                    errors.email ? "visible" : "invisible"
+                                }`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    {errors.email ? errors.email : "username"}
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -349,10 +574,22 @@ export default function AccountCreate() {
                                         onChange={(e) =>
                                             setPhoneNumber(e.target.value)
                                         }
+                                        onKeyDown={handleKeyDown}
                                         placeholder="Nhập số điện thoại"
                                         className="w-full"
                                     />
                                 </div>
+                            </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] ${
+                                    errors.phone ? "visible" : "invisible"
+                                }`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    {errors.phone ? errors.phone : "phone"}
+                                </h1>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 invisible">
@@ -374,4 +611,105 @@ export default function AccountCreate() {
             </div>
         </div>
     );
+}
+
+export function Validation({
+    image = null,
+    username = null,
+    password = null,
+    fullname = null,
+    birthDay = null,
+    email = null,
+    phone = null,
+    listEmail = [],
+    listPhoneNumber = [],
+    listUsername = [],
+}) {
+    const errors = {
+        status: true,
+    };
+
+    if (image === null) {
+        errors.image = "Vui lòng chọn ảnh.";
+        errors.status = false;
+    }
+    //validate username
+    if (username == null || username === "") {
+        errors.username = "Vui lòng điền tên tài khoản.";
+        errors.status = false;
+    } else {
+        const usernameRegex = /^[a-zA-Z0-9._-]{5,20}$/;
+        if (!usernameRegex.test(username)) {
+            errors.username =
+                "Tên đăng nhập phải từ 5-20 kí tự và gồm số, chữ cái (hoa, thường), các kí tự đặc biệt(._-).";
+            errors.status = false;
+        }
+        if (listUsername.some((data) => data.username === username)) {
+            errors.username = "Tên đăng nhập đã tồn tại.";
+            errors.status = false;
+        }
+    }
+
+    //validate password
+    if (password == null || password === "") {
+        errors.password = "Vui lòng nhập mật khẩu.";
+        errors.status = false;
+    } else {
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/;
+        if (!passwordRegex.test(password)) {
+            errors.password =
+                "Mật khẩu phải từ 6-14 kí tự và có tối thiểu 1 kí tự hoa, 1 kí tự thường, 1 kí tự số, các kí tự ($,#,!,@).";
+            errors.status = false;
+        }
+    }
+    //validate full name
+    if (fullname == null || fullname === "") {
+        errors.fullname = "Vui nhập họ và tên";
+        errors.status = false;
+    } else {
+        const fullnameRegex = /^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/;
+        if (!fullnameRegex.test(fullname)) {
+            errors.fullname =
+                "Họ tên phải từ 3-100 kí tự và chỉ bao gồm các chữ cái.";
+            errors.status = false;
+        }
+    }
+
+    //validate birthday
+    if (birthDay == null || birthDay === "") {
+        errors.birthDay = "Vui lòng chọn ngày sinh";
+        errors.status = false;
+    }
+    //validate email
+    if (email == null || email === "") {
+        errors.email = "Vui lòng nhập địa chỉ email";
+        errors.status = false;
+    } else {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            errors.email = "Email không đúng định dạng";
+            errors.status = false;
+        }
+        if (listEmail.some((data) => data.email === email)) {
+            errors.email = "Email đã tồn tại.";
+            errors.status = false;
+        }
+    }
+    //validate phone number
+    if (phone == null || phone === "") {
+        errors.phone = "Vui lòng nhập số điện thoại.";
+        errors.status = false;
+    } else {
+        const phoneRegex = /^0\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            errors.phone = "Số điện thoại không đúng.";
+            errors.status = false;
+        }
+        if (listPhoneNumber.some((data) => data.phone_number === phone)) {
+            errors.phone = "Số điện thoại đã tồn tại.";
+            errors.status = false;
+        }
+    }
+    return errors;
 }
