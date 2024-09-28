@@ -15,7 +15,7 @@ class Role extends Model
      * @var array<int, string>
      */
 
-     /**
+    /**
      * The primary key associated with the table.
      *
      * @var string
@@ -36,5 +36,8 @@ class Role extends Model
         'updated_at',
         'status'
     ];
-    
+    public function accounts()
+    {
+        return $this->hasMany(Account::class, 'role_id');
+    }
 }

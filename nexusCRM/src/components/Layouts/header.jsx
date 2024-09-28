@@ -1,16 +1,31 @@
 import { useState } from "react";
 import DropDownProfile from "./dropdown";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 export default function Header() {
     const [localUser] = useState(JSON.parse(localStorage.getItem("USER")));
-
+    const { id } = useParams();
     const [openProfile, setOpenProfile] = useState(false);
 
     const location = useLocation();
 
     // Kiểm tra route và xác định tiêu đề
     const getTitle = () => {
+        if (id) {
+            return (
+                <>
+                    <h1 className="font-medium text-sm text-gray-400">
+                        <span className="pr-3">Quản lí hệ thống</span>
+                        <span>/</span>
+                        <span className="pr-3 pl-3">Tài khoản</span>
+                        <span>/</span>
+                        <span className="font-medium text-sm text-gray-900 pl-3">
+                            {id}
+                        </span>
+                    </h1>
+                </>
+            );
+        }
         switch (location.pathname) {
             case "/":
                 return (
@@ -32,7 +47,34 @@ export default function Header() {
                         </h1>
                     </>
                 );
-            // Thêm các route khác nếu cần
+            case "/account/create":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Quản lí hệ thống</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="pr-3 pl-3">Tài khoản</span>
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Thêm mới
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/account/:id":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Quản lí hệ thống</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="pr-3 pl-3">Tài khoản</span>
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Thêm mới
+                            </span>
+                        </h1>
+                    </>
+                );
             case "/customer":
                 return (
                     <>
@@ -90,7 +132,7 @@ export default function Header() {
                     </>
                 );
             default:
-                return "Trang chính";
+                return "None";
         }
     };
     return (

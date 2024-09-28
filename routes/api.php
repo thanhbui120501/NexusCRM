@@ -24,7 +24,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => ['admin_only_allowed']], function () {
             //Role routes
             Route::controller(RoleResourceController::class)->group(function () {
-                Route::post('/role/get-all-role', 'index')->name('api.role.index'); //get all role
+                Route::get('/role/get-all-role', 'index')->name('api.role.index'); //get all role
                 Route::post('/role/create-new-role', 'store')->name('api.role.store'); //create new role
                 Route::get('/role/get-detail-role/{role}', 'show')->name('api.role.show'); //show role detail
                 Route::patch('/role/update-role/{role}', 'update')->name('api.role.update'); //update role by id
@@ -59,6 +59,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::controller(SearchResourceController::class)->group(function () {
                 Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
                 Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
+                Route::get('account/search-by-keyword','searchUserByKeyWord')->name('api.account.search.by.keyword');
             });
         });
 

@@ -13,73 +13,52 @@ use Illuminate\Support\Facades\Auth;
 
 class RoleResourceController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return Role[]|\Illuminate\Database\Eloquent\Collection
      */
     /**
      * 
-    * @OA\Info(
- *      version="1.0.0",
- *      title="L5 OpenApi",
- *      description="L5 Swagger OpenApi description"
- * )
- * @OA\Get(
- *    path = "/role"
- *    summary="Role Data",
- *    description="Role Page",
- *    tags={"Role"},
- *    
- *   @OA\Response(
- *     response = 200,
- *     description="OK",
- *     @OA\MediaType(
- *       mediaType={"application/json"},
- *     )
- *   ),
- * @OA\PathItem (
+     * @OA\Info(
+     *      version="1.0.0",
+     *      title="L5 OpenApi",
+     *      description="L5 Swagger OpenApi description"
+     * )
+     * @OA\Get(
+     *    path = "/role"
+     *    summary="Role Data",
+     *    description="Role Page",
+     *    tags={"Role"},
+     *    
+     *   @OA\Response(
+     *     response = 200,
+     *     description="OK",
+     *     @OA\MediaType(
+     *       mediaType={"application/json"},
+     *     )
+     *   ),
+     * @OA\PathItem (
      *     ),
- * ),
- * 
- */
+     * ),
+     * 
+     */
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input,[           
-            'offset' => 'min:0|numeric',
-            'limit'=> 'min:1|numeric',
-        ]);
-        if($validator->fails()){
-            $arr = [
-                'success' => false,
-                'status_code' => 200,
-                'message' => "Failed",
-                'data' => $validator->errors()
-            ];
-            return response()->json($arr, Response::HTTP_OK);
-        }else{
-            //set offset and limit
-            $offset = !$request->has('limit')  ? 0 : $request->offset;
-            $limit = !$request->has('limit') ? 50 : $request->limit;
+        $limit = $request->query('limit', 100000);
+        $offset = $request->query('offset', 0);
+        $role = Role::where('status', 1)->offset($offset)->limit($limit)->get();
 
-            //select enable role
-            $role = DB::table('roles')->where('status', 1)->offset($offset)->limit($limit)->get();
-            
-            //return json message
-            $arr = [
-                'success' => true,
-                'status_code' => 200,
-                'message' => "List of system roles",
-                'data' => RoleResource::collection($role)
-            ];
-            return response()->json($arr,Response::HTTP_OK);
-        }
-        
-        
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "List of system roles",
+            'data' => RoleResource::collection($role)
+        ];
+        return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
@@ -89,12 +68,12 @@ class RoleResourceController extends Controller
     {
         //validate
         $input = $request->all();
-        $validator = Validator::make($input,[
+        $validator = Validator::make($input, [
             'role_name' => 'required|string|max:50|min:5',
             'description' => 'string|max:255',
         ]);
         //check validate
-        if($validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -102,19 +81,20 @@ class RoleResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{
+        } else {
             //create new role
-            $input['role_id'] = 'R'.Carbon::now()->format('dmyhis');
+            $input['role_id'] = 'R' . Carbon::now()->format('dmyhis');
             $role = Role::create($input);
-            
+
             //save activity
             $user = Auth::guard('api')->user();
             $newRequest = (new RequestController)->makeActivityRequest(
                 'Role Created',
                 'Role',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Role Created") . $role->role_name .'.',
+                'The user ' . $user->username . (new RequestController)->makeActivityContent("Role Created") . $role->role_name . '.',
                 $user->account_id,
-                $user->username);               
+                $user->username
+            );
             $result = (new ActivityHistoryResourceController)->store($newRequest);
 
             //return json message
@@ -127,7 +107,7 @@ class RoleResourceController extends Controller
                     'activity_name' => $result->activity_name,
                     'activity_type' => $result->activity_type,
                     'activity_content' => $result->activity_content,
-                    'activity_time' => $result->created_at,    
+                    'activity_time' => $result->created_at,
                 ],
             ];
             return response()->json($arr, Response::HTTP_CREATED);
@@ -138,7 +118,7 @@ class RoleResourceController extends Controller
      * Display the specified resource.
      */
     public function show(Role $role)
-    {                          
+    {
         $arr = [
             'success' => true,
             'status_code' => 200,
@@ -151,14 +131,14 @@ class RoleResourceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Role $role, Request $request )
+    public function update(Role $role, Request $request)
     {
-        $input = $request -> all();             
-        $validator = Validator::make($input,[
+        $input = $request->all();
+        $validator = Validator::make($input, [
             'role_name' => 'required|string|max:50|min:5',
             'description' => 'string|max:255',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -166,63 +146,64 @@ class RoleResourceController extends Controller
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{           
+        } else {
             $update = $role->update($request->all());
-            if($update){
+            if ($update) {
                 //save activity
                 $user = Auth::guard('api')->user();
                 $newRequest = (new RequestController)->makeActivityRequest(
                     'Role Updated',
                     'Role',
-                    'The user '. $user->username . (new RequestController)->makeActivityContent("Role Updated", $request) . $role->role_name .'.',
+                    'The user ' . $user->username . (new RequestController)->makeActivityContent("Role Updated", $request) . $role->role_name . '.',
                     $user->account_id,
-                    $user->username);               
+                    $user->username
+                );
                 $result = (new ActivityHistoryResourceController)->store($newRequest);
 
                 //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
-                    'message' => "Updated successful",                  
+                    'message' => "Updated successful",
                     'data' => new RoleResource($role),
                     'activity' => [
                         'activity_name' => $result->activity_name,
                         'activity_type' => $result->activity_type,
                         'activity_content' => $result->activity_content,
-                        'activity_time' => $result->created_at,    
+                        'activity_time' => $result->created_at,
                     ],
                 ];
                 return response()->json($arr, Response::HTTP_OK);
-            }else{
+            } else {
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
-                    'message' => "Update Failed",                   
+                    'message' => "Update Failed",
                     'data' => 'Failed!'
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }
-            
-        }      
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Role $role)
-    {                          
+    {
         $check_id = DB::table('accounts')->where('role_id', $role->role_id)->get();
-        if($check_id->isEmpty()){
+        if ($check_id->isEmpty()) {
             $delete = $role->delete();
-            if($delete){
+            if ($delete) {
                 //save activity
                 $user = Auth::guard('api')->user();
                 $newRequest = (new RequestController)->makeActivityRequest(
                     'Role Deleted',
                     'Role',
-                    'The user '. $user->username . (new RequestController)->makeActivityContent("Role Deleted") . $role->role_name .'.',
+                    'The user ' . $user->username . (new RequestController)->makeActivityContent("Role Deleted") . $role->role_name . '.',
                     $user->account_id,
-                    $user->username);               
+                    $user->username
+                );
                 $result = (new ActivityHistoryResourceController)->store($newRequest);
 
                 //return json message
@@ -230,16 +211,16 @@ class RoleResourceController extends Controller
                     'success' => true,
                     'status_code' => 204,
                     'message' => "Deleted successful",
-                    'data' => 'Success!',    
+                    'data' => 'Success!',
                     'activity' => [
                         'activity_name' => $result->activity_name,
                         'activity_type' => $result->activity_type,
                         'activity_content' => $result->activity_content,
-                        'activity_time' => $result->created_at,    
-                    ],    
+                        'activity_time' => $result->created_at,
+                    ],
                 ];
                 return response()->json($arr, Response::HTTP_NO_CONTENT);
-            }else{
+            } else {
                 $arr = [
                     'success' => false,
                     'status_code' => 200,
@@ -248,7 +229,7 @@ class RoleResourceController extends Controller
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }
-        }else{
+        } else {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -256,6 +237,6 @@ class RoleResourceController extends Controller
                 'data' => "This role cannot be deleted because an account is already holding this role.",
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }      
+        }
     }
 }

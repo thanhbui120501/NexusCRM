@@ -4,12 +4,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { vi } from "date-fns/locale";
 import { format } from "date-fns";
-// eslint-disable-next-line no-unused-vars
+
 export default function ShowFillter({
     onData,
     onCloseFillter,
     listFillter,
     listAdmin,
+    onSubmit
 }) {
     const timeFillter = listFillter.find((filter) => filter.type === "time");
     const roleFillter = listFillter.find((fillter) => fillter.type === "role");
@@ -103,7 +104,9 @@ export default function ShowFillter({
     const handleCloseFillter = (val) => {
         onCloseFillter(val);
     };
-
+    const handleSubmit = (val) =>{
+        onSubmit(val);
+    }
     return (
         <div className="absolute fillter flex flex-col p-3 items-start gap-2 border rounded-xl bg-[#FFF] shadow-[0px 4px 8px 0px] ">
             <div className="flex flex-col items-start gap-2 relative">
@@ -132,6 +135,7 @@ export default function ShowFillter({
                                                     setOpenAdminItem(
                                                         !openAdminItem
                                                     );
+                                                
                                             }}
                                         >
                                             <img
@@ -313,6 +317,7 @@ export default function ShowFillter({
                                         : null,
                                 idAdmin: id,
                             });
+                            handleSubmit(true);
                             handleCloseFillter(false);
                         }}
                         className="flex h-32 py-2 px-3 justify-center items-center gap-2 self-stretch rounded-lg bg-[#171717] cursor-pointer"
