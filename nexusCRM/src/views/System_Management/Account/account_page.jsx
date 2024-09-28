@@ -4,6 +4,8 @@ import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
 import ShowFillter from "./showFillter";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Account() {
     //change url with no reload
@@ -185,6 +187,19 @@ export default function Account() {
         });
 
         try {
+            // eslint-disable-next-line no-unused-vars
+            const response = await axiosClient.post(
+                "/account/delete-account",
+                data
+            );
+            toast.success("Xóa tài khoản thành công!", {
+                position: "top-right",
+                autoClose: 5000, // thời gian tự động đóng (mili giây)
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+            });
             getUsers(currentPage, showRowNumber);
             setSelectedUsers([]);
         } catch (err) {
@@ -251,9 +266,9 @@ export default function Account() {
                         key={i}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-gray-900 text-white"
+                                ? "bg-gray-900 text-white hover:bg-[#262626]"
                                 : "text-gray-900 hover:text-white hover:bg-gray-900"
-                        }w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(i)}
                     >
@@ -423,6 +438,7 @@ export default function Account() {
 
     return (
         <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
+            <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2">
                     <h1 className="self-stretch text-gray-900 font-semibold text-3xl">
@@ -473,7 +489,7 @@ export default function Account() {
                     )}
                     {selectedUsers.length == 0 ? (
                         <div
-                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 cursor-pointer"
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 hover:bg-[#C2410C] cursor-pointer"
                             onClick={() => {
                                 handleNavigation("/account/create");
                             }}
@@ -491,18 +507,8 @@ export default function Account() {
                         </div>
                     ) : (
                         <div
-                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-[#DC2626] cursor-pointer onClick={()=>{}}"
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] cursor-pointer onClick={()=>{}}"
                             onClick={() => {
-                                // setValuesDialog({
-                                //     ...dialog,
-                                //     title: "Xóa tài khoản",
-                                //     description:
-                                //         "Bạn có chắc muốn xóa tài khoản này chứ?",
-                                //     color: "text-red-600",
-                                //     bgColor: "bg-red-600",
-                                //     hoverColor: "hover:bg-red-500",
-                                // });
-                                // handleClickToOpen();
                                 deletedUser();
                             }}
                         >
@@ -545,10 +551,10 @@ export default function Account() {
                                     <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Email
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[10%] whitespace-nowrap">
+                                    <th className="py-3 px-6 text-left w-[10%] whitespace-nowrap ">
                                         Chức vụ
                                     </th>
-                                    <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg w-[20%] whitespace-nowrap">
+                                    <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg w-[20%] whitespace-nowrap ">
                                         Trạng thái
                                     </th>
                                 </tr>

@@ -37,7 +37,8 @@ Route::group(['prefix' => 'v1'], function () {
                 Route::get('/account/get-detail-account/{account}', 'show')->name('api.account.show'); //show account detail
                 Route::patch('/account/update-account/{account}', 'update')->name('api.account.update'); //update account by id
                 Route::post('/account/delete-account', 'destroy')->name('api.account.delete'); //delete account by id
-                Route::patch('/account/reset-password/{account}', 'resetPassword')->middleware('admin_only_allowed')->name('api.account.reset.password'); //reset account password
+                Route::patch('/account/reset-password/{account}', 'resetPassword')->name('api.account.reset.password'); //reset account password
+                Route::get('account/get-username-email-phone','getUsernamePhoneAndPhone')->name('api.get.username.email.phonenumber');//get list username, phonenumber and email
             });
             //Activity History
             Route::controller(ActivityHistoryResourceController::class)->group(function () {

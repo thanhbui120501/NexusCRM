@@ -24,7 +24,7 @@ class AccountResourceController extends Controller
     {
         $limit = $request->query('limit', 100000);
         $offset = $request->query('offset', 0);
-        $account = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->offset($offset)->limit($limit)->get();
+        $account = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
         $count = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->count();
 
         $arr = [
@@ -52,14 +52,14 @@ class AccountResourceController extends Controller
         $input = $request->all();
         $validator = Validator::make($input, [
             'username' => 'required|string|min:5|max:20|unique:accounts,username',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/',
             'password_confirm' => 'required|min:6|same:password|',
             'role_id' => 'required|string|exists:roles,role_id',
-            'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
-            'email' => 'required|email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
-            'full_name' => 'required|string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',
-            'date_of_birth' => 'date',
-            'images' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone_number' => 'required|unique:accounts,phone_number|digits:10|numeric',
+            'email' => 'required|email|unique:accounts,email|string|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|email:rfc,dns',
+            'full_name' => 'required|string|max:40|regex:/^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/',
+            'date_of_birth' => 'required|string',
+            'images' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         //check vailidate
         if ($validator->fails()) {
@@ -330,5 +330,22 @@ class AccountResourceController extends Controller
             ],
         ];
         return response()->json($arr, Response::HTTP_NO_CONTENT);
+    }
+    public function getUsernamePhoneAndPhone()
+    {
+        $username = Account::select('username')->get();
+        $email = Account::select('email')->get();
+        $phoneNumber = Account::select('phone_number')->get();
+        //return json message
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Success",
+            'usernames' => $username,
+            'emails' => $email,
+            'phone_numbers' => $phoneNumber
+
+        ];
+        return response()->json($arr, Response::HTTP_OK);
     }
 }
