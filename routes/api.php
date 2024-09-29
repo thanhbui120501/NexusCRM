@@ -35,10 +35,11 @@ Route::group(['prefix' => 'v1'], function () {
                 Route::get('/account/get-all-account', 'index')->name('api.account.index'); //get account role
                 Route::post('/account/create-new-account', 'store')->name('api.account.store'); //create account role
                 Route::get('/account/get-detail-account/{account}', 'show')->name('api.account.show'); //show account detail
-                Route::patch('/account/update-account/{account}', 'update')->name('api.account.update'); //update account by id
+                Route::post('/account/update-account/{account}', 'update')->name('api.account.update'); //update account by id
                 Route::post('/account/delete-account', 'destroy')->name('api.account.delete'); //delete account by id
                 Route::patch('/account/reset-password/{account}', 'resetPassword')->name('api.account.reset.password'); //reset account password
                 Route::get('account/get-username-email-phone','getUsernamePhoneAndPhone')->name('api.get.username.email.phonenumber');//get list username, phonenumber and email
+                Route::get('account/get-username-email-phone-except/{account}','getUsernamePhoneAndPhoneExcept')->name('api.get.username.email.phonenumber.except');//get list username, phonenumber and email except account
             });
             //Activity History
             Route::controller(ActivityHistoryResourceController::class)->group(function () {

@@ -551,7 +551,7 @@ export default function Account() {
                                     <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Email
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[10%] whitespace-nowrap ">
+                                    <th className="py-3 px-6 text-left w-[12%] whitespace-nowrap ">
                                         Chức vụ
                                     </th>
                                     <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg w-[20%] whitespace-nowrap ">

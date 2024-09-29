@@ -55,11 +55,11 @@ class AccountResourceController extends Controller
             'password' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/',
             'password_confirm' => 'required|min:6|same:password|',
             'role_id' => 'required|string|exists:roles,role_id',
-            'phone_number' => 'required|unique:accounts,phone_number|digits:10|numeric',
+            'phone_number' => 'required|string|regex:/^0[0-9]{9}$/|unique:accounts,phone_number',
             'email' => 'required|email|unique:accounts,email|string|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|email:rfc,dns',
             'full_name' => 'required|string|max:40|regex:/^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/',
             'date_of_birth' => 'required|string',
-            'images' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
         //check vailidate
         if ($validator->fails()) {
@@ -140,25 +140,48 @@ class AccountResourceController extends Controller
         //validate
         $input = $request->all();
         $validator = Validator::make($input, [
+            'password' => 'min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/',
+            'password_confirm' => 'min:6|same:password|',
             'role_id' => 'string|exists:roles,role_id',
-            'phone_number' => 'unique:accounts,phone_number|digits:10|numeric',
-            'email' => 'email|unique:accounts,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
-            'full_name' => 'string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',
-            'date_of_birth' => 'date',
+            'phone_number' => 'string|regex:/^0[0-9]{9}$/|unique:accounts,phone_number,'.$account->account_id.',account_id',
+            'email' => 'email|unique:accounts,email,'. $account->account_id .',account_id|string|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|email:rfc,dns',
+            'full_name' => 'string|max:40|regex:/^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/',
+            'date_of_birth' => 'string',
+            'images' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+            'status' => 'string'
         ]);
         //check validate
         if ($validator->fails()) {
             $arr = [
                 'success' => false,
-                'status_code' => 200,
+                'status_code' => 400,
                 'message' => "Updated Account Failed",
                 'data' => $validator->errors()
             ];
             return response()->json($arr, Response::HTTP_OK);
         } else {
-            //update user
+            //hash password
+            if ($request->has('password')) {
+                $input['password'] = Hash::make($input['password']);
+            }
+            //upload image
+            if ($request->has('images')) {
+                $image = $request->file('images');
+                //set filename
+                $fileName = Str::random(32) . "." . $image->getClientOriginalExtension();
+
+                $image->move('uploads/', $fileName);
+
+                //set image file
+                $input['image_name'] = $fileName;
+            }
+            //get status
+            if ($request->has('status')) {
+                $input['status'] = $input['status'] === 'true' ? true : false;
+            }
+            //update user   
             $update = $account->update($input);
-            $user = Auth::guard('api')->user();
+            $user = $request->user();
             if ($update) {
                 //save activity
                 $newRequest = (new RequestController)->makeActivityRequest(
@@ -331,11 +354,29 @@ class AccountResourceController extends Controller
         ];
         return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
-    public function getUsernamePhoneAndPhone()
+    public function getUsernamePhoneAndPhone(Request $request)
     {
         $username = Account::select('username')->get();
         $email = Account::select('email')->get();
         $phoneNumber = Account::select('phone_number')->get();
+        //return json message
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Success",
+            'usernames' => $username,
+            'emails' => $email,
+            'phone_numbers' => $phoneNumber
+
+        ];
+        return response()->json($arr, Response::HTTP_OK);
+    }
+    public function getUsernamePhoneAndPhoneExcept(Account $account)
+    {
+        $account_id = $account->account_id;
+        $username = Account::select('username')->where('account_id', '!=', $account_id)->get();
+        $email = Account::select('email')->where('account_id', '!=', $account_id)->get();
+        $phoneNumber = Account::select('phone_number')->where('account_id', '!=', $account_id)->get();
         //return json message
         $arr = [
             'success' => true,
