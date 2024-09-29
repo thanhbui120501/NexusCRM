@@ -30,7 +30,7 @@ class AccountResource extends JsonResource
         
         return [
             'account_id' => $this->account_id,
-            'username' => $this->username,            
+            'username' => $this->username,                 
             'email' => $this->email,
             'phone_number' => $this->phone_number,
             'full_name' => $this->full_name,

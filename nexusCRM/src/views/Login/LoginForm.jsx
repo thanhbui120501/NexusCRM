@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import axiosClient from "../../axiosClient";
 import { useStateContext } from "../../contexts/contextprovider";
-import Validation from "../../validation";
 import DialogComponent from "../../components/dialog";
+import LoginValidation from "../../validation";
 
 //import { useState } from 'react'
 // import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
@@ -87,7 +87,7 @@ function LoginForm() {
     //on login
     const Submit = (ev) => {
         ev.preventDefault();
-        setError(Validation(values));
+        setError(LoginValidation(values));
 
         const data = new FormData();
         data.append("username", usernameRef.current.value);

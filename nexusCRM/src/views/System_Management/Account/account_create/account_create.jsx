@@ -5,7 +5,8 @@ import DatePicker from "react-datepicker";
 import axiosClient from "../../../../axiosClient";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { Validation } from "../../../../validation";
 
 export default function AccountCreate() {
     //set navigate
@@ -115,6 +116,7 @@ export default function AccountCreate() {
                 listEmail: listEmail,
                 listPhoneNumber: listPhoneNumber,
                 listUsername: listUsername,
+                type:"create"
             });
             setErrors(validationErrors);
             if (!validationErrors.status) {
@@ -153,10 +155,10 @@ export default function AccountCreate() {
                     progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
                 });
                 setTimeout(() => {
-                    navigate('/account');
-                }, 5000); 
+                    navigate("/account");
+                }, 5000);
             }
-        // eslint-disable-next-line no-unused-vars
+            // eslint-disable-next-line no-unused-vars
         } catch (err) {
             toast.error("Đã có lỗi xảy ra khi tạo tài khoản", {
                 position: "top-right",
@@ -208,6 +210,7 @@ export default function AccountCreate() {
                     className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-gray-200"
                     encType="multipart/form-data"
                     onSubmit={onSubmit}
+                    autoComplete="off"
                 >
                     <h1 className="text-xl font-semibold text-[#171717]">
                         Thông tin tài khoản
@@ -358,6 +361,7 @@ export default function AccountCreate() {
                                         }
                                         placeholder="Nhập mật khẩu"
                                         className="w-full"
+                                        autoComplete="new-password"
                                     />
                                 </div>
                                 <img
@@ -613,103 +617,4 @@ export default function AccountCreate() {
     );
 }
 
-export function Validation({
-    image = null,
-    username = null,
-    password = null,
-    fullname = null,
-    birthDay = null,
-    email = null,
-    phone = null,
-    listEmail = [],
-    listPhoneNumber = [],
-    listUsername = [],
-}) {
-    const errors = {
-        status: true,
-    };
 
-    if (image === null) {
-        errors.image = "Vui lòng chọn ảnh.";
-        errors.status = false;
-    }
-    //validate username
-    if (username == null || username === "") {
-        errors.username = "Vui lòng điền tên tài khoản.";
-        errors.status = false;
-    } else {
-        const usernameRegex = /^[a-zA-Z0-9._-]{5,20}$/;
-        if (!usernameRegex.test(username)) {
-            errors.username =
-                "Tên đăng nhập phải từ 5-20 kí tự và gồm số, chữ cái (hoa, thường), các kí tự đặc biệt(._-).";
-            errors.status = false;
-        }
-        if (listUsername.some((data) => data.username === username)) {
-            errors.username = "Tên đăng nhập đã tồn tại.";
-            errors.status = false;
-        }
-    }
-
-    //validate password
-    if (password == null || password === "") {
-        errors.password = "Vui lòng nhập mật khẩu.";
-        errors.status = false;
-    } else {
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/;
-        if (!passwordRegex.test(password)) {
-            errors.password =
-                "Mật khẩu phải từ 6-14 kí tự và có tối thiểu 1 kí tự hoa, 1 kí tự thường, 1 kí tự số, các kí tự ($,#,!,@).";
-            errors.status = false;
-        }
-    }
-    //validate full name
-    if (fullname == null || fullname === "") {
-        errors.fullname = "Vui nhập họ và tên";
-        errors.status = false;
-    } else {
-        const fullnameRegex = /^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/;
-        if (!fullnameRegex.test(fullname)) {
-            errors.fullname =
-                "Họ tên phải từ 3-100 kí tự và chỉ bao gồm các chữ cái.";
-            errors.status = false;
-        }
-    }
-
-    //validate birthday
-    if (birthDay == null || birthDay === "") {
-        errors.birthDay = "Vui lòng chọn ngày sinh";
-        errors.status = false;
-    }
-    //validate email
-    if (email == null || email === "") {
-        errors.email = "Vui lòng nhập địa chỉ email";
-        errors.status = false;
-    } else {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            errors.email = "Email không đúng định dạng";
-            errors.status = false;
-        }
-        if (listEmail.some((data) => data.email === email)) {
-            errors.email = "Email đã tồn tại.";
-            errors.status = false;
-        }
-    }
-    //validate phone number
-    if (phone == null || phone === "") {
-        errors.phone = "Vui lòng nhập số điện thoại.";
-        errors.status = false;
-    } else {
-        const phoneRegex = /^0\d{9}$/;
-        if (!phoneRegex.test(phone)) {
-            errors.phone = "Số điện thoại không đúng.";
-            errors.status = false;
-        }
-        if (listPhoneNumber.some((data) => data.phone_number === phone)) {
-            errors.phone = "Số điện thoại đã tồn tại.";
-            errors.status = false;
-        }
-    }
-    return errors;
-}

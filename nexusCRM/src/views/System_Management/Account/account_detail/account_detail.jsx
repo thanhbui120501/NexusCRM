@@ -5,15 +5,20 @@ import DatePicker from "react-datepicker";
 import axiosClient from "../../../../axiosClient";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
+import { Validation } from "../../../../validation";
+import AccountActivity from "./account_activity";
 
 export default function AccountDetail() {
+    //get account_id
+    const { id } = useParams();
     //set navigate
     const navigate = useNavigate();
     //set form ref
     const formRef = useRef(null);
     //set avartar display
-    const [avatar, setAvatar] = useState("/icons/avatar_empty.svg");
+    const [avatar, setAvatar] = useState("");
+    const [imgFirst, setImgFirst] = useState("");
     //set image file
     const [image, setImage] = useState(null);
     //image error
@@ -35,8 +40,21 @@ export default function AccountDetail() {
     const [email, setEmail] = useState("");
     //set phone number
     const [phoneNumber, setPhoneNumber] = useState("");
-    //get list username, phone number and email to validate
-    const [listUsername, getListUsername] = useState([]);
+    //account status
+    const [status, setStatus] = useState({});
+    const accountStatus = [
+        {
+            code: 1,
+            sta: "Đang hoạt động",
+            value: 'true',
+        },
+        {
+            code: 0,
+            sta: "Ngưng hoạt động",
+            value: 'false',
+        },
+    ];
+    //get list username, phone number and email to validate    
     const [listEmail, getListEmail] = useState([]);
     const [listPhoneNumber, getListPhoneNumber] = useState([]);
     // Error states for validation
@@ -53,7 +71,7 @@ export default function AccountDetail() {
         if (file) {
             if (file.size > 24 * 1024 * 1024) {
                 setErrorMessage("Ảnh không quá 24MB");
-                setAvatar("/icons/avatar_empty.svg");
+                setAvatar(imgFirst);
             } else {
                 const reader = new FileReader();
                 reader.onloadend = () => {
@@ -74,14 +92,15 @@ export default function AccountDetail() {
     };
     //get role
     useEffect(() => {
+        getAccountById();
         getRoles();
         getListUsernameEmailPhoneNumber();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const getRoles = async () => {
         try {
             const response = await axiosClient.get("/role/get-all-role");
             setRole(response.data.data);
-            setRoleItem(response.data.data ? response.data.data[0] : "");
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -90,11 +109,35 @@ export default function AccountDetail() {
     const getListUsernameEmailPhoneNumber = async () => {
         try {
             const response = await axiosClient.get(
-                "/account/get-username-email-phone"
-            );
-            getListEmail(response.data.emails);
-            getListUsername(response.data.usernames);
+                `/account/get-username-email-phone-except/${id}`
+            );            
+            getListEmail(response.data.emails);            
             getListPhoneNumber(response.data.phone_numbers);
+        } catch (err) {
+            const response = err.response;
+            console.log(response.message);
+        }
+    };
+    const getAccountById = async () => {
+        try {
+            const response = await axiosClient.get(
+                `account/get-detail-account/${id}`
+            );
+            if (response.data.status_code === 200) {
+                const account = response.data.data;
+                setAvatar(account.image_name);
+                setImgFirst(account.image_name);
+                setUsername(account.username);
+                setFullname(account.full_name);
+                const dateParts = account.date_of_birth.split("-");
+                setBirthDay(
+                    new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+                );
+                setEmail(account.email);
+                setPhoneNumber(account.phone_number);
+                setRoleItem(account.role[0]);
+                setStatus(account.status ? accountStatus[0] : accountStatus[1]);
+            }
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -104,8 +147,7 @@ export default function AccountDetail() {
     const onSubmit = async (ev) => {
         ev.preventDefault();
         try {
-            const validationErrors = Validation({
-                image: image,
+            const validationErrors = Validation({               
                 username: username,
                 password: password,
                 fullname: fullname,
@@ -113,8 +155,8 @@ export default function AccountDetail() {
                 email: email,
                 phone: phoneNumber,
                 listEmail: listEmail,
-                listPhoneNumber: listPhoneNumber,
-                listUsername: listUsername,
+                listPhoneNumber: listPhoneNumber,    
+                type:"edit"           
             });
             setErrors(validationErrors);
             if (!validationErrors.status) {
@@ -128,39 +170,55 @@ export default function AccountDetail() {
                 });
                 return;
             }
-            const data = new FormData();
-            data.append("username", username);
-            data.append("password", password);
-            data.append("password_confirm", password);
+            const data = new FormData();            
+            if(password!=''){
+                data.append("password", password);     
+                data.append("password_confirm", password);    
+            }                
             data.append("role_id", roleItem.role_id);
             data.append("full_name", fullname);
-            data.append("images", image);
+            image!=null && data.append("images", image);
             data.append("email", email);
             data.append("date_of_birth", format(birthDay, "yyyy-MM-dd"));
             data.append("phone_number", phoneNumber);
-
+            data.append("status",status.value);
+            
             const response = await axiosClient.post(
-                "account/create-new-account",
+                `account/update-account/${id}`,
                 data
             );
-            if (response.data.status_code === 201) {
-                toast.success("Tạo mới tài khoản thành công!", {
+            
+            if (response.data.status_code === 200) {
+                toast.success("Cập nhật tài khoản thành công!", {
                     position: "top-right",
-                    autoClose: 5000, // thời gian tự động đóng (mili giây)
+                    autoClose: 4000, // thời gian tự động đóng (mili giây)
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
                 });
                 setTimeout(() => {
-                    navigate('/account');
-                }, 5000); 
+                    navigate("/account");
+                }, 4000);
             }
-        // eslint-disable-next-line no-unused-vars
+            if (response.data.status_code === 400) {
+                toast.error("Cập nhật thất bại!", {
+                    position: "top-right",
+                    autoClose: 4000, 
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+                });
+                setTimeout(() => {
+                    navigate("/account");
+                }, 4000);
+            }
+            //eslint-disable-next-line no-unused-vars
         } catch (err) {
-            toast.error("Đã có lỗi xảy ra khi tạo tài khoản", {
+            toast.error("Đã có lỗi xảy ra khi cập nhật tài khoản", {
                 position: "top-right",
-                autoClose: 5000, // thời gian tự động đóng (mili giây)
+                autoClose: 4000, // thời gian tự động đóng (mili giây)
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
@@ -179,10 +237,10 @@ export default function AccountDetail() {
                 <div className="flex justify-between items-end self-stretch">
                     <div className="flex flex-col items-start gap-2 flex-1">
                         <h1 className="font-semibold text-3xl text-[#171717]">
-                            Thêm mới tài khoản
+                            Chi tiết tài khoản
                         </h1>
                         <h1 className="font-medium text-base text-[#A3A3A3]">
-                            Thêm mới tài khoản để sẵn sàng sử dụng website
+                            Thông tin chi tiết tài khoản
                         </h1>
                     </div>
                     <div
@@ -208,6 +266,7 @@ export default function AccountDetail() {
                     className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-gray-200"
                     encType="multipart/form-data"
                     onSubmit={onSubmit}
+                    autoComplete="off"
                 >
                     <h1 className="text-xl font-semibold text-[#171717]">
                         Thông tin tài khoản
@@ -231,20 +290,15 @@ export default function AccountDetail() {
                                     }  border-dashed h-[68px] w-[68px]`}
                                 >
                                     <div className="flex flex-col justify-center items-center gap-2.5 w-full h-full">
-                                        {avatar ===
-                                        "/icons/avatar_empty.svg" ? (
-                                            <img
-                                                src={avatar}
-                                                alt="avatar_empty"
-                                                className="w-5 h-5"
-                                            />
-                                        ) : (
-                                            <img
-                                                src={avatar}
-                                                alt="avatar_empty"
-                                                className="w-full h-full object-cover rounded-lg"
-                                            />
-                                        )}
+                                        <img
+                                            src={
+                                                image
+                                                    ? avatar
+                                                    : `http://127.0.0.1:8000/uploads/${avatar}`
+                                            }
+                                            alt="avatar_empty"
+                                            className="w-full h-full object-cover rounded-lg"
+                                        />
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -265,14 +319,12 @@ export default function AccountDetail() {
                                         type="file"
                                         accept="image/jpeg, image/png, image/jpg, image/svg+xml"
                                         onChange={handleImageChange}
-                                        style={{ display: "none" }} // Ẩn input
+                                        style={{ display: "none" }} // Hide input
                                     />
                                     <div
                                         className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#fff] px-3 py-2 justify-center border border-[#E5E5E5]"
                                         onClick={() => {
-                                            setAvatar(
-                                                "/icons/avatar_empty.svg"
-                                            );
+                                            setAvatar(imgFirst);
                                             setImage(null);
                                         }}
                                     >
@@ -308,8 +360,9 @@ export default function AccountDetail() {
                                         : "border-[#E5E5E5]"
                                 }`}
                             >
-                                <div className="flex items-center gap-0.5 flex-1">
+                                <div className="flex items-center gap-0.5 flex-1">                                   
                                     <input
+                                        readOnly
                                         type="text"
                                         value={username}
                                         onChange={(e) =>
@@ -347,6 +400,8 @@ export default function AccountDetail() {
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
+                                        name="password_input"
+                                        id="password_input_filed"
                                         type={
                                             isHidenPassword
                                                 ? "password"
@@ -357,6 +412,7 @@ export default function AccountDetail() {
                                             setPassword(e.target.value)
                                         }
                                         placeholder="Nhập mật khẩu"
+                                        autoComplete="new-password"
                                         className="w-full"
                                     />
                                 </div>
@@ -496,6 +552,7 @@ export default function AccountDetail() {
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
                                         className="w-full font-medium text-sm text-[#171717]"
+                                        value={roleItem.role_id}
                                         onChange={(e) => {
                                             const selectedRole = role.find(
                                                 (r) =>
@@ -592,124 +649,52 @@ export default function AccountDetail() {
                                 </h1>
                             </div>
                         </div>
-                        <div className="flex flex-col justify-center items-start gap-2.5 flex-1 invisible">
+                        <div className="flex flex-col justify-center items-start gap-2.5 flex-1 ">
                             <h1 className="font-medium text-sm text-[#171717]">
-                                Email
+                                Trạng thái
                             </h1>
                             <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
                                 <div className="flex items-center gap-0.5 flex-1">
-                                    <input
-                                        type="email"
-                                        placeholder="Nhập email"
-                                        className="w-full"
-                                    />
+                                    <select
+                                        className="w-full font-medium text-sm text-[#171717]"
+                                        value={status.code}
+                                        onChange={(e) => {
+                                            const selectedStatus =
+                                                accountStatus.find(
+                                                    (s) =>
+                                                        s.code ===
+                                                        Number(e.target.value)
+                                                );
+                                            setStatus(selectedStatus);
+                                        }}
+                                    >
+                                        {accountStatus.map((option, index) => (
+                                            <option
+                                                key={index}
+                                                value={option.code}
+                                            >
+                                                {option.sta}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+                            </div>
+                            <div
+                                className={`flex justify-center items-center gap-2.5 max-w-[500px] invisible`}
+                            >
+                                <h1
+                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                >
+                                    Trạng thái
+                                </h1>
                             </div>
                         </div>
                     </div>
                 </form>
+                <AccountActivity/>
             </div>
         </div>
     );
 }
 
-export function Validation({
-    image = null,
-    username = null,
-    password = null,
-    fullname = null,
-    birthDay = null,
-    email = null,
-    phone = null,
-    listEmail = [],
-    listPhoneNumber = [],
-    listUsername = [],
-}) {
-    const errors = {
-        status: true,
-    };
 
-    if (image === null) {
-        errors.image = "Vui lòng chọn ảnh.";
-        errors.status = false;
-    }
-    //validate username
-    if (username == null || username === "") {
-        errors.username = "Vui lòng điền tên tài khoản.";
-        errors.status = false;
-    } else {
-        const usernameRegex = /^[a-zA-Z0-9._-]{5,20}$/;
-        if (!usernameRegex.test(username)) {
-            errors.username =
-                "Tên đăng nhập phải từ 5-20 kí tự và gồm số, chữ cái (hoa, thường), các kí tự đặc biệt(._-).";
-            errors.status = false;
-        }
-        if (listUsername.some((data) => data.username === username)) {
-            errors.username = "Tên đăng nhập đã tồn tại.";
-            errors.status = false;
-        }
-    }
-
-    //validate password
-    if (password == null || password === "") {
-        errors.password = "Vui lòng nhập mật khẩu.";
-        errors.status = false;
-    } else {
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/;
-        if (!passwordRegex.test(password)) {
-            errors.password =
-                "Mật khẩu phải từ 6-14 kí tự và có tối thiểu 1 kí tự hoa, 1 kí tự thường, 1 kí tự số, các kí tự ($,#,!,@).";
-            errors.status = false;
-        }
-    }
-    //validate full name
-    if (fullname == null || fullname === "") {
-        errors.fullname = "Vui nhập họ và tên";
-        errors.status = false;
-    } else {
-        const fullnameRegex = /^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/;
-        if (!fullnameRegex.test(fullname)) {
-            errors.fullname =
-                "Họ tên phải từ 3-100 kí tự và chỉ bao gồm các chữ cái.";
-            errors.status = false;
-        }
-    }
-
-    //validate birthday
-    if (birthDay == null || birthDay === "") {
-        errors.birthDay = "Vui lòng chọn ngày sinh";
-        errors.status = false;
-    }
-    //validate email
-    if (email == null || email === "") {
-        errors.email = "Vui lòng nhập địa chỉ email";
-        errors.status = false;
-    } else {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            errors.email = "Email không đúng định dạng";
-            errors.status = false;
-        }
-        if (listEmail.some((data) => data.email === email)) {
-            errors.email = "Email đã tồn tại.";
-            errors.status = false;
-        }
-    }
-    //validate phone number
-    if (phone == null || phone === "") {
-        errors.phone = "Vui lòng nhập số điện thoại.";
-        errors.status = false;
-    } else {
-        const phoneRegex = /^0\d{9}$/;
-        if (!phoneRegex.test(phone)) {
-            errors.phone = "Số điện thoại không đúng.";
-            errors.status = false;
-        }
-        if (listPhoneNumber.some((data) => data.phone_number === phone)) {
-            errors.phone = "Số điện thoại đã tồn tại.";
-            errors.status = false;
-        }
-    }
-    return errors;
-}
