@@ -88,17 +88,18 @@ class AccountResourceController extends Controller
             }
 
             $account = Account::create($input);
-
+            
             //save activity
             $user = $request->user();
 
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Account Created',
                 'Account',
-                'The user ' . $user->username . (new RequestController)->makeActivityContent("Account Created") . $account->username . '.',
+                (new RequestController)->getActivityContent("Account Created", $request, null,$account->username),
                 $user->account_id,
                 $user->username
             );
+            
             $result = (new ActivityHistoryResourceController)->store($newRequest);
 
             //return json message           
@@ -143,8 +144,8 @@ class AccountResourceController extends Controller
             'password' => 'min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/',
             'password_confirm' => 'min:6|same:password|',
             'role_id' => 'string|exists:roles,role_id',
-            'phone_number' => 'string|regex:/^0[0-9]{9}$/|unique:accounts,phone_number,'.$account->account_id.',account_id',
-            'email' => 'email|unique:accounts,email,'. $account->account_id .',account_id|string|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|email:rfc,dns',
+            'phone_number' => 'string|regex:/^0[0-9]{9}$/|unique:accounts,phone_number,' . $account->account_id . ',account_id',
+            'email' => 'email|unique:accounts,email,' . $account->account_id . ',account_id|string|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|email:rfc,dns',
             'full_name' => 'string|max:40|regex:/^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/',
             'date_of_birth' => 'string',
             'images' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
@@ -160,9 +161,12 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         } else {
+            $user = $request->user();
+            //check change data
+            $updateData = [];
             //hash password
             if ($request->has('password')) {
-                $input['password'] = Hash::make($input['password']);
+                $updateData['password'] = Hash::make($input['password']);
             }
             //upload image
             if ($request->has('images')) {
@@ -173,49 +177,76 @@ class AccountResourceController extends Controller
                 $image->move('uploads/', $fileName);
 
                 //set image file
-                $input['image_name'] = $fileName;
+                $updateData['image_name'] = $fileName;
             }
-            //get status
-            if ($request->has('status')) {
-                $input['status'] = $input['status'] === 'true' ? true : false;
+            if (isset($input['full_name']) && $input['full_name'] !== $account->full_name) {
+                $updateData['full_name'] = $input['full_name'];
+            }
+            if (isset($input['date_of_birth']) && $input['date_of_birth'] !== $account->full_name) {
+                $updateData['date_of_birth'] = $input['date_of_birth'];
+            }
+            if (isset($input['role_id']) && $input['role_id'] !== $account->role_id) {
+                $updateData['role_id'] = $input['role_id'];
+            }
+            if (isset($input['email']) && $input['email'] !== $account->email) {
+                $updateData['email'] = $input['email'];
+            }
+            if (isset($input['phone_number']) && $input['phone_number'] !== $account->phone_number) {
+                $updateData['phone_number'] = $input['phone_number'];
+            }
+            if (isset($input['status'])) {
+                $status = $input['status'] === 'true' ? 1 : 0;
+                
+                if ($status !== $account->status) {
+                    $updateData['status'] = $status;
+                }
             }
             //update user   
-            $update = $account->update($input);
-            $user = $request->user();
-            if ($update) {
-                //save activity
-                $newRequest = (new RequestController)->makeActivityRequest(
-                    'Account Updated',
-                    'Account',
-                    'The user ' . $user->username . (new RequestController)->makeActivityContent("Account Updated", $request) . $account->username . '.',
-                    $user->account_id,
-                    $user->username
-                );
-                $result = (new ActivityHistoryResourceController)->store($newRequest);
 
-                //return json message
-                $arr = [
-                    'success' => true,
-                    'status_code' => 200,
-                    'message' => "Updated successful",
-                    'data' => new AccountResource($account),
-                    'activity' => [
-                        'activity_name' => $result->activity_name,
-                        'activity_type' => $result->activity_type,
-                        'activity_content' => $result->activity_content,
-                        'activity_time' => $result->created_at,
-                    ],
-                ];
-                return response()->json($arr, Response::HTTP_OK);
-            } else {
-                //failed message
+            if (!empty($updateData)) {                
+                $update = $account->update($updateData);
+                if ($update) {
+                    //save activity
+                    $newRequest = (new RequestController)->makeActivityRequest(
+                        'Account Updated',
+                        'Account',
+                        (new RequestController)->getActivityContent("Account Updated",$request ,$updateData, $account->username),
+                        $user->account_id,
+                        $user->username
+                    );
+                    $result = (new ActivityHistoryResourceController)->store($newRequest);                    
+                    //return json message
+                    $arr = [
+                        'success' => true,
+                        'status_code' => 200,
+                        'message' => "Updated successful",
+                        'data' => new AccountResource($account),
+                        'activity' => [
+                            'activity_name' => $result->activity_name,
+                            'activity_type' => $result->activity_type,
+                            'activity_content' => $result->activity_content,
+                            'activity_time' => $result->created_at,
+                        ],
+                    ];
+                    return response()->json($arr, Response::HTTP_OK);
+                } else {
+                    //failed message
+                    $arr = [
+                        'success' => false,
+                        'status_code' => 400,
+                        'message' => "Updated Account Failed",
+                        'data' => 'Failed!'
+                    ];
+                    return response()->json($arr, Response::HTTP_OK);
+                }
+            }else{
                 $arr = [
                     'success' => false,
-                    'status_code' => 200,
-                    'message' => "Updated Account Failed",
+                    'status_code' => 204,
+                    'message' => "No changes detected",
                     'data' => 'Failed!'
                 ];
-                return response()->json($arr, Response::HTTP_OK);
+                return response()->json($arr, Response::HTTP_NO_CONTENT);
             }
         }
     }
@@ -332,7 +363,7 @@ class AccountResourceController extends Controller
             $newRequest = (new RequestController)->makeActivityRequest(
                 'Account Deleted',
                 'Account',
-                'The user ' . $userRequest->username . (new RequestController)->makeActivityContent("Account Deleted") . $account->username . '.',
+                (new RequestController)->getActivityContent("Account Deleted", $request, null ,$account->username),
                 $userRequest->account_id,
                 $userRequest->username
             );

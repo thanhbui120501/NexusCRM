@@ -145,7 +145,7 @@ export default function AccountCreate() {
                 "account/create-new-account",
                 data
             );
-            if (response.data.status_code === 201) {
+            if (response.status === 201) {
                 toast.success("Tạo mới tài khoản thành công!", {
                     position: "top-right",
                     autoClose: 5000, // thời gian tự động đóng (mili giây)
