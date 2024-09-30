@@ -10,6 +10,8 @@ import { Validation } from "../../../../validation";
 import AccountActivity from "./account_activity";
 
 export default function AccountDetail() {
+    //account record
+    const [accountRecord, setAccounRecord] = useState({});
     //get account_id
     const { id } = useParams();
     //set navigate
@@ -46,15 +48,15 @@ export default function AccountDetail() {
         {
             code: 1,
             sta: "Đang hoạt động",
-            value: 'true',
+            value: "true",
         },
         {
             code: 0,
             sta: "Ngưng hoạt động",
-            value: 'false',
+            value: "false",
         },
     ];
-    //get list username, phone number and email to validate    
+    //get list username, phone number and email to validate
     const [listEmail, getListEmail] = useState([]);
     const [listPhoneNumber, getListPhoneNumber] = useState([]);
     // Error states for validation
@@ -110,8 +112,8 @@ export default function AccountDetail() {
         try {
             const response = await axiosClient.get(
                 `/account/get-username-email-phone-except/${id}`
-            );            
-            getListEmail(response.data.emails);            
+            );
+            getListEmail(response.data.emails);
             getListPhoneNumber(response.data.phone_numbers);
         } catch (err) {
             const response = err.response;
@@ -125,6 +127,7 @@ export default function AccountDetail() {
             );
             if (response.data.status_code === 200) {
                 const account = response.data.data;
+                setAccounRecord(account);
                 setAvatar(account.image_name);
                 setImgFirst(account.image_name);
                 setUsername(account.username);
@@ -147,7 +150,7 @@ export default function AccountDetail() {
     const onSubmit = async (ev) => {
         ev.preventDefault();
         try {
-            const validationErrors = Validation({               
+            const validationErrors = Validation({
                 username: username,
                 password: password,
                 fullname: fullname,
@@ -155,8 +158,8 @@ export default function AccountDetail() {
                 email: email,
                 phone: phoneNumber,
                 listEmail: listEmail,
-                listPhoneNumber: listPhoneNumber,    
-                type:"edit"           
+                listPhoneNumber: listPhoneNumber,
+                type: "edit",
             });
             setErrors(validationErrors);
             if (!validationErrors.status) {
@@ -170,25 +173,39 @@ export default function AccountDetail() {
                 });
                 return;
             }
-            const data = new FormData();            
-            if(password!=''){
-                data.append("password", password);     
-                data.append("password_confirm", password);    
-            }                
-            data.append("role_id", roleItem.role_id);
-            data.append("full_name", fullname);
-            image!=null && data.append("images", image);
-            data.append("email", email);
-            data.append("date_of_birth", format(birthDay, "yyyy-MM-dd"));
-            data.append("phone_number", phoneNumber);
-            data.append("status",status.value);
-            
+            const data = new FormData();
+            //check password change?
+            if (password != "" && password !== accountRecord.password) {
+                data.append("password", password);
+                data.append("password_confirm", password);
+            }
+            //check role change?
+            roleItem.role_id !== accountRecord.role_id &&
+                data.append("role_id", roleItem.role_id);
+            //check fullname change?
+            fullname !== accountRecord.full_name &&
+                data.append("full_name", fullname);
+            //image
+            image != null && data.append("images", image);
+            //check email change?
+            email !== accountRecord.email && data.append("email", email);
+            //check birthday change?
+            let birtDayFormat = format(birthDay, "yyyy-MM-dd");
+            birtDayFormat !== accountRecord.date_of_birth &&
+                data.append("date_of_birth", format(birthDay, "yyyy-MM-dd"));
+            //check phone number change?
+            phoneNumber !== accountRecord.phone_number &&
+                data.append("phone_number", phoneNumber);
+            //check status change?
+            status.value !== accountRecord.status &&
+                data.append("status", status.value);
+
             const response = await axiosClient.post(
                 `account/update-account/${id}`,
                 data
             );
             
-            if (response.data.status_code === 200) {
+            if (response.status === 200) {
                 toast.success("Cập nhật tài khoản thành công!", {
                     position: "top-right",
                     autoClose: 4000, // thời gian tự động đóng (mili giây)
@@ -201,18 +218,26 @@ export default function AccountDetail() {
                     navigate("/account");
                 }, 4000);
             }
-            if (response.data.status_code === 400) {
-                toast.error("Cập nhật thất bại!", {
+            if (response.status === 204) {
+                toast.info("Không có thây đổi nào!", {
                     position: "top-right",
-                    autoClose: 4000, 
+                    autoClose: 4000, // thời gian tự động đóng (mili giây)
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
                 });
-                setTimeout(() => {
-                    navigate("/account");
-                }, 4000);
+                
+            }
+            if (response.status === 400) {
+                toast.error("Cập nhật thất bại!", {
+                    position: "top-right",
+                    autoClose: 4000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+                });                
             }
             //eslint-disable-next-line no-unused-vars
         } catch (err) {
@@ -360,7 +385,7 @@ export default function AccountDetail() {
                                         : "border-[#E5E5E5]"
                                 }`}
                             >
-                                <div className="flex items-center gap-0.5 flex-1">                                   
+                                <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         readOnly
                                         type="text"
@@ -691,10 +716,8 @@ export default function AccountDetail() {
                         </div>
                     </div>
                 </form>
-                <AccountActivity/>
+                <AccountActivity id={id}/>
             </div>
         </div>
     );
 }
-
-

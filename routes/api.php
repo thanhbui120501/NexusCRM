@@ -38,12 +38,12 @@ Route::group(['prefix' => 'v1'], function () {
                 Route::post('/account/update-account/{account}', 'update')->name('api.account.update'); //update account by id
                 Route::post('/account/delete-account', 'destroy')->name('api.account.delete'); //delete account by id
                 Route::patch('/account/reset-password/{account}', 'resetPassword')->name('api.account.reset.password'); //reset account password
-                Route::get('account/get-username-email-phone','getUsernamePhoneAndPhone')->name('api.get.username.email.phonenumber');//get list username, phonenumber and email
-                Route::get('account/get-username-email-phone-except/{account}','getUsernamePhoneAndPhoneExcept')->name('api.get.username.email.phonenumber.except');//get list username, phonenumber and email except account
+                Route::get('account/get-username-email-phone', 'getUsernamePhoneAndPhone')->name('api.get.username.email.phonenumber'); //get list username, phonenumber and email
+                Route::get('account/get-username-email-phone-except/{account}', 'getUsernamePhoneAndPhoneExcept')->name('api.get.username.email.phonenumber.except'); //get list username, phonenumber and email except account
             });
             //Activity History
             Route::controller(ActivityHistoryResourceController::class)->group(function () {
-                Route::get('/activity/get-all-activity', 'index')->name('api.activity.index');
+                Route::get('/activity/get-all-activity/{account}', 'index')->name('api.activity.index');
                 Route::get('/activity/get-detail-activity/{activityHistory}', 'show')->name('api.activity.show'); //get all activity history
                 Route::post('/activity/get-activity-by-type', 'getActivityHistoryByType')->name('api.activity.getActivityHistoryByType');
                 Route::delete('/activity/delete-activity/{activityHistory}', 'destroy')->name('api.activity.delete'); //delete activity
@@ -61,7 +61,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::controller(SearchResourceController::class)->group(function () {
                 Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
                 Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
-                Route::get('account/search-by-keyword','searchUserByKeyWord')->name('api.account.search.by.keyword');
+                Route::get('account/search-by-keyword', 'searchUserByKeyWord')->name('api.account.search.by.keyword');
             });
         });
 

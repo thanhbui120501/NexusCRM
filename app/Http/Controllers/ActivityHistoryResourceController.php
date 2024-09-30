@@ -12,15 +12,18 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\FuncCall;
+use App\Models\Account;
 
 class ActivityHistoryResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $activity = ActivityHistory::all();    
+    public function index(Request $request, Account $account)
+    {  
+        $limit = $request->query('limit', 100000);
+        $offset = $request->query('offset', 0);
+        $activity = ActivityHistory::where('status', 1)->where('account_id', $account->account_id)->offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
         $arr = [
             'success' => true,
             'status_code' => 200,
