@@ -160,6 +160,7 @@ export default function AccountCreate() {
             }
             // eslint-disable-next-line no-unused-vars
         } catch (err) {
+            console.log(err);
             toast.error("Đã có lỗi xảy ra khi tạo tài khoản", {
                 position: "top-right",
                 autoClose: 5000, // thời gian tự động đóng (mili giây)

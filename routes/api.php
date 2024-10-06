@@ -12,6 +12,7 @@ use App\Http\Controllers\PasswordResetResourceController;
 use App\Http\Controllers\PromotionTypeResourceController;
 use App\Http\Controllers\PromotionResourceController;
 use App\Http\Controllers\SearchResourceController;
+use App\Http\Controllers\RequestController;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,9 @@ Route::group(['prefix' => 'v1'], function () {
                 Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
                 Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
                 Route::get('account/search-by-keyword', 'searchUserByKeyWord')->name('api.account.search.by.keyword');
+            });
+            Route::controller(RequestController::class)->group(function(){
+                Route::delete('images/delete-unused-images','deleteUnusedImages')->name('api.delete.unused.images');
             });
         });
 

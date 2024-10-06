@@ -144,7 +144,7 @@ class AccountResourceController extends Controller
             'password' => 'min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/',
             'password_confirm' => 'min:6|same:password|',
             'role_id' => 'string|exists:roles,role_id',
-            'phone_number' => 'string|regex:/^0[0-9]{9}$/|unique:accounts,phone_number,' . $account->account_id . ',account_id',
+            'phone_number' => 'string|regex:/^(03|05|07|08|09)[0-9]{8}$/|unique:accounts,phone_number,' . $account->account_id . ',account_id',
             'email' => 'email|unique:accounts,email,' . $account->account_id . ',account_id|string|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|email:rfc,dns',
             'full_name' => 'string|max:40|regex:/^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/',
             'date_of_birth' => 'string',

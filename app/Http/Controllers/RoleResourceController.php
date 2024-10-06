@@ -71,6 +71,8 @@ class RoleResourceController extends Controller
         $validator = Validator::make($input, [
             'role_name' => 'required|string|max:50|min:5',
             'description' => 'string|max:255',
+            'role_another_name' => 'string|max:100',
+            'role_level' => 'integer'
         ]);
         //check validate
         if ($validator->fails()) {
