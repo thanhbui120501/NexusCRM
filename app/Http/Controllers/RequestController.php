@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 class RequestController extends Controller
 {
     // public $acctivityType = ['Account','Role','Activity','Distributor','Warehouse','Customer','Product','Promotion'];
@@ -167,4 +168,25 @@ class RequestController extends Controller
         ]);
         return $request;
     }
+    public function deleteUnusedImages()
+{
+    // get file name use
+    $usedImages = DB::table('accounts')->pluck('image_name')->toArray();
+    
+    // get file in /uploads
+    $directory = public_path('\uploads');
+    
+     // get file path
+    $allImages = File::allFiles($directory);
+    
+    // delete files unused
+    foreach ($allImages as $image) {
+        $imageName = $image->getFilename();
+        if (!in_array($imageName, $usedImages)) {
+            File::delete($image->getPathname());
+        }
+    }
+
+    return response()->json(['message' => 'Unused images deleted successfully.']);
+}
 }

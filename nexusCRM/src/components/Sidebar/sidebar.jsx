@@ -156,7 +156,7 @@ export default function SideBar() {
                         </h1>
                     )}
                 </div>
-                {localUser.role[0].role_name === "Quản lí" && (
+                {localUser.role[0].role_level <= 3 && (
                     <div
                         key={1}
                         className={`flex p-4 items-center justify-between ${
@@ -194,75 +194,61 @@ export default function SideBar() {
                         </button>
                     </div>
                 )}
-                {localUser.role[0].role_name === "Quản lí" &&
-                    openSubMenu &&
-                    open && (
-                        <div className="flex flex-col items-start animate-fade-in">
-                            <div
-                                key={0}
-                                className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
-                                onClick={() => {
-                                    setselectedSubMenuTap(0);
-                                    handleNavigation("/account");
-                                }}
+                {localUser.role[0].role_level <= 3 && openSubMenu && open && (
+                    <div className="flex flex-col items-start animate-fade-in">
+                        <div
+                            key={0}
+                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                            onClick={() => {
+                                setselectedSubMenuTap(0);
+                                handleNavigation("/account");
+                            }}
+                        >
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <h1
+                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                    selectedSubMenuTap == 0 && "text-gray-900"
+                                }`}
                             >
-                                <img
-                                    src="/icons/line.svg"
-                                    alt="icon-statistics"
-                                />
-                                <h1
-                                    className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                        selectedSubMenuTap == 0 &&
-                                        "text-gray-900"
-                                    }`}
-                                >
-                                    Tài khoản
-                                </h1>
-                            </div>
-                            <div
-                                key={1}
-                                className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
-                                onClick={() => {
-                                    setselectedSubMenuTap(1);
-                                    handleNavigation("/role");
-                                }}
-                            >
-                                <img
-                                    src="/icons/line.svg"
-                                    alt="icon-statistics"
-                                />
-                                <h1
-                                    className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                        selectedSubMenuTap == 1 &&
-                                        "text-gray-900"
-                                    }`}
-                                >
-                                    Chức vụ
-                                </h1>
-                            </div>
-                            <div
-                                key={2}
-                                className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
-                                onClick={() => {
-                                    setselectedSubMenuTap(2);
-                                    handleNavigation("/customer");
-                                }}
-                            >
-                                <img
-                                    src="/icons/line.svg"
-                                    alt="icon-statistics"
-                                />
-                                <h1
-                                    className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                        selectedSubMenuTap == 2 &&
-                                        "text-gray-900"
-                                    }`}
-                                >
-                                    Khách hàng
-                                </h1>
-                            </div>
+                                Tài khoản
+                            </h1>
                         </div>
-                    )}
+                        <div
+                            key={1}
+                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                            onClick={() => {
+                                setselectedSubMenuTap(1);
+                                handleNavigation("/role");
+                            }}
+                        >
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <h1
+                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                    selectedSubMenuTap == 1 && "text-gray-900"
+                                }`}
+                            >
+                                Chức vụ
+                            </h1>
+                        </div>
+                        <div
+                            key={2}
+                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                            onClick={() => {
+                                setselectedSubMenuTap(2);
+                                handleNavigation("/customer");
+                            }}
+                        >
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <h1
+                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                    selectedSubMenuTap == 2 && "text-gray-900"
+                                }`}
+                            >
+                                Khách hàng
+                            </h1>
+                        </div>
+                    </div>
+                )}
                 <div
                     key={2}
                     className={`flex p-4 gap-2 items-center ${

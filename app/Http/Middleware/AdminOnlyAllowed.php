@@ -17,10 +17,10 @@ class AdminOnlyAllowed
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::guard('api')->user();
+        $user = $request->user();
         if($user!=null){            
-            $users = DB::table('accounts')->join('roles','accounts.role_id','=','roles.role_id')->where('account_id',$user->account_id)->select('roles.role_name')->first();            
-            if($users->role_name == "Quản lí"){
+            $users = DB::table('accounts')->join('roles','accounts.role_id','=','roles.role_id')->where('account_id',$user->account_id)->select('roles.role_level')->first();            
+            if($users->role_level <= 3){
                 return $next($request);
             }else{
                 $arr = [

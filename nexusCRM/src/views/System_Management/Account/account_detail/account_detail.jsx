@@ -10,6 +10,7 @@ import { Validation } from "../../../../validation";
 import AccountActivity from "./account_activity";
 
 export default function AccountDetail() {
+    const localUser = JSON.parse(localStorage.getItem("USER"));
     //account record
     const [accountRecord, setAccounRecord] = useState({});
     //get account_id
@@ -61,6 +62,8 @@ export default function AccountDetail() {
     const [listPhoneNumber, getListPhoneNumber] = useState([]);
     // Error states for validation
     const [errors, setErrors] = useState({});
+    //Allow update
+    const [allowUpdate, setAllowUpdate] = useState(true);
     //handlde date change
     const handleDateChange = (date) => {
         setBirthDay(date); // Cập nhật ngày sinh
@@ -139,13 +142,22 @@ export default function AccountDetail() {
                 setEmail(account.email);
                 setPhoneNumber(account.phone_number);
                 setRoleItem(account.role[0]);
+                
                 setStatus(account.status ? accountStatus[0] : accountStatus[1]);
+                if (localUser.role[0].role_level >= account.role[0].role_level) {
+                    setAllowUpdate(false);
+                } else {
+                    setAccounRecord(true);
+                }
+                
             }
         } catch (err) {
             const response = err.response;
             console.log(response.message);
         }
     };
+    //set allow update
+
     //Submit form
     const onSubmit = async (ev) => {
         ev.preventDefault();
@@ -199,20 +211,22 @@ export default function AccountDetail() {
             //check status change?
             status.value !== accountRecord.status &&
                 data.append("status", status.value);
-
+                data.forEach((value, key) => {
+                    console.log(key, value); // In ra từng key và value
+                });
             const response = await axiosClient.post(
                 `account/update-account/${id}`,
                 data
             );
-            
+
             if (response.status === 200) {
                 toast.success("Cập nhật tài khoản thành công!", {
                     position: "top-right",
-                    autoClose: 4000, // thời gian tự động đóng (mili giây)
+                    autoClose: 4000,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
-                    progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+                    progress: undefined,
                 });
                 setTimeout(() => {
                     navigate("/account");
@@ -227,7 +241,6 @@ export default function AccountDetail() {
                     draggable: true,
                     progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
                 });
-                
             }
             if (response.status === 400) {
                 toast.error("Cập nhật thất bại!", {
@@ -237,10 +250,11 @@ export default function AccountDetail() {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
-                });                
+                });
             }
             //eslint-disable-next-line no-unused-vars
         } catch (err) {
+            
             toast.error("Đã có lỗi xảy ra khi cập nhật tài khoản", {
                 position: "top-right",
                 autoClose: 4000, // thời gian tự động đóng (mili giây)
@@ -267,12 +281,24 @@ export default function AccountDetail() {
                         <h1 className="font-medium text-base text-[#A3A3A3]">
                             Thông tin chi tiết tài khoản
                         </h1>
+                        {!allowUpdate && (
+                            <h1 className="font-medium text-base text-red-600">
+                                Bạn không thể thay đổi thông tin cho tài khoản
+                                này
+                            </h1>
+                        )}
                     </div>
                     <div
                         className="flex items-center gap-3 cursor-pointer"
-                        onClick={handleExternalSubmit}
+                        onClick={allowUpdate && handleExternalSubmit}
                     >
-                        <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-[#EA580C] rounded-lg hover:bg-[#C2410C]">
+                        <div
+                            className={`flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch ${
+                                allowUpdate
+                                    ? "bg-[#EA580C] hover:bg-[#C2410C]"
+                                    : "bg-orange-400"
+                            }   rounded-lg `}
+                        >
                             <img
                                 src="/icons/save.svg"
                                 alt="save"
@@ -328,8 +354,13 @@ export default function AccountDetail() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#171717] px-3 py-2 justify-center hover:bg-[#262626]"
+                                        className={`flex flex-col items-start gap-2.5 rounded-lg cursor-pointer ${
+                                            allowUpdate
+                                                ? "bg-[#171717] hover:bg-[#262626]"
+                                                : "bg-gray-400"
+                                        }  px-3 py-2 justify-center `}
                                         onClick={() =>
+                                            allowUpdate &&
                                             document
                                                 .getElementById("avatarInput")
                                                 .click()
@@ -425,6 +456,7 @@ export default function AccountDetail() {
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
+                                        readOnly={!allowUpdate}
                                         name="password_input"
                                         id="password_input_filed"
                                         type={
@@ -483,6 +515,7 @@ export default function AccountDetail() {
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
+                                        readOnly={!allowUpdate}
                                         type="text"
                                         value={fullname}
                                         onChange={(e) =>
@@ -536,6 +569,7 @@ export default function AccountDetail() {
                                     alt="hide_password"
                                     className="h-5 w-5 cursor-pointer"
                                     onClick={() =>
+                                        allowUpdate &&
                                         setOpenCalendar(!openCalendar)
                                     }
                                 />
@@ -576,6 +610,7 @@ export default function AccountDetail() {
                             <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
+                                        disabled={!allowUpdate}
                                         className="w-full font-medium text-sm text-[#171717]"
                                         value={roleItem.role_id}
                                         onChange={(e) => {
@@ -620,6 +655,7 @@ export default function AccountDetail() {
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
+                                        readOnly={!allowUpdate}
                                         type="text"
                                         value={email}
                                         onChange={(e) =>
@@ -651,6 +687,7 @@ export default function AccountDetail() {
                             <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
+                                        readOnly={!allowUpdate}
                                         type="text"
                                         value={phoneNumber}
                                         onChange={(e) =>
@@ -681,6 +718,7 @@ export default function AccountDetail() {
                             <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
+                                        disabled={!allowUpdate}
                                         className="w-full font-medium text-sm text-[#171717]"
                                         value={status.code}
                                         onChange={(e) => {
@@ -716,7 +754,7 @@ export default function AccountDetail() {
                         </div>
                     </div>
                 </form>
-                <AccountActivity id={id}/>
+                <AccountActivity id={id} />
             </div>
         </div>
     );

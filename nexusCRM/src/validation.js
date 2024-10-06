@@ -117,7 +117,7 @@ export function Validation({
         errors.phone = "Vui lòng nhập số điện thoại.";
         errors.status = false;
     } else {
-        const phoneRegex = /^0\d{9}$/;
+        const phoneRegex = /^(03|05|07|08|09)[0-9]{8}$/;
         if (!phoneRegex.test(phone)) {
             errors.phone = "Số điện thoại không đúng.";
             errors.status = false;

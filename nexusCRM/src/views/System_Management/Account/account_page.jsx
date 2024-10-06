@@ -8,6 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Account() {
+    const localUser = JSON.parse(localStorage.getItem("USER"));
     //change url with no reload
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -30,6 +31,9 @@ export default function Account() {
     const [openFillter, setOpenFillter] = useState(false);
     const [listAdmin, setListAdmin] = useState([]);
     const [isSubmitFillter, submitFillter] = useState(false);
+    //allow deleted
+    
+
     // eslint-disable-next-line no-unused-vars
     const [listFillter, setListFillter] = useState([
         {
@@ -103,7 +107,7 @@ export default function Account() {
         if (isAllSelected) {
             setSelectedUsers([]); // Bỏ chọn tất cả
         } else {
-            const allUserIds = users.map((user) => user.account_id);
+            const allUserIds = users.filter((user) => localUser.role[0].role_level < user.role[0].role_level).map((user) => user.account_id);
             setSelectedUsers(allUserIds); // Chọn tất cả
         }
         setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
@@ -164,7 +168,7 @@ export default function Account() {
                     offset: offset,
                 },
             });
-
+            
             //set user and records
             setUsers(response.data.data);
             setTotalRecords(response.data.totalRecords);
@@ -575,10 +579,12 @@ export default function Account() {
                                                 ? "bg-orange-100"
                                                 : ""
                                         }`}
-                                    >
+                                    >   
+                                    
                                         <td className="py-3 px-6 text-left">
                                             <input
                                                 type="checkbox"
+                                                disabled={localUser.role[0].role_level >= user.role[0].role_level ? true : false}
                                                 checked={selectedUsers.includes(
                                                     user.account_id
                                                 )}
