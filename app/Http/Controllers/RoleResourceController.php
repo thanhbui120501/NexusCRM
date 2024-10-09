@@ -50,7 +50,7 @@ class RoleResourceController extends Controller
     {
         $limit = $request->query('limit', 100000);
         $offset = $request->query('offset', 0);
-        $role = Role::where('status', 1)->offset($offset)->limit($limit)->get();
+        $role = Role::offset($offset)->limit($limit)->get();
 
         $arr = [
             'success' => true,
