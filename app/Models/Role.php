@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Monolog\Level;
 
 class Role extends Model
 {
@@ -41,5 +42,17 @@ class Role extends Model
     public function accounts()
     {
         return $this->hasMany(Account::class, 'role_id');
+    }
+    public function getRoleFunction($level){
+        if($level>=4){
+            return ['Chức năng nv','Chức năng nv','Chức năng nv','Chức năng nv'];
+        }else{
+            if($level === 3){
+                return ['Chức năng admin','Chức năng admin','Chức năng admin','Chức năng admin'];
+            }else if($level === 2){
+                return ['Chức năng gd','Chức năng gd','Chức năng gd','Chức năng gd'];
+            }
+            return ['Chức năng it','Chức năng it','Chức năng it','Chức năng it'];
+        }
     }
 }

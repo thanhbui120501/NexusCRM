@@ -15,7 +15,7 @@ export default function AccountActivity({ id }) {
             const response = await axiosClient.get(
                 `/activity/get-all-activity/${id}`
             );
-            console.log(response.data);
+            
             if (response.status === 200) {
                 const activity = response.data.data;
                 setListActivity(activity);

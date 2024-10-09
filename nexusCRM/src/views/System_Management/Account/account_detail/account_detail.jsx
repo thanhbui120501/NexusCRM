@@ -142,14 +142,15 @@ export default function AccountDetail() {
                 setEmail(account.email);
                 setPhoneNumber(account.phone_number);
                 setRoleItem(account.role[0]);
-                
+
                 setStatus(account.status ? accountStatus[0] : accountStatus[1]);
-                if (localUser.role[0].role_level >= account.role[0].role_level) {
+                if (
+                    localUser.role[0].role_level >= account.role[0].role_level
+                ) {
                     setAllowUpdate(false);
                 } else {
-                    setAccounRecord(true);
+                    setAllowUpdate(true);
                 }
-                
             }
         } catch (err) {
             const response = err.response;
@@ -192,7 +193,7 @@ export default function AccountDetail() {
                 data.append("password_confirm", password);
             }
             //check role change?
-            roleItem.role_id !== accountRecord.role_id &&
+            roleItem.role_id !== accountRecord.role[0].role_id &&
                 data.append("role_id", roleItem.role_id);
             //check fullname change?
             fullname !== accountRecord.full_name &&
@@ -209,11 +210,18 @@ export default function AccountDetail() {
             phoneNumber !== accountRecord.phone_number &&
                 data.append("phone_number", phoneNumber);
             //check status change?
-            status.value !== accountRecord.status &&
+            (status.value.toLowerCase() === "true") !== accountRecord.status &&
                 data.append("status", status.value);
-                data.forEach((value, key) => {
-                    console.log(key, value); // In ra từng key và value
-                });
+
+            // data.forEach((value, key) => {
+            //     // Check if value is a File (for images)
+            //     if (value instanceof File) {
+            //         console.log(key, value.name); // Print the filename for File objects
+            //     } else {
+            //         console.log(key, value); // Print the value directly for other types
+            //     }
+            // });
+
             const response = await axiosClient.post(
                 `account/update-account/${id}`,
                 data
@@ -254,7 +262,6 @@ export default function AccountDetail() {
             }
             //eslint-disable-next-line no-unused-vars
         } catch (err) {
-            
             toast.error("Đã có lỗi xảy ra khi cập nhật tài khoản", {
                 position: "top-right",
                 autoClose: 4000, // thời gian tự động đóng (mili giây)

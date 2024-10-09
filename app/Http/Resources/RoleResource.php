@@ -15,8 +15,18 @@ class RoleResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    {       
-        $member = Account::where('role_id',$this->role_id)->count();
+    {
+        $member = Account::where('role_id', $this->role_id)->count();
+        $list_member = Account::where('role_id', $this->role_id)->get()->map(function ($account) {
+            return [
+                'account_id' => $account->account_id,
+                'username' => $account->username,
+                'email' => $account->email,
+                'full_name' => $account->full_name,
+                'image_name'=> $account->image_name,
+                'status' => $account->status == 1 ? true : false,
+            ];
+        });
         return [
             'role_id' => $this->role_id,
             'role_name' => $this->role_name,
@@ -24,11 +34,11 @@ class RoleResource extends JsonResource
             'role_another_name' => $this->role_another_name,
             'role_level' => $this->role_level,
             'description' => $this->description,
+            'list_member' => $list_member,
+            'role_function' => $this->getRoleFunction($this->role_level),
             'create_at' => $this->created_at,
             'update_at' => $this->updated_at,
             'status' => $this->status == 1 ? true : false,
         ];
-        
     }
-    
 }
