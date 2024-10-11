@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { Validation } from "../../../../validation";
 
 export default function AccountCreate() {
+    //set loading
+    const [loading, setLoading] = useState(false);
     //set navigate
     const navigate = useNavigate();
     //set form ref
@@ -105,6 +107,7 @@ export default function AccountCreate() {
     const onSubmit = async (ev) => {
         ev.preventDefault();
         try {
+            
             const validationErrors = Validation({
                 image: image,
                 username: username,
@@ -116,7 +119,7 @@ export default function AccountCreate() {
                 listEmail: listEmail,
                 listPhoneNumber: listPhoneNumber,
                 listUsername: listUsername,
-                type:"create"
+                type: "create",
             });
             setErrors(validationErrors);
             if (!validationErrors.status) {
@@ -130,6 +133,7 @@ export default function AccountCreate() {
                 });
                 return;
             }
+            setLoading(true);
             const data = new FormData();
             data.append("username", username);
             data.append("password", password);
@@ -169,6 +173,8 @@ export default function AccountCreate() {
                 draggable: true,
                 progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
             });
+        }finally{
+            setLoading(false);
         }
     };
     //HandleExternalSubmit
@@ -611,11 +617,17 @@ export default function AccountCreate() {
                                 </div>
                             </div>
                         </div>
+                        {loading && (
+                            <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center">
+                                <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
+                                <h1 className="text-sm font-medium text-white">
+                                    Đang thêm nhân viên
+                                </h1>
+                            </div>
+                        )}
                     </div>
                 </form>
             </div>
         </div>
     );
 }
-
-

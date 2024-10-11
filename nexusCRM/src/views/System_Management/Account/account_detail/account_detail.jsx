@@ -10,7 +10,10 @@ import { Validation } from "../../../../validation";
 import AccountActivity from "./account_activity";
 
 export default function AccountDetail() {
+    //get local user
     const localUser = JSON.parse(localStorage.getItem("USER"));
+    //set loading
+    const [loading, setLoading] = useState(false);
     //account record
     const [accountRecord, setAccounRecord] = useState({});
     //get account_id
@@ -125,6 +128,7 @@ export default function AccountDetail() {
     };
     const getAccountById = async () => {
         try {
+            setLoading(true);
             const response = await axiosClient.get(
                 `account/get-detail-account/${id}`
             );
@@ -155,6 +159,8 @@ export default function AccountDetail() {
         } catch (err) {
             const response = err.response;
             console.log(response.message);
+        } finally {
+            setLoading(false);
         }
     };
     //set allow update
@@ -348,15 +354,19 @@ export default function AccountDetail() {
                                     }  border-dashed h-[68px] w-[68px]`}
                                 >
                                     <div className="flex flex-col justify-center items-center gap-2.5 w-full h-full">
-                                        <img
-                                            src={
-                                                image
-                                                    ? avatar
-                                                    : `http://127.0.0.1:8000/uploads/${avatar}`
-                                            }
-                                            alt="avatar_empty"
-                                            className="w-full h-full object-cover rounded-lg"
-                                        />
+                                        {loading ? (
+                                            <div className="animate-spin rounded-full h-4 w-4 border-t-4 border-orange-600 border-solid"></div>
+                                        ) : (
+                                            <img
+                                                src={
+                                                    image
+                                                        ? avatar
+                                                        : `http://127.0.0.1:8000/uploads/${avatar}`
+                                                }
+                                                alt="avatar_empty"
+                                                className="w-full h-full object-cover rounded-lg"
+                                            />
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -763,6 +773,14 @@ export default function AccountDetail() {
                 </form>
                 <AccountActivity id={id} />
             </div>
+            {loading && (
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
+                    <h1 className="text-sm font-medium text-white">
+                        Đang tải thông tin
+                    </h1>
+                </div>
+            )}
         </div>
     );
 }

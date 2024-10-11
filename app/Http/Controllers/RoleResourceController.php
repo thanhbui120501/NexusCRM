@@ -137,8 +137,9 @@ class RoleResourceController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'role_name' => 'required|string|max:50|min:5',
+            'role_name' => '|string|max:50|min:5',
             'description' => 'string|max:255',
+            'status' => 'integer'
         ]);
         if ($validator->fails()) {
             $arr = [
@@ -152,7 +153,7 @@ class RoleResourceController extends Controller
             $update = $role->update($request->all());
             if ($update) {
                 //save activity
-                $user = Auth::guard('api')->user();
+                $user = $request->user();
                 $newRequest = (new RequestController)->makeActivityRequest(
                     'Role Updated',
                     'Role',
