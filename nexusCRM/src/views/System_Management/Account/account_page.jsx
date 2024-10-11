@@ -32,7 +32,6 @@ export default function Account() {
     const [listAdmin, setListAdmin] = useState([]);
     const [isSubmitFillter, submitFillter] = useState(false);
     //allow deleted
-    
 
     // eslint-disable-next-line no-unused-vars
     const [listFillter, setListFillter] = useState([
@@ -107,7 +106,12 @@ export default function Account() {
         if (isAllSelected) {
             setSelectedUsers([]); // Bỏ chọn tất cả
         } else {
-            const allUserIds = users.filter((user) => localUser.role[0].role_level < user.role[0].role_level).map((user) => user.account_id);
+            const allUserIds = users
+                .filter(
+                    (user) =>
+                        localUser.role[0].role_level < user.role[0].role_level
+                )
+                .map((user) => user.account_id);
             setSelectedUsers(allUserIds); // Chọn tất cả
         }
         setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
@@ -168,7 +172,7 @@ export default function Account() {
                     offset: offset,
                 },
             });
-            
+
             //set user and records
             setUsers(response.data.data);
             setTotalRecords(response.data.totalRecords);
@@ -180,6 +184,7 @@ export default function Account() {
         } catch (err) {
             const response = err.response;
             setError(response.message);
+        } finally {
             setLoading(false);
         }
     };
@@ -198,11 +203,11 @@ export default function Account() {
             );
             toast.success("Xóa tài khoản thành công!", {
                 position: "top-right",
-                autoClose: 5000, // thời gian tự động đóng (mili giây)
+                autoClose: 5000,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
-                progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
+                progress: undefined,
             });
             getUsers(currentPage, showRowNumber);
             setSelectedUsers([]);
@@ -269,7 +274,7 @@ export default function Account() {
                     <button
                         key={i}
                         className={`flex ${
-                            currentPage === totalPages
+                            currentPage === i
                                 ? "bg-gray-900 text-white hover:bg-[#262626]"
                                 : "text-gray-900 hover:text-white hover:bg-gray-900"
                         } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
@@ -288,7 +293,7 @@ export default function Account() {
                             key={i}
                             className={`flex ${
                                 currentPage === i
-                                    ? "bg-gray-900 text-white"
+                                    ? "bg-gray-900 text-white hover:bg-[#262626]"
                                     : "text-gray-900 hover:text-white hover:bg-gray-900"
                             } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
@@ -312,7 +317,7 @@ export default function Account() {
                         key={totalPages}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-gray-900 text-white"
+                                ? "bg-gray-900 text-white hover:bg-[#262626]"
                                 : "text-gray-900 hover:text-white hover:bg-gray-900"
                         }
                             
@@ -453,35 +458,43 @@ export default function Account() {
                     </h1>
                 </div>
                 <div className="relative flex items-center gap-2">
-                    <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
-                        <img
-                            src="/icons/search.svg"
-                            alt="icon-search"
-                            className={`w-5 h-5 cursor-pointer`}
-                            onClick={() => {
-                                handleSearch(keywordFromUrl);
-                            }}
-                        />
-                        <div className="flex items-center gap-[2px] ml-2 flex-1">
-                            <input
-                                type="text"
-                                value={keywordFromUrl}
-                                onChange={(e) => handleSearch(e.target.value)}
-                                placeholder="Tìm kiếm tài khoản"
+                    {users.length !== 0 && (
+                        <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
+                            <img
+                                src="/icons/search.svg"
+                                alt="icon-search"
+                                className={`w-5 h-5 cursor-pointer`}
+                                onClick={() => {
+                                    handleSearch(keywordFromUrl);
+                                }}
+                            />
+                            <div className="flex items-center gap-[2px] ml-2 flex-1">
+                                <input
+                                    type="text"
+                                    value={keywordFromUrl}
+                                    onChange={(e) =>
+                                        handleSearch(e.target.value)
+                                    }
+                                    placeholder="Tìm kiếm tài khoản"
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {users.length !== 0 && (
+                        <img src="/icons/line.svg" alt="icon-statistics" />
+                    )}
+                    {users.length !== 0 && (
+                        <div
+                            className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
+                            onClick={() => setOpenFillter(!openFillter)}
+                        >
+                            <img
+                                src="/icons/sliders.svg"
+                                alt="icon-sliders"
+                                className="flex flex-col items-center w-5 h-5 "
                             />
                         </div>
-                    </div>
-                    <img src="/icons/line.svg" alt="icon-statistics" />
-                    <div
-                        className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                        onClick={() => setOpenFillter(!openFillter)}
-                    >
-                        <img
-                            src="/icons/sliders.svg"
-                            alt="icon-sliders"
-                            className="flex flex-col items-center w-5 h-5 "
-                        />
-                    </div>
+                    )}
                     {openFillter && (
                         <ShowFillter
                             onCloseFillter={callbackFillTer}
@@ -523,7 +536,21 @@ export default function Account() {
                     )}
                 </div>
             </div>
-            {
+            {users.length === 0 && !loading ? (
+                <div className="flex flex-col items-center justify-center w-full mt-4">
+                    <h1 className="text-base font-medium text-red-600">
+                        Chưa có nhân viên nào trên hệ thống!
+                    </h1>
+                    <h1
+                        onClick={() => {
+                            handleNavigation("/account/create");
+                        }}
+                        className="cursor-pointer text-blue-600 text-sm font-medium underline"
+                    >
+                        Thêm nhân viên ngay
+                    </h1>
+                </div>
+            ) : (
                 <div className="flex pb-6 pl-6 pr-6 flex-col items-start gap-3 self-stretch">
                     <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto  max-w-full">
                         <table className="w-full table-fixed bg-white ">
@@ -579,12 +606,17 @@ export default function Account() {
                                                 ? "bg-orange-100"
                                                 : ""
                                         }`}
-                                    >   
-                                    
+                                    >
                                         <td className="py-3 px-6 text-left">
                                             <input
                                                 type="checkbox"
-                                                disabled={localUser.role[0].role_level >= user.role[0].role_level ? true : false}
+                                                disabled={
+                                                    localUser.role[0]
+                                                        .role_level >=
+                                                    user.role[0].role_level
+                                                        ? true
+                                                        : false
+                                                }
                                                 checked={selectedUsers.includes(
                                                     user.account_id
                                                 )}
@@ -739,7 +771,15 @@ export default function Account() {
                         </div>
                     </div>
                 </div>
-            }
+            )}
+            {loading && (
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center gap-4">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
+                    <h1 className="text-sm font-medium text-white">
+                        Đang tải danh sách nhân viên
+                    </h1>
+                </div>
+            )}
             <DialogComponent
                 open={open}
                 setOpen={setOpen}

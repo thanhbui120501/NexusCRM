@@ -2,7 +2,7 @@
 
 function FeatureHighlight() {
   return (
-    <section className="flex flex-col justify-center self-stretch p-4 my-auto  min-w-[240px] w-[960px] h-full max-md:max-w-full scale-75 sm:scale-100 lg:scale-110 m-4 sm:m-6 lg:mr-10 lg:mt-10 lg:mb-10">
+    <div className="flex flex-col justify-center self-stretch p-4 my-auto  min-w-[240px] w-[960px]  max-md:max-w-full scale-75 sm:scale-100 lg:scale-110 m-4 sm:m-6 lg:mr-10 lg:mt-10 lg:mb-10">
       <div className="flex overflow-hidden relative flex-1 gap-2.5 items-start rounded-3xl border border-solid bg-neutral-50 border-neutral-200 size-full max-md:max-w-full">
         <img
           loading="lazy"
@@ -25,7 +25,7 @@ function FeatureHighlight() {
           </p>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

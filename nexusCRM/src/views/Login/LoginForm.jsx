@@ -16,7 +16,9 @@ function LoginForm() {
         showPassword: false,
         rememberPassword: false,
     });
-
+    //set loading
+    const [loading, setLoading] = React.useState(false);
+    //set errors
     const [errors, setError] = React.useState({});
 
     const handleClickShowPassword = () => {
@@ -85,54 +87,58 @@ function LoginForm() {
         setOpen(false);
     };
     //on login
-    const Submit = (ev) => {
-        ev.preventDefault();
-        setError(LoginValidation(values));
+    const Submit = async (ev) => {
+        try {
+            ev.preventDefault();
+            setLoading(true);
+            setError(LoginValidation(values));
 
-        const data = new FormData();
-        data.append("username", usernameRef.current.value);
-        data.append("password", passwordRef.current.value);
-        data.append(
-            "remember_token",
-            values.rememberPassword ? "true" : "false"
-        );
+            const data = new FormData();
+            data.append("username", usernameRef.current.value);
+            data.append("password", passwordRef.current.value);
+            data.append(
+                "remember_token",
+                values.rememberPassword ? "true" : "false"
+            );
 
-        axiosClient
-            .post("/account/login", data)
-            .then(({ data }) => {
-                setUser(data.data);
-                setToken(data.Bearer_token);
-            })
-            .catch((err) => {
-                const response = err.response;
-                if (response && err.status === 422) {
-                    console.log(response.data.errors);
-                }
-                if (response && err.status === 401) {
-                    setValuesDialog({
-                        ...dialog,
-                        title: "Đăng nhập thất bại",
-                        description:
-                            "Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra lại thông tin đăng nhập. Xin cảm ơn ❤️",
-                        color: "text-red-600",
-                        bgColor: "bg-red-600",
-                        hoverColor: "hover:bg-red-500",
-                    });
-                    handleClickToOpen();
-                }
-                if (response && err.status === 403) {
-                    setValuesDialog({
-                        ...dialog,
-                        title: "Đăng nhập thất bại",
-                        description:
-                            "Tài khoản của bạn đã bị vô hiệu hóa nên bạn không thể đăng nhập vào hệ thống, vui lòng liên hệ với quản trị liên để có thêm thông tin chi tiết. Xin cảm ơn ❤️",
-                        color: "text-orange-600",
-                        bgColor: "bg-orange-600",
-                        hoverColor: "hover:bg-orange-500",
-                    });
-                    handleClickToOpen();
-                }
-            });
+            const response = await axiosClient.post("/account/login", data);
+            console.log(response.status);
+            if (response.status === 200) {
+                setUser(response.data.data);
+                setToken(response.data.Bearer_token);
+            }
+            if (response.status === 401) {
+                setValuesDialog({
+                    ...dialog,
+                    title: "Đăng nhập thất bại",
+                    description:
+                        "Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra lại thông tin đăng nhập. Xin cảm ơn ❤️",
+                    color: "text-red-600",
+                    bgColor: "bg-red-600",
+                    hoverColor: "hover:bg-red-500",
+                });
+                handleClickToOpen();
+            }
+            if (response.status === 403) {
+                setValuesDialog({
+                    ...dialog,
+                    title: "Đăng nhập thất bại",
+                    description:
+                        "Tài khoản của bạn đã bị vô hiệu hóa nên bạn không thể đăng nhập vào hệ thống, vui lòng liên hệ với quản trị liên để có thêm thông tin chi tiết. Xin cảm ơn ❤️",
+                    color: "text-orange-600",
+                    bgColor: "bg-orange-600",
+                    hoverColor: "hover:bg-orange-500",
+                });
+                handleClickToOpen();
+            }
+        } catch (err) {
+            const response = err.response;
+            if (response.status === 422) {
+                console.log(response);
+            }
+        } finally {
+            setLoading(false);
+        }
     };
     return (
         <form
@@ -140,6 +146,12 @@ function LoginForm() {
             className="flex flex-col self-center px-6 mt-12 max-w-full font-sans w-[416px] max-md:px-5 max-md:mt-10"
             onSubmit={Submit}
         >
+            {loading && (
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[10] items-center justify-center pb-40 rounded-xl">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
+                    <h1 className="text-sm font-medium text-white">Đang đăng nhập</h1>
+                </div>
+            )}
             <h2 className="text-3xl font-semibold leading-none text-neutral-900">
                 Đăng nhập
             </h2>
@@ -214,7 +226,7 @@ function LoginForm() {
                             checked={values.rememberPassword}
                             onChange={handleClickRememberPassword}
                             id="remember"
-                            className="w-4 h-4 bg-blue-500 checked:bg-blue-700 focus:ring-blue-500 focus:ring-2 rounded"
+                            className="h-4 w-4  bg-gray-100 border-gray-300 rounded-lg accent-[#EA580C]"
                         />
                         <label
                             htmlFor="remember"
@@ -247,6 +259,7 @@ function LoginForm() {
                     hoverColor={dialog.hoverColor}
                 />
             </div>
+
         </form>
     );
 }

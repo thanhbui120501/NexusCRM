@@ -71,10 +71,12 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         } else {
+            
+            $user = $request->user();
             //create account id, hash password
             $input['account_id'] = 'AC' . Carbon::now()->format('dmyhis');
             $input['password'] = Hash::make($input['password']);
-
+            $input['created_by'] = $user->account_id;
             //create avatar
             if ($request->has('images')) {
                 $image = $request->file('images');
@@ -90,7 +92,6 @@ class AccountResourceController extends Controller
             $account = Account::create($input);
             
             //save activity
-            $user = $request->user();
 
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Account Created',
