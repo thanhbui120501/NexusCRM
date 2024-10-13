@@ -639,6 +639,7 @@ export default function AccountDetail() {
                                         }}
                                     >
                                         {role.map((option, index) => (
+                                            option.status &&
                                             <option
                                                 key={index}
                                                 value={option.role_id}
