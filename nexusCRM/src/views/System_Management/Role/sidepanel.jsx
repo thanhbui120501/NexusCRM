@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../axiosClient";
 import { toast, ToastContainer } from "react-toastify";
+import ShowDataDropDown from "../Account/showDataDropdown";
+
 export default function SidePanel({ isOpen, onData, role, onUpdated }) {
     //navigate
     const navigate = useNavigate();
@@ -11,10 +13,66 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
     const [checked, setChecked] = useState(status);
     //set loading
     const [loading, setLoading] = useState(false);
+    //set open dropdown data
+    const [openDropDownData, setOpenDropDownData] = useState(false);
+    //set number row
+    const [showRowNumber, setShowRowNumber] = useState(5);
+    //set total
+    const [totalPages, setTotalPages] = useState(0);
+    //set current page
+    const [currentPage, setCurrentPage] = useState(1);
+    //set index
+    const [indexOfFirstItem, setIndexOfFirstItem] = useState(0);
+    const [indexOfLastItem, setIndexOfLastItem] = useState(5);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filteredData, setFilteredData] = useState(role?.list_member);
+    //show toast
+    const showErrorToast = () => {
+        toast.error("Chức năng này sẽ sớm có trên hệ thống!", {
+            position: "top-right",
+            autoClose: 3000,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+    //handel search
+    const handleSearch = (e) => {
+        const term = e.target.value;
+        setSearchTerm(term);
+
+        const filtered = role?.list_member.filter(
+            (item) =>
+                item.full_name.toLowerCase().includes(term.toLowerCase()) ||
+                item.account_id.toLowerCase().includes(term.toLowerCase())
+        );
+        setFilteredData(filtered);
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            handleSetTotalPages();
+            const lastIndex = currentPage * showRowNumber;
+            const firstIndex = lastIndex - showRowNumber;
+            setIndexOfLastItem(lastIndex);
+            setIndexOfFirstItem(firstIndex);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, currentPage, showRowNumber, searchTerm]);
     //set role status
     const handleCheckboxChange = (val) => {
         setChecked(val);
         updateStatus(val);
+    };
+    //handle selected row
+    const handleSeclectRowNumber = (row) => {
+        setShowRowNumber(row);
+        setCurrentPage(1);
+    };
+    //close dropdown
+    const handleCloseDropdow = () => {
+        setOpenDropDownData(false);
     };
     //navidate to account create page
     const handleNavigation = (path) => {
@@ -22,7 +80,6 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
     };
     const updateStatus = async (val) => {
         try {
-            console.log(val);
             setLoading(true);
             const data = {
                 status: val ? "1" : "0",
@@ -37,14 +94,12 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     },
                 }
             );
-            console.log(response.data);
-            if (response.status === 200) {                   
+            if (response.status === 200) {
                 if (onUpdated) {
                     onUpdated(true);
                 } else {
                     console.error("onUpdated is undefined");
-                }            
-                        
+                }
             }
         } catch (err) {
             console.log(err);
@@ -56,15 +111,218 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 draggable: true,
                 progress: undefined,
             });
-        }finally {
-            setLoading(false); // Đặt loading về false trong cả trường hợp thành công và thất bại
+        } finally {
+            setLoading(false);
         }
+    };
+    //handle page change
+    const handlePageChange = (page) => {
+        if (page !== currentPage) {
+            setCurrentPage(page);
+        }
+    };
+    //handle next page
+    const handleNext = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+    //handle prev page
+    const handlePrev = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+    //handle set total page
+    const handleSetTotalPages = () => {
+        const pages = Math.ceil(
+            (searchTerm === ""
+                ? role?.list_member?.length
+                : filteredData.length) / showRowNumber
+        );
+        setTotalPages(pages);
+    };
+    const renderPagination = () => {
+        const pages = [];
+
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(
+                    <button
+                        key={i}
+                        className={`flex ${
+                            currentPage === i
+                                ? "bg-gray-900 text-white hover:bg-[#262626]"
+                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                        type="button"
+                        onClick={() => handlePageChange(i)}
+                    >
+                        {i}
+                    </button>
+                );
+            }
+        } else {
+            if (currentPage <= 4) {
+                for (let i = 1; i <= 5; i++) {
+                    pages.push(
+                        <button
+                            key={i}
+                            className={`flex ${
+                                currentPage === i
+                                    ? "bg-gray-900 text-white hover:bg-[#262626]"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(i)}
+                        >
+                            {i}
+                        </button>
+                    );
+                }
+                pages.push(
+                    <div
+                        key={"more_0"}
+                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                        type="text"
+                    >
+                        ...
+                    </div>
+                );
+                pages.push(
+                    <button
+                        key={totalPages}
+                        className={`flex ${
+                            currentPage === totalPages
+                                ? "bg-gray-900 text-white hover:bg-[#262626]"
+                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                        }
+                            
+                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                        type="button"
+                        onClick={() => handlePageChange(totalPages)}
+                    >
+                        {totalPages}
+                    </button>
+                );
+            } else {
+                if (currentPage > totalPages - 5) {
+                    pages.push(
+                        <button
+                            key={1}
+                            className={`flex ${
+                                currentPage === 1
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            }
+                                
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(1)}
+                        >
+                            {1}
+                        </button>
+                    );
+                    pages.push(
+                        <div
+                            key={"more_1"}
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            type="text"
+                        >
+                            ...
+                        </div>
+                    );
+                    for (let i = totalPages - 4; i <= totalPages; i++) {
+                        pages.push(
+                            <button
+                                key={i}
+                                className={`flex ${
+                                    currentPage === i
+                                        ? "bg-gray-900 text-white"
+                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                type="button"
+                                onClick={() => handlePageChange(i)}
+                            >
+                                {i}
+                            </button>
+                        );
+                    }
+                } else {
+                    pages.push(
+                        <button
+                            key={1}
+                            className={`flex ${
+                                currentPage === 1
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            }
+                                
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(1)}
+                        >
+                            {1}
+                        </button>
+                    );
+                    pages.push(
+                        <div
+                            key={"more_2"}
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            type="text"
+                        >
+                            ...
+                        </div>
+                    );
+                    for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                        pages.push(
+                            <button
+                                key={i}
+                                className={`flex ${
+                                    currentPage === i
+                                        ? "bg-gray-900 text-white"
+                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                type="button"
+                                onClick={() => handlePageChange(i)}
+                            >
+                                {i}
+                            </button>
+                        );
+                    }
+                    pages.push(
+                        <div
+                            key={"more_3"}
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            type="text"
+                        >
+                            ...
+                        </div>
+                    );
+                    pages.push(
+                        <button
+                            key={totalPages}
+                            className={`flex ${
+                                currentPage === totalPages
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                            type="button"
+                            onClick={() => handlePageChange(totalPages)}
+                        >
+                            {totalPages}
+                        </button>
+                    );
+                }
+            }
+        }
+        return pages;
     };
     return (
         <div
             className={`flex flex-col items-start fixed top-0 right-0 h-screen w-[712px] bg-white shadow-lg transform ${
                 isOpen ? "translate-x-0" : "translate-x-full"
-            } transition-transform duration-300 ease-in-out z-[200] overflow-y-auto overflow-x-hidden`}
+            }  transition-transform duration-300 ease-in-out z-[200] overflow-y-auto overflow-x-hidden `}
         >
             <div
                 name="header"
@@ -88,7 +346,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     />
                 </div>
             </div>
-            <div className="w-full h-px bg-gray-300 my-2.5"></div>
+            <div className="flex h-2 py-2.5 flex-col justify-between items-start self-stretch flex-shrink-0">
+                <div className="w-full h-[1px] min-h-[1px] bg-gray-300 block "></div>
+            </div>
             <div
                 name="body"
                 id="body"
@@ -171,9 +431,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                     <div className="flex items-center gap-[2px] ml-2 flex-1">
                                         <input
                                             type="text"
-                                            // value={}
-                                            //onChange={() => {}}
-                                            placeholder="Tìm kiếm tài khoản"
+                                            value={searchTerm}
+                                            onChange={handleSearch}
+                                            placeholder="Tìm kiếm nhân viên"
                                         />
                                     </div>
                                 </div>
@@ -183,7 +443,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                 />
                                 <div
                                     className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                                    onClick={() => {}}
+                                    onClick={() => {showErrorToast();}}
                                 >
                                     <img
                                         src="/icons/sliders.svg"
@@ -199,60 +459,133 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             className="flex flex-col items-start gap-3 self-stretch"
                         >
                             {/* {account item here} */}
-                            {role?.list_member?.map((mem) => (
-                                <div
-                                    key={mem.account_id}
-                                    className="flex flex-col items-start gap-3 self-stretch"
-                                >
+                            {(searchTerm === ""
+                                ? role?.list_member
+                                : filteredData
+                            )
+                                ?.slice(indexOfFirstItem, indexOfLastItem)
+                                ?.map((mem) => (
                                     <div
-                                        name="user-item"
-                                        className="flex justify-between items-center self-stretch"
+                                        key={mem.account_id}
+                                        className="flex flex-col items-start gap-3 self-stretch"
                                     >
                                         <div
-                                            name="account-info"
-                                            className="flex items-center gap-2"
+                                            name="user-item"
+                                            className="flex justify-between items-center self-stretch"
                                         >
-                                            <img
-                                                src={`http://127.0.0.1:8000/uploads/${mem.image_name}`}
-                                                alt="avatar-img"
-                                                className="rounded-full w-10 h-10"
-                                            />
-                                            <div className="flex flex-col items-start gap-1">
-                                                <h1 className="text-sm font-medium text-[#A3A3A3]">
-                                                    {mem.account_id}
-                                                </h1>
-                                                <h1 className="text-base font-semibold text-gray-900">
-                                                    {mem.full_name}
-                                                </h1>
+                                            <div
+                                                name="account-info"
+                                                className="flex items-center gap-2"
+                                            >
+                                                <img
+                                                    src={`http://127.0.0.1:8000/uploads/${mem.image_name}`}
+                                                    alt="avatar-img"
+                                                    className="rounded-full w-10 h-10"
+                                                />
+                                                <div className="flex flex-col items-start gap-1">
+                                                    <h1 className="text-sm font-medium text-[#A3A3A3]">
+                                                        {mem.account_id}
+                                                    </h1>
+                                                    <h1 className="text-base font-semibold text-gray-900">
+                                                        {mem.full_name}
+                                                    </h1>
+                                                </div>
                                             </div>
+                                            {mem.status ? (
+                                                <div className="flex justify-center items-center gap-2.5 border border-[#16A34A] bg-[#F0FDF4]  rounded-[4px] px-3 py-1">
+                                                    <h1 className="font-medium text-sm text-[#16A34A]">
+                                                        Đang hoạt động
+                                                    </h1>
+                                                </div>
+                                            ) : (
+                                                <div className="flex justify-center items-center gap-2.5 border border-[#DC2626] bg-[#FEF2F2] rounded-[4px] px-3 py-1">
+                                                    <h1 className="font-medium text-sm text-[#DC2626]">
+                                                        Ngưng hoạt động
+                                                    </h1>
+                                                </div>
+                                            )}
                                         </div>
-                                        {mem.status ? (
-                                            <div className="flex justify-center items-center gap-2.5 border border-[#16A34A] bg-[#F0FDF4]  rounded-[4px] px-3 py-1">
-                                                <h1 className="font-medium text-sm text-[#16A34A]">
-                                                    Đang hoạt động
-                                                </h1>
-                                            </div>
-                                        ) : (
-                                            <div className="flex justify-center items-center gap-2.5 border border-[#DC2626] bg-[#FEF2F2] rounded-[4px] px-3 py-1">
-                                                <h1 className="font-medium text-sm text-[#DC2626]">
-                                                    Ngưng hoạt động
-                                                </h1>
-                                            </div>
-                                        )}
+                                        <div className="w-full h-px bg-gray-300"></div>
                                     </div>
-                                    <div className="w-full h-px bg-gray-300"></div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
 
-                        {/* {padnigation here} */}
+                        <div className="flex justify-between items-center self-stretch">
+                            <div className="relative overflow-visible flex flex-col items-start gap-1 max-h-none">
+                                <div
+                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-gray-200"
+                                    onClick={() => {
+                                        setOpenDropDownData(!openDropDownData);
+                                        handleSetTotalPages();
+                                    }}
+                                >
+                                    <h1 className="text-gray-900 font-medium text-sm cursor-pointer">
+                                        {showRowNumber}
+                                    </h1>
+                                    <img
+                                        src="/icons/statis_more_icon.svg"
+                                        alt="icon-selected"
+                                        className={`w-4 h-4 cursor-pointer`}
+                                    />
+                                </div>
+                                {openDropDownData && (
+                                    <ShowDataDropDown
+                                        onData={handleSeclectRowNumber}
+                                        onCloseDropdow={handleCloseDropdow}
+                                    />
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => handlePrev()}
+                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                    type="button"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-4 h-4"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                                {renderPagination()}
+
+                                <button
+                                    onClick={() => handleNext()}
+                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                    type="button"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-4 h-4"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
+
             {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center">
+                <div className="absolute inset-0 bg-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">Đang cập nhật</h1>
+                    <h1 className="text-sm font-medium text-white">
+                        Đang cập nhật
+                    </h1>
                 </div>
             )}
         </div>

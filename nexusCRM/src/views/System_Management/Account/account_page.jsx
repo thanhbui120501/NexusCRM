@@ -21,7 +21,7 @@ export default function Account() {
     const [totalRecords, setTotalRecords] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [showRowNumber, setShowRowNumber] = useState(5);
-    // eslint-disable-next-line no-unused-vars
+    //set loading
     const [loading, setLoading] = useState(true);
     // eslint-disable-next-line no-unused-vars
     const [accecpt, setAccecpt] = useState(false);
@@ -86,6 +86,7 @@ export default function Account() {
     };
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState(null);
+    //close dropdown
     const handleCloseDropdow = () => {
         setOpenDropDownData(false);
     };

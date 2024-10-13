@@ -9,6 +9,8 @@ import LoginValidation from "../../validation";
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 function LoginForm() {
+    //set dialog message
+    const [dialogMessage, setDialogMessage] = React.useState(null);
     //Handle show and hide password
     const [values, setValues] = React.useState({
         password: "",
@@ -86,6 +88,12 @@ function LoginForm() {
     const handleToClose = () => {
         setOpen(false);
     };
+    React.useEffect(() => {
+        if (dialogMessage) {
+            setValuesDialog(dialogMessage);
+            handleClickToOpen();
+        }
+    }, [dialogMessage]);
     //on login
     const Submit = async (ev) => {
         try {
@@ -106,10 +114,35 @@ function LoginForm() {
             if (response.status === 200) {
                 setUser(response.data.data);
                 setToken(response.data.Bearer_token);
+                setDialogMessage(null);
             }
-            if (response.status === 401) {
-                setValuesDialog({
-                    ...dialog,
+            // if (response.status === 401) {
+            //     setDialogMessage({
+            //         title: "Đăng nhập thất bại",
+            //         description:
+            //             "Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra lại thông tin đăng nhập. Xin cảm ơn ❤️",
+            //         color: "text-red-600",
+            //         bgColor: "bg-red-600",
+            //         hoverColor: "hover:bg-red-500",
+            //     });
+            // }
+            // if (response.status === 403) {
+            //     setDialogMessage({
+            //         title: "Đăng nhập thất bại",
+            //         description:
+            //             "Tài khoản của bạn đã bị vô hiệu hóa nên bạn không thể đăng nhập vào hệ thống, vui lòng liên hệ với quản trị liên để có thêm thông tin chi tiết. Xin cảm ơn ❤️",
+            //         color: "text-orange-600",
+            //         bgColor: "bg-orange-600",
+            //         hoverColor: "hover:bg-orange-500",
+            //     });
+            // }
+        } catch (err) {
+            const response = err.response;
+            if (response.status === 422) {
+                console.log(response);
+            }
+            if(response.status === 401){
+                setDialogMessage({
                     title: "Đăng nhập thất bại",
                     description:
                         "Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra lại thông tin đăng nhập. Xin cảm ơn ❤️",
@@ -117,11 +150,9 @@ function LoginForm() {
                     bgColor: "bg-red-600",
                     hoverColor: "hover:bg-red-500",
                 });
-                handleClickToOpen();
             }
-            if (response.status === 403) {
-                setValuesDialog({
-                    ...dialog,
+            if(response.status === 403){
+                setDialogMessage({
                     title: "Đăng nhập thất bại",
                     description:
                         "Tài khoản của bạn đã bị vô hiệu hóa nên bạn không thể đăng nhập vào hệ thống, vui lòng liên hệ với quản trị liên để có thêm thông tin chi tiết. Xin cảm ơn ❤️",
@@ -129,15 +160,9 @@ function LoginForm() {
                     bgColor: "bg-orange-600",
                     hoverColor: "hover:bg-orange-500",
                 });
-                handleClickToOpen();
-            }
-        } catch (err) {
-            const response = err.response;
-            if (response.status === 422) {
-                console.log(response);
             }
         } finally {
-            setLoading(false);
+            setLoading(false);                    
         }
     };
     return (

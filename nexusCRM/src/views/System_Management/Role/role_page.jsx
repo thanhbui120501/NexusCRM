@@ -13,6 +13,7 @@ export default function Role() {
     const [hasUpdated, setHasUpdated] = useState(false);
     //set open/close side panel
     const [isOpen, setIsOpen] = useState(false);
+    //set aniimated    
     const toggleSidePanel = (value) => {
         setIsOpen(value);
     };
@@ -21,7 +22,6 @@ export default function Role() {
         getListRole();
     }, []);
     useEffect(() => {
-        
         if (hasUpdated) {
             getListRole();
             setHasUpdated(false);
@@ -49,63 +49,45 @@ export default function Role() {
             setLoading(false);
         }
     };
-
-    //build member avatar
-    const buildMemberAvatar = (listMember) => {
-        let avatar = [];
+    const renderAvatars = (listMember) => {
         if (listMember.length === 0) {
-            avatar.push(
-                <div
-                    key={0}
-                    className="flex w-8 h-8 p-2 justify-center items-center gap-2.5 bg-[#FFF7ED] border border-[#fff] rounded-full absolute"
-                >
-                    <h1 className="text-xs font-medium text-[#EA580C]">0</h1>
-                </div>
-            );
-        } else if (listMember.length <= 5) {
-            let z_index = listMember.length * 10;
-
-            for (let i = 0; i < listMember.length; i++) {
-                avatar.push(
-                    <img
-                        key={i}
-                        src={`http://127.0.0.1:8000/uploads/${listMember[i].image_name}`}
-                        alt="avatar"
-                        className={`w-[32px] h-[32px] rounded-full absolute left-[${
-                            i * 20
-                        }px] z-[${z_index}] border border-white`}
-                    />
-                );
-                z_index -= 10;
-            }
-        } else {
-            let z_index = 50;
-
-            for (let i = 0; i < 5; i++) {
-                avatar.push(
-                    <img
-                        key={listMember[i].account_id}
-                        src={`http://127.0.0.1:8000/uploads/${listMember[i].image_name}`}
-                        alt="avatar"
-                        className={`w-[32px] h-[32px] rounded-full absolute left-[${
-                            i * 20
-                        }px] z-[${z_index}] border border-white`}
-                    />
-                );
-                z_index -= 10;
-            }
-            avatar.push(
-                <div
-                    key={0}
-                    className={`flex w-8 h-8 p-2 justify-center items-center gap-2.5 bg-[#FFF7ED] border border-[#fff] rounded-full absolute left-[6.5rem] z-0 `}
-                >
-                    <h1 className="text-xs font-medium text-[#EA580C]">
-                        +{listMember.length - 5}
-                    </h1>
-                </div>
-            );
+          return (
+            <div
+              key={0}
+              className={`flex w-8 h-8 justify-center items-center bg-[#FFF7ED] border border-white rounded-full`}
+            >
+              <h1 className="text-xs font-medium text-[#EA580C]">0</h1>
+            </div>
+          );
         }
-        return avatar;
+      
+        const avatars = listMember.slice(0, 5).map((avatar, index) => (
+          <img
+            key={avatar.account_id}
+            src={`http://127.0.0.1:8000/uploads/${avatar.image_name}`}
+            alt={`avatar-${avatar.id}`}
+            className={`w-[32px] h-[32px] rounded-full absolute border-2 border-white`}
+            style={{
+              left: `${index * 24}px`,
+              zIndex: 6 - index,
+            }}
+          />
+        ));
+      
+        if (listMember.length > 5) {
+          avatars.push(
+            <div
+              key={0}
+              className={`flex w-8 h-8 justify-center items-center bg-[#FFF7ED] border border-white rounded-full absolute left-[130px] z-0`}
+            >
+              <h1 className="text-xs font-medium text-[#EA580C]">
+                +{listMember.length - 5}
+              </h1>
+            </div>
+          );
+        }
+      
+        return avatars;
     };
     return (
         <div className="flex flex-col px-6 items-start flex-1 self-stretch overflow-y-auto overflow-x-hidden">
@@ -173,15 +155,8 @@ export default function Role() {
                                     <h1 className="font-medium text-base text-[#171717]">
                                         Nhân viên:
                                     </h1>
-                                    <div className="relative w-[182px] h-[32px]">
-                                        {buildMemberAvatar(role.list_member)}
-
-                                        {/* <img src="http://127.0.0.1:8000/uploads/FGkHlkWxj1QpDNMU8JqlsUlrUrRuvlSP.jpg" alt="avatar" className="w-[32px] h-[32px] rounded-full absolute left-[0px] z-[50] border border-white" />
-                                    <img src="http://127.0.0.1:8000/uploads/LdAydUr56Z1kFwCW8xwMXzo6EITffjSl.jpg" alt="avatar" className="w-[32px] h-[32px] rounded-full absolute left-[20px] z-[40] border border-white" />
-                                    <img src="http://127.0.0.1:8000/uploads/XmSERyiIyaR8Q4MOTicmtW4O5yGkt5jS.jpg" alt="avatar" className="w-[32px] h-[32px] rounded-full absolute left-[40px] z-[30] border border-white" />
-                                    <img src="http://127.0.0.1:8000/uploads/RG20VXzgCIfhFGAQSYF2bL4yuUenFugj.jpg" alt="avatar" className="w-[32px] h-[32px] rounded-full absolute left-[60px] z-[20] border border-white" />
-                                    <img src="http://127.0.0.1:8000/uploads/69oW96I3tDcEK9ljaxQ4AZezgvNK5vFp.jpg" alt="avatar" className="w-[32px] h-[32px] rounded-full absolute left-[80px] z-[10] border border-white" />
-                                     */}
+                                    <div className="relative w-[182px] h-[32px]">                                        
+                                        {renderAvatars(role.list_member)}
                                     </div>
                                 </div>
                                 <div
@@ -216,6 +191,8 @@ export default function Role() {
                     }}
                 ></div>
             )}
+            
+            
             <SidePanel
                 isOpen={isOpen}
                 onData={toggleSidePanel}

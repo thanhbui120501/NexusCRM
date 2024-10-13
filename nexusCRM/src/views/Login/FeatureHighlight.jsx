@@ -8,7 +8,8 @@ function FeatureHighlight() {
           loading="lazy"
           src="https://cdn.builder.io/api/v1/image/assets/TEMP/a4900a4a6bc767cfcde99844efdd233d42b17fee89535b525c20745f8ccd3bfd?placeholderIfAbsent=true&apiKey=6129f3f077614e979263c9b69c421594"
           alt=""
-          className="object-contain absolute -bottom-10 z-0 rounded-3xl aspect-[2.05] h-[540px] min-w-[240px] right-[-227px] w-[1106px] max-md:max-w-full"
+          className="object-contain absolute -bottom-32 z-0 rounded-3xl aspect-[2.05] h-[540px] min-w-[240px] right-[-80px] w-[1106px] max-md:max-w-full"
+          
         />
         <div className="flex z-0 flex-col flex-1 shrink pt-8 pr-6 pb-6 pl-20 basis-0 min-w-[240px] max-md:px-5 max-md:max-w-full">
           <div className="flex flex-col w-full max-md:max-w-full">
