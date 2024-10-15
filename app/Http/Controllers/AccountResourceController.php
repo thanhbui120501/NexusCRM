@@ -21,18 +21,32 @@ class AccountResourceController extends Controller
      */
 
     public function index(Request $request)
-    {
+    {   
+        //set last month         
+        $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
+        //limit and offset
         $limit = $request->query('limit', 100000);
         $offset = $request->query('offset', 0);
+        //get account not deleted
         $account = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
+        //count all account without limit and offset 
         $count = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->count();
-
+        //get all disable account
+        $acount_disable = Account::where('status', 0)->count();
+        //get all account last month
+        $account_lastmonth = Account::where('created_at', '<=', $lastMonthEnd)->count();
+        //get disable account last month
+        $disable_lastmonth = Account::where('created_at', '<=', $lastMonthEnd)->where('status', 0)->count();
+        //json arr
         $arr = [
             'success' => true,
             'status_code' => 200,
             'message' => "List of system account",
             'data' => AccountResource::collection($account),
-            'totalRecords' => $count
+            'totalRecords' => $count,
+            'total_disable_account' => $acount_disable,
+            'account_lastmonth' => $account_lastmonth,
+            'disable_account_lastmonth' => $disable_lastmonth
         ];
         return response()->json($arr, Response::HTTP_OK);
     }

@@ -76,9 +76,9 @@ export default function DropDownProfile() {
                 <h1 className="text-base font-medium">Đăng xuất</h1>
             </div>
             {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center">
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">Đang đăng xuất</h1>
+                    <h1 className="text-lg font-medium text-white">Đang đăng xuất</h1>
                 </div>
             )}
             <ToastContainer />

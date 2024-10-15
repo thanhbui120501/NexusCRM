@@ -1,12 +1,46 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function SideBar() {
+    //get location
+    const location = useLocation();
+    //set open sidebar
     const [open, setOpen] = useState(true);
     const [openSubMenu, setOpenSubMenu] = useState(false);
     const [selectedTap, setTapSelected] = useState(0);
     const localUser = JSON.parse(localStorage.getItem("USER"));
+    useEffect(() => {
+        if(location.pathname === "/account" || location.pathname === "/account/:id" || location.pathname === "/account/create" ){
+            setTapSelected(1);
+        }
+        if(location.pathname === "/"){
+            setTapSelected(0);
+        }
+        if(location.pathname === "/"){
+            setTapSelected(0);
+        }
+        if(location.pathname === "/role"){
+            setTapSelected(1);
+        }
+        if(location.pathname === "/customer"){
+            setTapSelected(1);
+        }
+        if(location.pathname === "/selling"){
+            setTapSelected(2);
+        }
+        if(location.pathname === "/sell-program"){
+            setTapSelected(3);
+        }
+        if(location.pathname === "/setting"){
+            setTapSelected(4);
+        }
+        if(location.pathname === "/help"){
+            setTapSelected(5);
+        }        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
+    //set tap
     const setTapManageSelected = () => {
         setOpenSubMenu(!openSubMenu);
         setTapSelected(1);

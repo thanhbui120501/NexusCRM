@@ -4,11 +4,8 @@ import { useStateContext } from "../../contexts/contextprovider";
 import DialogComponent from "../../components/dialog";
 import LoginValidation from "../../validation";
 
-//import { useState } from 'react'
-// import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-// import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-
-function LoginForm() {
+// eslint-disable-next-line react/prop-types
+function LoginForm({ onLoading }) {
     //set dialog message
     const [dialogMessage, setDialogMessage] = React.useState(null);
     //Handle show and hide password
@@ -18,8 +15,7 @@ function LoginForm() {
         showPassword: false,
         rememberPassword: false,
     });
-    //set loading
-    const [loading, setLoading] = React.useState(false);
+
     //set errors
     const [errors, setError] = React.useState({});
 
@@ -98,7 +94,7 @@ function LoginForm() {
     const Submit = async (ev) => {
         try {
             ev.preventDefault();
-            setLoading(true);
+            onLoading(true);
             setError(LoginValidation(values));
 
             const data = new FormData();
@@ -141,7 +137,7 @@ function LoginForm() {
             if (response.status === 422) {
                 console.log(response);
             }
-            if(response.status === 401){
+            if (response.status === 401) {
                 setDialogMessage({
                     title: "Đăng nhập thất bại",
                     description:
@@ -151,7 +147,7 @@ function LoginForm() {
                     hoverColor: "hover:bg-red-500",
                 });
             }
-            if(response.status === 403){
+            if (response.status === 403) {
                 setDialogMessage({
                     title: "Đăng nhập thất bại",
                     description:
@@ -162,7 +158,7 @@ function LoginForm() {
                 });
             }
         } finally {
-            setLoading(false);                    
+            onLoading(false);
         }
     };
     return (
@@ -171,12 +167,6 @@ function LoginForm() {
             className="flex flex-col self-center px-6 mt-12 max-w-full font-sans w-[416px] max-md:px-5 max-md:mt-10"
             onSubmit={Submit}
         >
-            {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[10] items-center justify-center pb-40 rounded-xl">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">Đang đăng nhập</h1>
-                </div>
-            )}
             <h2 className="text-3xl font-semibold leading-none text-neutral-900">
                 Đăng nhập
             </h2>
@@ -232,8 +222,8 @@ function LoginForm() {
                                     onMouseDown={handleMouseDownPassword}
                                     src={
                                         values.showPassword
-                                            ? "../src/assets/showpassword.png"
-                                            : "../src/assets/hidepassword.png"
+                                            ? "/icons/hide_password.svg"
+                                            : "/icons/show_password.svg"
                                     }
                                     className="w-5 h-5"
                                 ></img>
@@ -284,7 +274,6 @@ function LoginForm() {
                     hoverColor={dialog.hoverColor}
                 />
             </div>
-
         </form>
     );
 }
