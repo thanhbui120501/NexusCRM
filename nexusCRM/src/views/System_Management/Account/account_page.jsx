@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import ShowDataDropDown from "./showDataDropdown";
 import axiosClient from "../../../axiosClient";
@@ -17,8 +18,15 @@ export default function Account() {
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
     const [users, setUsers] = useState([]);
-    // eslint-disable-next-line no-unused-vars
+    //total record
     const [totalRecords, setTotalRecords] = useState(0);
+    //total disable account
+    const [disableAccount, setDisableAccount] = useState(0);
+    //total user lastmonth
+    const [lastmonthUser, setLastMonthUser] = useState(0);
+    //get disable account last month
+    const [disableAccountLastMonth, setDisableAccountLastMonth] = useState(0);
+    //total pages
     const [totalPages, setTotalPages] = useState(0);
     const [showRowNumber, setShowRowNumber] = useState(5);
     //set loading
@@ -177,7 +185,9 @@ export default function Account() {
             //set user and records
             setUsers(response.data.data);
             setTotalRecords(response.data.totalRecords);
-
+            setDisableAccount(response.data.total_disable_account);
+            setLastMonthUser(response.data.account_lastmonth);
+            setDisableAccountLastMonth(response.data.disable_account_lastmonth);
             //set pages
             const pages = Math.ceil(response.data.totalRecords / limit);
             setTotalPages(pages);
@@ -447,10 +457,10 @@ export default function Account() {
     const startIndex = (currentPage - 1) * showRowNumber + 1;
 
     return (
-        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
+        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto ">
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
-                <div className="flex flex-col flex-1 items-start gap-2">
+                <div className="flex flex-col flex-1 items-start gap-2 ">
                     <h1 className="self-stretch text-gray-900 font-semibold text-3xl">
                         Tài khoản
                     </h1>
@@ -537,6 +547,13 @@ export default function Account() {
                     )}
                 </div>
             </div>
+            <AccountStatistics
+                loading={loading}
+                users={totalRecords}
+                disableAccount={disableAccount}
+                lastmonthUser={lastmonthUser}
+                disableAccountLastMonth={disableAccountLastMonth}
+            />
             {users.length === 0 && !loading ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
                     <h1 className="text-base font-medium text-red-600">
@@ -552,7 +569,7 @@ export default function Account() {
                     </h1>
                 </div>
             ) : (
-                <div className="flex pb-6 pl-6 pr-6 flex-col items-start gap-3 self-stretch">
+                <div className="flex pb-6 flex-col items-start gap-3 self-stretch">
                     <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto  max-w-full">
                         <table className="w-full table-fixed bg-white ">
                             <thead className="rounded-t-lg sticky top-0 z-10">
@@ -774,7 +791,7 @@ export default function Account() {
                 </div>
             )}
             {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center gap-4">
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
                     <h1 className="text-sm font-medium text-white">
                         Đang tải danh sách nhân viên
@@ -792,6 +809,191 @@ export default function Account() {
                 bgColor={dialog.bgColor}
                 hoverColor={dialog.hoverColor}
             />
+        </div>
+    );
+}
+
+export function AccountStatistics({
+    loading,
+    users,
+    disableAccount,
+    lastmonthUser,
+    disableAccountLastMonth,
+}) {
+    //format number
+    const formatNumber = (value) => {
+        if (Number.isInteger(value)) {
+          return value; 
+        }      
+        
+        return value.toFixed(2);
+      }
+    //get percent
+    const getAccountPercent = (current, lastmonth) => {
+        let grow = loading ? 0 : current - lastmonth;
+        if (lastmonth === 0) {
+            if(current === 0){
+                return (
+                    <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                        <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
+                            <img
+                                src="/icons/arrow-trend-up.svg"
+                                alt="arrow-trend-up"
+                            />
+                            <h1 className="text-[#16A34A] font-medium text-sm">
+                                0 %
+                            </h1>
+                        </div>
+                    </div>
+                );
+            }
+            return (
+                <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                    <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
+                        <img
+                            src="/icons/arrow-trend-up.svg"
+                            alt="arrow-trend-up"
+                        />
+                        <h1 className="text-[#16A34A] font-medium text-sm">
+                            100 %
+                        </h1>
+                    </div>
+                </div>
+            );
+        }
+        if (grow === 0) {
+            return (
+                <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                    <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
+                        <img
+                            src="/icons/arrow-trend-up.svg"
+                            alt="arrow-trend-up"
+                        />
+                        <h1 className="text-[#16A34A] font-medium text-sm">
+                            0 %
+                        </h1>
+                    </div>
+                </div>
+            );
+        } else {
+            if (grow > 0) {
+                let percent = formatNumber((grow / lastmonth) * 100);
+                return (
+                    <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                        <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
+                            <img
+                                src="/icons/arrow-trend-up.svg"
+                                alt="arrow-trend-up"
+                            />
+                            <h1 className="text-[#16A34A] font-medium text-sm">
+                                {percent} %
+                            </h1>
+                        </div>
+                    </div>
+                );
+            } else {
+                let percent = formatNumber((grow / lastmonth) * 100);
+                return (
+                    <div className="flex items-center justify-center gap-2.5 border border-b-[#FECACA] bg-[#FEF2F2] rounded-full">
+                        <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
+                            <img
+                                src="/icons/arrow-trend-down.svg"
+                                alt="arrow-trend-down"
+                            />
+                            <h1 className="text-[#DC2626] font-medium text-sm">
+                                {percent * -1} %
+                            </h1>
+                        </div>
+                    </div>
+                );
+            }
+        }
+    };
+
+    return (
+        <div className="flex pb-6 items-center self-stretch">
+            <div className="flex items-center gap-6 flex-1">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-base font-medium text-gray-900">
+                            Tổng tài khoản
+                        </h1>
+                        <img
+                            src="/icons/circle-info.svg"
+                            alt="icon-info"
+                            className="cursor-pointer"
+                        />
+                    </div>
+                    <h1 className="text-4xl font-bold text-gray-900">
+                        {loading ? 0 : users + 1}
+                    </h1>
+                    <div className="flex items-center gap-2 self-stretch">
+                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                            so với tháng trước
+                        </h1>
+
+                        {getAccountPercent(users + 1, lastmonthUser)}
+                    </div>
+                </div>
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-base font-medium text-gray-900">
+                            Tài khoản ngưng hoạt động
+                        </h1>
+                        <img
+                            src="/icons/circle-info.svg"
+                            alt="icon-info"
+                            className="cursor-pointer"
+                        />
+                    </div>
+                    <h1 className="text-4xl font-bold text-gray-900">
+                        {loading
+                            ? 0
+                            : formatNumber((disableAccount / (users + 1)) * 100)}
+                        %
+                    </h1>
+                    <div className="flex items-center gap-2 self-stretch">
+                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                            so với tháng trước
+                        </h1>                        
+                        {getAccountPercent(
+                            disableAccount,
+                            disableAccountLastMonth
+                        )}
+                    </div>
+                </div>
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-base font-medium text-gray-900">
+                            Doanh thu/Tài khoản
+                        </h1>
+                        <img
+                            src="/icons/circle-info.svg"
+                            alt="icon-info"
+                            className="cursor-pointer"
+                        />
+                    </div>
+                    <h1 className="text-4xl font-bold text-gray-900">
+                        2,250,000,000
+                    </h1>
+                    <div className="flex items-center gap-2 self-stretch">
+                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                            so với tháng trước
+                        </h1>
+                        <div className="flex items-center justify-center gap-2.5 border bg-[#F0FDF4] rounded-full">
+                            <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
+                                <img
+                                    src="/icons/arrow-trend-up.svg"
+                                    alt="arrow-trend-up"
+                                />
+                                <h1 className="text-[#16A34A] font-medium text-sm">
+                                    12 %
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
