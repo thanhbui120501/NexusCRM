@@ -19,7 +19,10 @@ export default function Account() {
     const [openDropDownData, setOpenDropDownData] = useState(false);
     const [users, setUsers] = useState([]);
     //total record
+    // eslint-disable-next-line no-unused-vars
     const [totalRecords, setTotalRecords] = useState(0);
+    //total account this month
+    const [accountThisMonth, setAccountThisMonth] = useState(0);
     //total disable account
     const [disableAccount, setDisableAccount] = useState(0);
     //total user lastmonth
@@ -188,6 +191,7 @@ export default function Account() {
             setDisableAccount(response.data.total_disable_account);
             setLastMonthUser(response.data.account_lastmonth);
             setDisableAccountLastMonth(response.data.disable_account_lastmonth);
+            setAccountThisMonth(response.data.account_this_month)
             //set pages
             const pages = Math.ceil(response.data.totalRecords / limit);
             setTotalPages(pages);
@@ -550,6 +554,7 @@ export default function Account() {
             <AccountStatistics
                 loading={loading}
                 users={totalRecords}
+                userThisMonth={accountThisMonth}
                 disableAccount={disableAccount}
                 lastmonthUser={lastmonthUser}
                 disableAccountLastMonth={disableAccountLastMonth}
@@ -816,6 +821,7 @@ export default function Account() {
 export function AccountStatistics({
     loading,
     users,
+    userThisMonth,
     disableAccount,
     lastmonthUser,
     disableAccountLastMonth,
@@ -932,7 +938,7 @@ export function AccountStatistics({
                             so với tháng trước
                         </h1>
 
-                        {getAccountPercent(users + 1, lastmonthUser)}
+                        {getAccountPercent(userThisMonth, lastmonthUser)}
                     </div>
                 </div>
                 <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">

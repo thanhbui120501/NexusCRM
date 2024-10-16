@@ -151,7 +151,7 @@ export default function Header() {
                 <img src="/icons/line.svg" alt="icon-statistics" />
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                        <div className=" w-10 h-10">
+                        <div className="relative w-10 h-10">
                             <img
                                 src={`${
                                     localUser.image_name == null
@@ -162,6 +162,7 @@ export default function Header() {
                                 alt="avatar"
                                 className="w-10 h-10 rounded-xl object-cover"
                             />
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                         </div>
                         <div className="flex flex-col items-start w-[126px] gap-[2px]">
                             <h1 className="self-stretch text-sm font-medium text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">

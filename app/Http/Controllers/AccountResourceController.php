@@ -21,7 +21,7 @@ class AccountResourceController extends Controller
      */
 
     public function index(Request $request)
-    {   
+    {
         //set last month         
         $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
         //limit and offset
@@ -31,12 +31,16 @@ class AccountResourceController extends Controller
         $account = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
         //count all account without limit and offset 
         $count = Account::where('deleted_status', 0)->where('account_id', '!=', $request->user()->account_id)->count();
+        //get account this month
+        $account_this_month = Account::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
         //get all disable account
-        $acount_disable = Account::where('status', 0)->count();
+        $acount_disable = Account::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->where('status', 0)->count();
         //get all account last month
-        $account_lastmonth = Account::where('created_at', '<=', $lastMonthEnd)->count();
+        $account_last_month = Account::where('created_at', '<=', $lastMonthEnd)->count();
         //get disable account last month
-        $disable_lastmonth = Account::where('created_at', '<=', $lastMonthEnd)->where('status', 0)->count();
+        $disable_last_month = Account::where('created_at', '<=', $lastMonthEnd)->where('status', 0)->count();
         //json arr
         $arr = [
             'success' => true,
@@ -44,9 +48,10 @@ class AccountResourceController extends Controller
             'message' => "List of system account",
             'data' => AccountResource::collection($account),
             'totalRecords' => $count,
+            'account_this_month' => $account_this_month,
             'total_disable_account' => $acount_disable,
-            'account_lastmonth' => $account_lastmonth,
-            'disable_account_lastmonth' => $disable_lastmonth
+            'account_lastmonth' => $account_last_month,
+            'disable_account_lastmonth' => $disable_last_month
         ];
         return response()->json($arr, Response::HTTP_OK);
     }
@@ -85,7 +90,7 @@ class AccountResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         } else {
-            
+
             $user = $request->user();
             //create account id, hash password
             $input['account_id'] = 'AC' . Carbon::now()->format('dmyhis');
@@ -104,17 +109,17 @@ class AccountResourceController extends Controller
             }
 
             $account = Account::create($input);
-            
+
             //save activity
 
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Account Created',
                 'Account',
-                (new RequestController)->getActivityContent("Account Created", $request, null,$account->username),
+                (new RequestController)->getActivityContent("Account Created", $request, null, $account->username),
                 $user->account_id,
                 $user->username
             );
-            
+
             $result = (new ActivityHistoryResourceController)->store($newRequest);
 
             //return json message           
@@ -211,25 +216,25 @@ class AccountResourceController extends Controller
             }
             if (isset($input['status'])) {
                 $status = $input['status'] === 'true' ? 1 : 0;
-                
+
                 if ($status !== $account->status) {
                     $updateData['status'] = $status;
                 }
             }
             //update user   
 
-            if (!empty($updateData)) {                
+            if (!empty($updateData)) {
                 $update = $account->update($updateData);
                 if ($update) {
                     //save activity
                     $newRequest = (new RequestController)->makeActivityRequest(
                         'Account Updated',
                         'Account',
-                        (new RequestController)->getActivityContent("Account Updated",$request ,$updateData, $account->username),
+                        (new RequestController)->getActivityContent("Account Updated", $request, $updateData, $account->username),
                         $user->account_id,
                         $user->username
                     );
-                    $result = (new ActivityHistoryResourceController)->store($newRequest);                    
+                    $result = (new ActivityHistoryResourceController)->store($newRequest);
                     //return json message
                     $arr = [
                         'success' => true,
@@ -254,7 +259,7 @@ class AccountResourceController extends Controller
                     ];
                     return response()->json($arr, Response::HTTP_OK);
                 }
-            }else{
+            } else {
                 $arr = [
                     'success' => false,
                     'status_code' => 204,
@@ -378,7 +383,7 @@ class AccountResourceController extends Controller
             $newRequest = (new RequestController)->makeActivityRequest(
                 'Account Deleted',
                 'Account',
-                (new RequestController)->getActivityContent("Account Deleted", $request, null ,$account->username),
+                (new RequestController)->getActivityContent("Account Deleted", $request, null, $account->username),
                 $userRequest->account_id,
                 $userRequest->username
             );
