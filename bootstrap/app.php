@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use App\Http\Middleware\AdminOnlyAllowed;
+use App\Http\Middleware\CheckDisableAccount;
 use App\Http\Middleware\UserOnlyAllowed;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -36,7 +37,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
-            'admin_only_allowed' => AdminOnlyAllowed::class,            
+            'admin_only_allowed' => AdminOnlyAllowed::class,         
+            'checking_disable_account' => CheckDisableAccount::class,
         ]);
         
     })

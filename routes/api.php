@@ -22,7 +22,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('/account/login', [AuthController::class, 'login'])->middleware(HandleCors::class)->name('api.auth.login');
     //['auth:sanctum'] middleware routes
     Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::group(['middleware' => ['admin_only_allowed']], function () {
+        Route::group(['middleware' => ['admin_only_allowed','checking_disable_account']], function () {
             //Role routes
             Route::controller(RoleResourceController::class)->group(function () {
                 Route::get('/role/get-all-role', 'index')->name('api.role.index'); //get all role
