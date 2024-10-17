@@ -24,6 +24,7 @@ class CustomerResource extends JsonResource
             'email' => $this->email,
             'full_name' => $this->full_name,
             'gender' => $this->gender == 0 ? "Male" : "Female",
+            'image_name' => $this->image_name,
             'date_of_birth' => $this->date_of_birth,
             'province' => $this->province,
             'town' => $this->town,

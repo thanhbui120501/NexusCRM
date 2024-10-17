@@ -191,7 +191,7 @@ export default function Account() {
             setDisableAccount(response.data.total_disable_account);
             setLastMonthUser(response.data.account_lastmonth);
             setDisableAccountLastMonth(response.data.disable_account_lastmonth);
-            setAccountThisMonth(response.data.account_this_month)
+            setAccountThisMonth(response.data.account_this_month);
             //set pages
             const pages = Math.ceil(response.data.totalRecords / limit);
             setTotalPages(pages);
@@ -461,7 +461,7 @@ export default function Account() {
     const startIndex = (currentPage - 1) * showRowNumber + 1;
 
     return (
-        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto ">
+        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
@@ -829,16 +829,16 @@ export function AccountStatistics({
     //format number
     const formatNumber = (value) => {
         if (Number.isInteger(value)) {
-          return value; 
-        }      
-        
+            return value;
+        }
+
         return value.toFixed(2);
-      }
+    };
     //get percent
     const getAccountPercent = (current, lastmonth) => {
         let grow = loading ? 0 : current - lastmonth;
         if (lastmonth === 0) {
-            if(current === 0){
+            if (current === 0) {
                 return (
                     <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
@@ -955,13 +955,15 @@ export function AccountStatistics({
                     <h1 className="text-4xl font-bold text-gray-900">
                         {loading
                             ? 0
-                            : formatNumber((disableAccount / (users + 1)) * 100)}
+                            : formatNumber(
+                                  (disableAccount / (users + 1)) * 100
+                              )}
                         %
                     </h1>
                     <div className="flex items-center gap-2 self-stretch">
                         <h1 className="font-medium text-base text-[#A3A3A3]">
                             so với tháng trước
-                        </h1>                        
+                        </h1>
                         {getAccountPercent(
                             disableAccount,
                             disableAccountLastMonth
