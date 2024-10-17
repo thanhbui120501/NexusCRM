@@ -95,7 +95,7 @@ Route::group(['prefix' => 'v1'], function () {
         //Customer routes
         Route::controller(CustomerResourceController::class)->group(function () {
             Route::post('/customer/create-new-customer', 'store')->name('api.customer.store'); //create new customer  
-            Route::post('/customer/get-list-customer', 'index')->name('api.customer.get.list.customer'); // get list customer by status
+            Route::get('/customer/get-list-customer', 'index')->name('api.customer.get.list.customer'); // get list customer by status
             Route::get('/customer/get-customer-by-id/{customer}', 'show')->name('api.customer.get.customer.by.id'); // get customer by id
             Route::patch('/customer/update-customer/{customer}', 'update')->name('api.customer.update.customer'); // update customer by id
             Route::delete('/customer/delete-customer/{customer}', 'destroy')->name('api.customer.delete.customer'); // delete customer by id

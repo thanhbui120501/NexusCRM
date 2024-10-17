@@ -30,52 +30,84 @@ class CustomerResourceController extends Controller
      */
     public function index(Request $request)
     {
-        //get customer by status
-        //validate
-        $input = $request->all();
-        $validator = Validator::make($input,[           
-            'offset' => 'min:0|numeric',
-            'limit' => 'min:1|numeric',
-            'status' => 'string'
-        ]);
-        if($validator->fails()){            
-            $arr = [
-                'success' => false,
-                'status_code' => 200,
-                'message' => "Failed",
-                'data' => $validator->errors()
-            ];
-            return response()->json($arr, Response::HTTP_OK);
-        }else{
-            //check status is right?
-            if($request->has('status') && !in_array($request->status,$this->customer_status)){
-                $arr = [
-                    'success' => false,
-                    'status_code' => 200,
-                    'message' => "Failed",
-                    'data' => "Invalid state, state includes ('Active','Locked','Expired','Closed')"
-                ];
-                return response()->json($arr, Response::HTTP_OK);
-            }else{
-                //set offset and limit
-                $offset = !$request->has('limit')  ? 0 : $request->offset;
-                $limit = !$request->has('limit') ? 50 : $request->limit;
+        // //get customer by status
+        // //validate
+        // $input = $request->all();
+        // $validator = Validator::make($input,[           
+        //     'offset' => 'min:0|numeric',
+        //     'limit' => 'min:1|numeric',
+        //     'status' => 'string'
+        // ]);
+        // if($validator->fails()){            
+        //     $arr = [
+        //         'success' => false,
+        //         'status_code' => 200,
+        //         'message' => "Failed",
+        //         'data' => $validator->errors()
+        //     ];
+        //     return response()->json($arr, Response::HTTP_OK);
+        // }else{
+        //     //check status is right?
+        //     if($request->has('status') && !in_array($request->status,$this->customer_status)){
+        //         $arr = [
+        //             'success' => false,
+        //             'status_code' => 200,
+        //             'message' => "Failed",
+        //             'data' => "Invalid state, state includes ('Active','Locked','Expired','Closed')"
+        //         ];
+        //         return response()->json($arr, Response::HTTP_OK);
+        //     }else{
+        //         //set offset and limit
+        //         $offset = !$request->has('limit')  ? 0 : $request->offset;
+        //         $limit = !$request->has('limit') ? 50 : $request->limit;
                 
-                //select customer
-                $customer = $request->has('status')  ? 
-                    DB::table('customers')->where('status', $request->status)->offset($offset)->limit($limit)->get() :
-                    DB::table('customers')->offset($offset)->limit($limit)->get();
+        //         //select customer
+        //         $customer = $request->has('status')  ? 
+        //             DB::table('customers')->where('status', $request->status)->offset($offset)->limit($limit)->get() :
+        //             DB::table('customers')->offset($offset)->limit($limit)->get();
 
-                 //return json message      
-                $arr = [
-                    'success' => true,
-                    'status_code' => 200,
-                    'message' => "List of customer",
-                    'data' => CustomerResource::collection($customer)
-                ];
-                return response()->json($arr,Response::HTTP_OK);
-            }
-        }
+        //          //return json message      
+        //         $arr = [
+        //             'success' => true,
+        //             'status_code' => 200,
+        //             'message' => "List of customer",
+        //             'data' => CustomerResource::collection($customer)
+        //         ];
+        //         return response()->json($arr,Response::HTTP_OK);
+        //     }
+        // }
+        //set last month         
+        //$lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
+        //limit and offset
+        $limit = $request->query('limit', 100000);
+        $offset = $request->query('offset', 0);
+        //get account not deleted
+        $customers = Customer::offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
+        //count all account without limit and offset 
+        $count = Customer::count();
+        // //get account this month
+        // $account_this_month = Customer::whereYear('created_at', Carbon::now()->year)
+        //     ->whereMonth('created_at', Carbon::now()->month)
+        //     ->count();
+        // //get all disable account
+        // $acount_disable = Customer::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->where('status', 0)->count();
+        // //get all account last month
+        // $account_last_month = Customer::where('created_at', '<=', $lastMonthEnd)->count();
+        // //get disable account last month
+        // $disable_last_month = Customer::where('created_at', '<=', $lastMonthEnd)->where('status', 0)->count();
+        //json arr
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "List of system customers",
+            'data' =>   CustomerResource::collection($customers),
+            'totalRecords' => $count,
+            // 'account_this_month' => $account_this_month,
+            // 'total_disable_account' => $acount_disable,
+            // 'account_lastmonth' => $account_last_month,
+            // 'disable_account_lastmonth' => $disable_last_month
+        ];
+        return response()->json($arr, Response::HTTP_OK);
     }
 
     /**
@@ -98,6 +130,7 @@ class CustomerResourceController extends Controller
             'customer_class' => 'required|string|max:50',
             'customer_group' => 'required|string|max:50',
             'customer_source' => 'required|string|max:50',
+            'image_name' => 'required|string'
         ]);
 
         //checking validate
@@ -111,7 +144,7 @@ class CustomerResourceController extends Controller
             return response()->json($arr, Response::HTTP_OK);
         }else{
             //get account id
-            $user = Auth::guard('api')->user();
+            $user = $request->user();
             $input['account_id'] = $user->account_id;
             
             //get address           
@@ -139,7 +172,7 @@ class CustomerResourceController extends Controller
             $arr = [
                 'success' => true,
                 'status_code' => 201,
-                'message' => "Creating new account successfully",
+                'message' => "Creating new customer successfully",
                 'data' => new CustomerResource($customer),
                 'activity' => [
                     'activity_name' => $result->activity_name,

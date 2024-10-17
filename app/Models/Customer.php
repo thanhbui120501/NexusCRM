@@ -36,6 +36,7 @@ class Customer extends Model
         'gender',
         'date_of_birth',
         'province',
+        'image_name',
         'town',
         'ward',
         'address',
