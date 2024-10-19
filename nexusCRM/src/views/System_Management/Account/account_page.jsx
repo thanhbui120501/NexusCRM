@@ -135,7 +135,7 @@ export default function Account() {
         if (!keywordFromUrl || keywordFromUrl == "") return;
         try {
             const response = await axiosClient.get(
-                "/account/search-by-keyword",
+                "/account/search-account-by-keyword",
                 {
                     params: {
                         keyword: keywordFromUrl,

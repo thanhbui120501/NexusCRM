@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Account;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -82,9 +83,9 @@ class CustomerResourceController extends Controller
         $limit = $request->query('limit', 100000);
         $offset = $request->query('offset', 0);
         //get account not deleted
-        $customers = Customer::offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
+        $customers = Customer::where('deleted_status', 0)->offset($offset)->limit($limit)->orderBy('created_at', 'desc')->get();
         //count all account without limit and offset 
-        $count = Customer::count();
+        $count = Customer::where('deleted_status', 0)->count();
         // //get account this month
         // $account_this_month = Customer::whereYear('created_at', Carbon::now()->year)
         //     ->whereMonth('created_at', Carbon::now()->month)
@@ -163,7 +164,7 @@ class CustomerResourceController extends Controller
             $newRequest = (new RequestController())->makeActivityRequest(
                 'Customer Created',
                 'Customer',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Customer Created") . $customer->full_name .'.',
+                (new RequestController)->getActivityContent("Account Created", $request, null, $customer->full_name),
                 $user->account_id,
                 $user->username);               
             $result = (new ActivityHistoryResourceController)->store($newRequest);
@@ -173,13 +174,7 @@ class CustomerResourceController extends Controller
                 'success' => true,
                 'status_code' => 201,
                 'message' => "Creating new customer successfully",
-                'data' => new CustomerResource($customer),
-                'activity' => [
-                    'activity_name' => $result->activity_name,
-                    'activity_type' => $result->activity_type,
-                    'activity_content' => $result->activity_content,
-                    'activity_time' => $result->created_at,    
-                ],
+                'data' => new CustomerResource($customer),                
             ];
             return response()->json($arr, Response::HTTP_CREATED);
         }
@@ -376,45 +371,47 @@ class CustomerResourceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Request $request)
     {
-        //delete: update status -> closed        
-        $delete =  DB::table('customers')->where('customer_id',$customer->customer_id)->update(['status' => $this->customer_status[3]]); 
-
-        //check delete     
-        if($delete == 1){
-            //save activity
-            $user = Auth::guard('api')->user();
-            $newRequest = (new RequestController)->makeActivityRequest(
-                'Customer Deleted',
-                'Customer',
-                'The user '. $user->username . (new RequestController)->makeActivityContent("Customer Deleted") . $customer->full_name .'.',
-                $user->account_id,
-                $user->username);               
-            $result = (new ActivityHistoryResourceController)->store($newRequest);
-            
-            //return json message
-            $arr = [
-                'success' => true,
-                'status_code' => 204,
-                'message' => "Customer has been deleted",
-                'data' => "Success!",
-                'activity' => [
-                    'activity_name' => $result->activity_name,
-                    'activity_type' => $result->activity_type,
-                    'activity_content' => $result->activity_content,
-                    'activity_time' => $result->created_at,
-                ],
-            ];
-            return response()->json($arr, Response::HTTP_NO_CONTENT);    
-        }else{
+        $validator = Validator::make($request->all(), [
+            'customers' => 'required|array',
+        ]);
+        //delete: update status -> 0        
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
                 'message' => "Failed",
-                'data' => "Deleted Failed!",
+                'data' => $validator->errors()
             ];
-            return response()->json($arr, Response::HTTP_OK);    
-        }        
+            return response()->json($arr, Response::HTTP_OK);
+        }
+        $customers = $request->input('customers');
+        $userRequest = $request->user();
+
+        foreach ($customers as $customer) {
+            $delete =  DB::table('customers')->where('customer_id', $customer)->update(['deleted_status' => true]);
+
+            //save acctivity
+            //$account = Account::where('account_id', $userRequest->account_id)->first();
+
+            // $newRequest = (new RequestController)->makeActivityRequest(
+            //     'Customer Deleted',
+            //     'Customer',
+            //     (new RequestController)->getActivityContent("Account Deleted", $request, null, $account->username),
+            //     $userRequest->account_id,
+            //     $userRequest->username
+            // );
+            // $result = (new ActivityHistoryResourceController)->store($newRequest);                // Thực hiện các xử lý cần thiết
+        }
+
+        //return json message
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Account has been deleted",
+            'data' => "Success!",            
+        ];
+        return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
 }

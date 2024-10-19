@@ -46,6 +46,7 @@ class Customer extends Model
         'account_id',      
         'updated_at',
         'created_at',
+        'deleted_status',
         'status'
     ];
 }

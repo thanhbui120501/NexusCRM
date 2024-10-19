@@ -39,6 +39,10 @@ class RequestController extends Controller
             case "Account Deleted":
                 return "Đã xóa tài khoản " . $account;
                 break;
+            case "Customer Created": return "Đã tạo mới khách hàng " . $account;
+            break;
+            case "Customer Deleted": return "Đã xóa khách hàng " . $account;
+            break;
         }
     }
 

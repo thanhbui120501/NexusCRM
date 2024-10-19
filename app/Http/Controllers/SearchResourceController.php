@@ -6,6 +6,8 @@ use App\Models\Account;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Resources\AccountResource;
+use App\Http\Resources\CustomerResource;
+use App\Models\Customer;
 use Illuminate\Http\Response;
 
 class SearchResourceController extends Controller
@@ -86,6 +88,24 @@ class SearchResourceController extends Controller
             'status_code' => 200,
             'message' => "List of accounts result",
             'data' => AccountResource::collection($accounts)
+        ];
+        return response()->json($arr, Response::HTTP_OK);
+    }
+
+    public function searchCustomerByKeyWord(Request $request){
+        $keyword = $request->input('keyword');
+
+        $accounts = Customer::where('customer_id', 'like', "%{$keyword}%")
+            ->orWhere('phone_number', 'like', "%{$keyword}%")
+            ->orWhere('full_name', 'like', "%{$keyword}%")
+            ->orWhere('email', 'like', "%{$keyword}%")            
+            ->get();
+
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "List of customer result",
+            'data' => CustomerResource::collection($accounts)
         ];
         return response()->json($arr, Response::HTTP_OK);
     }
