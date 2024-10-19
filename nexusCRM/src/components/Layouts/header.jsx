@@ -11,19 +11,31 @@ export default function Header() {
 
     // Kiểm tra route và xác định tiêu đề
     const getTitle = () => {
-        if (id) {
+        if (location.pathname.startsWith("/account/") && id) {
             return (
-                <>
-                    <h1 className="font-medium text-sm text-gray-400">
-                        <span className="pr-3">Quản lí hệ thống</span>
-                        <span>/</span>
-                        <span className="pr-3 pl-3">Tài khoản</span>
-                        <span>/</span>
-                        <span className="font-medium text-sm text-gray-900 pl-3">
-                            {id}
-                        </span>
-                    </h1>
-                </>
+                <h1 className="font-medium text-sm text-gray-400">
+                    <span className="pr-3">Quản lí hệ thống</span>
+                    <span>/</span>
+                    <span className="pr-3 pl-3">Tài khoản</span>
+                    <span>/</span>
+                    <span className="font-medium text-sm text-gray-900 pl-3">
+                        {id}
+                    </span>
+                </h1>
+            );
+        }
+
+        if (location.pathname.startsWith("/customer/") && id) {
+            return (
+                <h1 className="font-medium text-sm text-gray-400">
+                    <span className="pr-3">Quản lí hệ thống</span>
+                    <span>/</span>
+                    <span className="pr-3 pl-3">Khách hàng</span>
+                    <span>/</span>
+                    <span className="font-medium text-sm text-gray-900 pl-3">
+                        {id}
+                    </span>
+                </h1>
             );
         }
         switch (location.pathname) {
@@ -47,6 +59,7 @@ export default function Header() {
                         </h1>
                     </>
                 );
+
             case "/account/create":
                 return (
                     <>
@@ -83,6 +96,20 @@ export default function Header() {
                             <span>/</span>{" "}
                             <span className="font-medium text-sm text-gray-900 pl-3">
                                 Khách hàng
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/customer/create":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Quản lí hệ thống</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="pr-3 pl-3">Khách hàng</span>
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Thêm mới
                             </span>
                         </h1>
                     </>

@@ -62,7 +62,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::controller(SearchResourceController::class)->group(function () {
                 Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
                 Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
-                Route::get('account/search-by-keyword', 'searchUserByKeyWord')->name('api.account.search.by.keyword');
+                Route::get('account/search-account-by-keyword', 'searchUserByKeyWord')->name('api.account.search.by.keyword');
             });
             Route::controller(RequestController::class)->group(function(){
                 Route::delete('images/delete-unused-images','deleteUnusedImages')->name('api.delete.unused.images');
@@ -98,9 +98,13 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/customer/get-list-customer', 'index')->name('api.customer.get.list.customer'); // get list customer by status
             Route::get('/customer/get-customer-by-id/{customer}', 'show')->name('api.customer.get.customer.by.id'); // get customer by id
             Route::patch('/customer/update-customer/{customer}', 'update')->name('api.customer.update.customer'); // update customer by id
-            Route::delete('/customer/delete-customer/{customer}', 'destroy')->name('api.customer.delete.customer'); // delete customer by id
+            Route::post('/customer/delete-customer', 'destroy')->name('api.customer.delete.customer'); // delete customer by id
         });
-
+        Route::controller(SearchResourceController::class)->group(function () {
+            // Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
+            // Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
+            Route::get('customer/search-customer-by-keyword', 'searchCustomerByKeyWord')->name('api.customer.search.by.keyword');
+        });
         //Promotion Type routes
         Route::controller(PromotionTypeResourceController::class)->group(function () {
             Route::post('/promotion-type/get-all-promotion-type', 'index')->name('api.promotion.type.index'); // show all promotion type

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 export default function SideBar() {
     //get location
@@ -9,12 +9,11 @@ export default function SideBar() {
     const [openSubMenu, setOpenSubMenu] = useState(false);
     const [selectedTap, setTapSelected] = useState(0);
     const localUser = JSON.parse(localStorage.getItem("USER"));
+    const { id } = useParams();
     useEffect(() => {
-        if(location.pathname === "/account" || location.pathname === "/account/:id" || location.pathname === "/account/create" ){
+
+        if(location.pathname === "/account" || (location.pathname.startsWith("/account/") && id) || location.pathname === "/account/create" ){
             setTapSelected(1);
-        }
-        if(location.pathname === "/"){
-            setTapSelected(0);
         }
         if(location.pathname === "/"){
             setTapSelected(0);
@@ -22,7 +21,7 @@ export default function SideBar() {
         if(location.pathname === "/role"){
             setTapSelected(1);
         }
-        if(location.pathname === "/customer"){
+        if(location.pathname === "/customer" || (location.pathname.startsWith("/customer/") && id) || location.pathname === "/customer/create" ){
             setTapSelected(1);
         }
         if(location.pathname === "/selling"){

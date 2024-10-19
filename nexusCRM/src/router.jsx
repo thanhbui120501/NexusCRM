@@ -13,6 +13,8 @@ import Help from "./views/Help/help_page";
 import ProtectedRoute from "./components/protected_route";
 import AccountCreate from "./views/System_Management/Account/account_create/account_create";
 import AccountDetail from "./views/System_Management/Account/account_detail/account_detail";
+import CustomerCreate from "./views/System_Management/Customer/customer_create/customer_create_page";
+import CustomerDetail from "./views/System_Management/Customer/customer_detail/customer_detail_page";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -51,6 +53,22 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Customer />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/customer/create",
+                element: (
+                    <ProtectedRoute>
+                        <CustomerCreate />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/customer/:id",
+                element: (
+                    <ProtectedRoute>
+                        <CustomerDetail />
                     </ProtectedRoute>
                 ),
             },

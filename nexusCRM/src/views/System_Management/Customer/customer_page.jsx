@@ -16,7 +16,7 @@ export default function Customer() {
     const [selectedCustomer, setSelectedACustomer] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
-    const [customers, setUsers] = useState([]);
+    const [customers, setCustomers] = useState([]);
     //total record
     // eslint-disable-next-line no-unused-vars
     const [totalRecords, setTotalRecords] = useState(0);
@@ -132,18 +132,18 @@ export default function Customer() {
     const callbackSubmitfillter = (val) => {
         submitFillter(val);
     };
-    const getUserByKeyword = async () => {
+    const getCustomerByKeyword = async () => {
         if (!keywordFromUrl || keywordFromUrl == "") return;
         try {
             const response = await axiosClient.get(
-                "/account/search-by-keyword",
+                "/customer/search-customer-by-keyword",
                 {
                     params: {
                         keyword: keywordFromUrl,
                     },
                 }
             );
-            setUsers(response.data.data);
+            setCustomers(response.data.data);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -159,7 +159,7 @@ export default function Customer() {
                 },
             });
             submitFillter(false);
-            setUsers(response.data.data);
+            setCustomers(response.data.data);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -190,7 +190,7 @@ export default function Customer() {
             );
 
             //set user and records
-            setUsers(response.data.data);
+            setCustomers(response.data.data);
             setTotalRecords(response.data.totalRecords);
             // setDisableAccount(response.data.total_disable_account);
             // setLastMonthUser(response.data.account_lastmonth);
@@ -208,27 +208,28 @@ export default function Customer() {
         }
     };
 
-    // eslint-disable-next-line no-unused-vars
     const deletedCustomer = async () => {
         const data = new FormData();
         selectedCustomer.forEach((user, index) => {
-            data.append(`users[${index}]`, user);
+            data.append(`customers[${index}]`, user);
         });
 
         try {
             // eslint-disable-next-line no-unused-vars
             const response = await axiosClient.post(
-                "/account/delete-account",
+                `/customer/delete-customer/`,
                 data
             );
-            toast.success("Xóa khách hàng thành công!", {
-                position: "top-right",
-                autoClose: 5000,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            if (response.status === 204) {
+                toast.success("Xóa khách hàng thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
             getCustomers(currentPage, showRowNumber);
             setSelectedACustomer([]);
         } catch (err) {
@@ -239,7 +240,7 @@ export default function Customer() {
     // Lấy keyword từ URL (nếu có)
     const keywordFromUrl = searchParams.get("keyword") || "";
     useEffect(() => {
-        getUserByKeyword();
+        getCustomerByKeyword();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [keywordFromUrl]);
     useEffect(() => {
@@ -260,7 +261,7 @@ export default function Customer() {
         if (keyword.trim()) {
             navigate(`?keyword=${keyword}`);
         } else {
-            navigate("/account"); // Nếu không có keyword, điều hướng về trang chính
+            navigate("/customer"); // Nếu không có keyword, điều hướng về trang chính
         }
     };
     const handlePageChange = (page) => {
@@ -484,14 +485,13 @@ export default function Customer() {
                                 src="/icons/search.svg"
                                 alt="icon-search"
                                 className={`w-5 h-5 cursor-pointer`}
-                                // onClick={() => {
-                                //     handleSearch(keywordFromUrl);
-                                // }}
+                                onClick={() => {
+                                    handleSearch(keywordFromUrl);
+                                }}
                             />
                             <div className="flex items-center gap-[2px] ml-2 flex-1">
                                 <input
                                     type="text"
-                                    readOnly
                                     value={keywordFromUrl}
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
@@ -546,9 +546,9 @@ export default function Customer() {
                     ) : (
                         <div
                             className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] cursor-pointer onClick={()=>{}}"
-                            // onClick={() => {
-                            //     deletedUser();
-                            // }}
+                            onClick={() => {
+                                deletedCustomer();
+                            }}
                         >
                             <h1 className="text-center font-semibold text-sm text-white">
                                 Xóa ({selectedCustomer.length})
@@ -618,17 +618,17 @@ export default function Customer() {
                                 </tr>
                             </thead>
                             <tbody className="text-gray-600 text-sm font-light">
-                                {customers.map((user, index) => (
+                                {customers.map((customer, index) => (
                                     <tr
-                                        key={user.customer_id}
+                                        key={customer.customer_id}
                                         onDoubleClick={() => {
                                             handleNavigation(
-                                                `/account/${user.customer_id}`
+                                                `/customer/${customer.customer_id}`
                                             );
                                         }}
                                         className={`border-b border-gray-200 hover:bg-orange-100 ${
                                             selectedCustomer.includes(
-                                                user.customer_id
+                                                customer.customer_id
                                             )
                                                 ? "bg-orange-100"
                                                 : ""
@@ -644,11 +644,11 @@ export default function Customer() {
                                                         : false
                                                 }
                                                 checked={selectedCustomer.includes(
-                                                    user.customer_id
+                                                    customer.customer_id
                                                 )}
                                                 onChange={() =>
                                                     handleCheckboxChange(
-                                                        user.customer_id
+                                                        customer.customer_id
                                                     )
                                                 }
                                                 className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
@@ -658,9 +658,9 @@ export default function Customer() {
                                             {startIndex + index}
                                         </td>
                                         <td className="py-3 px-6 text-left">
-                                            {user.image_name ? (
+                                            {customer.image_name ? (
                                                 <img
-                                                    src={`http://127.0.0.1:8000/uploads/${user.image_name}`}
+                                                    src={`http://127.0.0.1:8000/uploads/${customer.image_name}`}
                                                     alt="Avatar"
                                                     className="w-10 h-10 rounded-xl object-fill"
                                                 />
@@ -673,13 +673,13 @@ export default function Customer() {
                                             )}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.full_name}
+                                            {customer.full_name}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.phone_number}
+                                            {customer.phone_number}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.email}
+                                            {customer.email}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
                                             {}
@@ -1001,5 +1001,3 @@ export default function Customer() {
 //             </div>
 //         </div>
 //     );
-
-
