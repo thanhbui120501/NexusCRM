@@ -129,3 +129,71 @@ export function Validation({
     }
     return errors;
 }
+
+export function CustomerValidation({        
+    fullname = null,
+    birthDay = null,
+    email = null,
+    phone = null,   
+    listPhoneNumber = [],
+    listEmail = [],
+    
+}){
+    const errors = {
+        status: true,
+    };
+    //validate full name
+    if (fullname == null || fullname === "") {
+        errors.fullname = "Vui nhập họ và tên";
+        errors.status = false;
+    } else {
+        const fullnameRegex = /^(?=.*[a-zA-Z])(?!.*\d).{3,100}$/;
+        if (!fullnameRegex.test(fullname)) {
+            errors.fullname =
+                "Họ tên phải từ 3-100 kí tự và chỉ bao gồm các chữ cái.";
+            errors.status = false;
+        }
+    }
+
+    //validate birthday   
+    if(birthDay != null || birthDay !== ""){       
+        const today = new Date();
+        if (birthDay >= today) {
+            errors.birthDay = "Ngày sinh không hợp lệ";
+            errors.status = false;
+        }
+    }
+
+    //validate email
+    if (email == null || email === "") {
+        errors.email = "Vui lòng nhập địa chỉ email";
+        errors.status = false;
+    } else {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            errors.email = "Email không đúng định dạng";
+            errors.status = false;
+        }
+        if (listEmail.some((data) => data.email === email)) {
+            errors.email = "Email đã tồn tại.";
+            errors.status = false;
+        }
+    }
+
+    //validate phone number
+    if (phone == null || phone === "") {
+        errors.phone = "Vui lòng nhập số điện thoại.";
+        errors.status = false;
+    } else {
+        const phoneRegex = /^(03|05|07|08|09)[0-9]{8}$/;
+        if (!phoneRegex.test(phone)) {
+            errors.phone = "Số điện thoại không đúng.";
+            errors.status = false;
+        }
+        if (listPhoneNumber.some((data) => data.phone_number === phone)) {
+            errors.phone = "Số điện thoại đã tồn tại.";
+            errors.status = false;
+        }
+    }
+    return errors;
+}

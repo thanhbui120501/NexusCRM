@@ -98,6 +98,13 @@ export default function AccountDetail() {
             e.preventDefault();
         }
     };
+    //handle change
+    const handleChange = (e) => {
+        // Chỉ cho phép nhập tối đa 10 ký tự
+        if (e.target.value.length <= 10) {
+            setPhoneNumber(e.target.value)
+        }
+    };
     //get role
     useEffect(() => {
         getAccountById();
@@ -709,7 +716,7 @@ export default function AccountDetail() {
                                         type="text"
                                         value={phoneNumber}
                                         onChange={(e) =>
-                                            setPhoneNumber(e.target.value)
+                                            handleChange(e)
                                         }
                                         onKeyDown={handleKeyDown}
                                         placeholder="Nhập số điện thoại"

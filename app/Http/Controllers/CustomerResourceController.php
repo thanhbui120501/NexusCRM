@@ -223,7 +223,7 @@ class CustomerResourceController extends Controller
             'email' => 'email|unique:customers,email|string|max:255|regex:/(.+)@(.+)\.(.+)/i|email:rfc,dns',
             'full_name' => 'string|max:40|regex:/^.*(?=.{3,})(?=.*[a-zA-Z]).*$/',
             'gender' => 'integer|digits_between:0,1',
-            'date_of_birth' => 'date',
+            'date_of_birth' => 'string',
             'province' => 'string|max:50|min:5',
             'town' => 'string|max:50|min:5',
             'ward' => 'string|max:50|min:5',
@@ -285,7 +285,7 @@ class CustomerResourceController extends Controller
             };
 
             //get account id
-            $user = Auth::guard('api')->user();           
+            $user = $request->user();           
            
             //get address           
             $input['address'] = $this->getCustomerAddress($request);                                 
@@ -295,27 +295,21 @@ class CustomerResourceController extends Controller
 
             //checking update
             if($update){
-                //save activity
-                $newRequest = (new RequestController)->makeActivityRequest(
-                    'Customer Updated',
-                    'Customer',
-                    'The user '. $user->username . (new RequestController)->makeActivityContent("Customer Updated",$request) . $customer->full_name .'.',
-                    $user->account_id,
-                    $user->username);               
-                $result = (new ActivityHistoryResourceController)->store($newRequest);
+                // //save activity
+                // $newRequest = (new RequestController)->makeActivityRequest(
+                //     'Customer Updated',
+                //     'Customer',
+                //     'The user '. $user->username . (new RequestController)->makeActivityContent("Customer Updated",$request) . $customer->full_name .'.',
+                //     $user->account_id,
+                //     $user->username);               
+                // $result = (new ActivityHistoryResourceController)->store($newRequest);
                 
                 //return json message
                 $arr = [
                     'success' => true,
                     'status_code' => 200,
                     'message' => "Updated successful",                   
-                    'data' => new CustomerResource($customer),
-                    'activity' => [
-                        'activity_name' => $result->activity_name,
-                        'activity_type' => $result->activity_type,
-                        'activity_content' => $result->activity_content,
-                        'activity_time' => $result->created_at,
-                    ],
+                    'data' => new CustomerResource($customer),                    
                 ];
                 return response()->json($arr, Response::HTTP_OK);
             }else{
@@ -413,5 +407,20 @@ class CustomerResourceController extends Controller
             'data' => "Success!",            
         ];
         return response()->json($arr, Response::HTTP_NO_CONTENT);
+    }
+    public function getListPhoneAndEmail(Customer $customer){
+        $customer_id = $customer->customer_id;       
+        $email = Customer::select('email')->where('customer_id', '!=', $customer_id)->get();
+        $phoneNumber = Customer::select('phone_number')->where('customer_id', '!=', $customer_id)->get();
+        //return json message
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Success",            
+            'emails' => $email,
+            'phone_numbers' => $phoneNumber
+
+        ];
+        return response()->json($arr, Response::HTTP_OK);
     }
 }
