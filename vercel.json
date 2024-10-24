@@ -1,0 +1,24 @@
+{
+    "builds": [
+      {
+        "src": "nexusCRM/package.json",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "nexusCRM/dist" }
+      }
+    ],
+    "routes": [
+      { "src": "/nexusCRM/(.*)", "dest": "nexusCRM/dist/$1" }
+    ],
+    "headers": [
+        {
+          "source": "/assets/(.*).js",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/javascript"
+            }
+          ]
+        }
+      ]
+  }
+  
