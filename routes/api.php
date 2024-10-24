@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountResourceController;
 use App\Http\Controllers\ActivityHistoryResourceController;
+use App\Http\Controllers\AddressResourceController;
 use App\Http\Controllers\RoleResourceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerResourceController;
@@ -39,8 +40,8 @@ Route::group(['prefix' => 'v1'], function () {
                 Route::post('/account/update-account/{account}', 'update')->name('api.account.update'); //update account by id
                 Route::post('/account/delete-account', 'destroy')->name('api.account.delete'); //delete account by id
                 Route::patch('/account/reset-password/{account}', 'resetPassword')->name('api.account.reset.password'); //reset account password
-                Route::get('account/get-username-email-phone', 'getUsernamePhoneAndPhone')->name('api.get.username.email.phonenumber'); //get list username, phonenumber and email
-                Route::get('account/get-username-email-phone-except/{account}', 'getUsernamePhoneAndPhoneExcept')->name('api.get.username.email.phonenumber.except'); //get list username, phonenumber and email except account
+                Route::get('/account/get-username-email-phone', 'getUsernamePhoneAndPhone')->name('api.get.username.email.phonenumber'); //get list username, phonenumber and email
+                Route::get('/account/get-username-email-phone-except/{account}', 'getUsernamePhoneAndPhoneExcept')->name('api.get.username.email.phonenumber.except'); //get list username, phonenumber and email except account
             });
             //Activity History
             Route::controller(ActivityHistoryResourceController::class)->group(function () {
@@ -99,6 +100,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/customer/get-customer-by-id/{customer}', 'show')->name('api.customer.get.customer.by.id'); // get customer by id
             Route::patch('/customer/update-customer/{customer}', 'update')->name('api.customer.update.customer'); // update customer by id
             Route::post('/customer/delete-customer', 'destroy')->name('api.customer.delete.customer'); // delete customer by id
+            Route::get('/customer/get-email-phone-except/{customer}','getListPhoneAndEmail')->name('api.customer.get.email.phone'); //get list email and phone number except
         });
         Route::controller(SearchResourceController::class)->group(function () {
             // Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
@@ -121,6 +123,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/promotion/get-promotion-by-id/{promotion}', 'show')->name('api.promotion.show'); // get promotion by id
             Route::patch('/promotion/update-promotion/{promotion}', 'update')->name('api.promotion.update'); // update promotion by id
             Route::delete('/promotion/delete-promotion/{promotion}', 'destroy')->name('api.promotion.delete'); // delete promotion by id
+        });
+
+        //Address
+        Route::controller(AddressResourceController::class)->group(function () {
+            Route::get('/address/get-address-by-customer/','index')->name('api.address.get.by.customer'); //get address by customer
+            Route::post('/address/create-customer-address/', 'store')->name('api.address.create.customer.address'); //crete customer address
         });
     });
 });
