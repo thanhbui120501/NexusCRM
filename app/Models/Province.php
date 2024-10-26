@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Address extends Model
+class Province extends Model
 {
     use HasFactory, Notifiable;
     /**
@@ -20,25 +20,23 @@ class Address extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'address_id';
+    protected $primaryKey = 'province_id';
     /**
      * Indicates if the model's ID is auto-incrementing.
      *
      * @var bool
      */
-    protected $table = 'address';
+    protected $table = 'provinces';
     public $incrementing = false;
     protected $fillable = [
-        'address_id',
-        'customer_id',
-        'address_line',
-        'province',
-        'town',
-        'ward',
-        'country',      
-        'updated_at',
+        'province_id',
+        'name',
+        'code',
+        'division_type',
+        'codename',
+        'phonecode',
         'created_at',
-        'is_default_address',
-        'deleted_status',        
+        'updated_at',        
     ];
+
 }

@@ -15,12 +15,12 @@ class AddressResourceController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {        
+    {
         $input = $request->all();
         $validator = Validator::make($input, [
-           'id' => 'required|string'
+            'customer_id' => 'required|string'
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             $arr = [
                 'success' => false,
                 'status_code' => 200,
@@ -29,8 +29,8 @@ class AddressResourceController extends Controller
             ];
             return response()->json($arr, Response::HTTP_OK);
         }
-        
-        $address = Address::where('customer_id', $request->id)
+
+        $address = Address::where('customer_id', $request->customer_id)
             ->where('deleted_status', 0)
             ->get();
 
@@ -48,11 +48,10 @@ class AddressResourceController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {        
+    {
         $input = $request->all();
-        //dd($input['id']);
         $validator = Validator::make($input, [
-            'id' => 'required|string',
+            'customer_id' => 'required|string',
             'address_line' => 'required|string',
             'province' => 'required|string',
             'town' => 'required|string',
@@ -69,7 +68,7 @@ class AddressResourceController extends Controller
             return response()->json($arr, Response::HTTP_OK);
         } else {
             //check address count 
-            $addressCount = Address::where('customer_id', $request->id)->count();
+            $addressCount = Address::where('customer_id', $request->customer_id)->count();
             if ($addressCount >= 10) {
                 $arr = [
                     'success' => false,
@@ -79,7 +78,7 @@ class AddressResourceController extends Controller
                 ];
                 return response()->json($arr, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $input['customer_id'] = $request->id;
+            $input['customer_id'] = $request->customer_id;
             $address = Address::create($input);
             //dd($address);
             $arr = [
@@ -105,14 +104,39 @@ class AddressResourceController extends Controller
      */
     public function update(Request $request, Address $address)
     {
-        //
+        
     }
-
+    public function setDefaultAddress(Address $address)
+    {
+        
+        $setNormalAddress = Address::where('is_default_address', 1)->update(['is_default_address' => 0]);
+        $setDefault = Address::where("address_id", $address->address_id)->update(['is_default_address' => 1]);
+        $add = Address::where("address_id", $address->address_id)->first();
+        if ($setDefault) {
+            //json arr
+            $arr = [
+                'success' => true,
+                'status_code' => 200,
+                'message' => "Update Succesfully",
+                'data' => new AddressResource($add),
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }else{
+            //json arr
+            $arr = [
+                'success' => true,
+                'status_code' => 422,
+                'message' => "Update Failed",
+                'data' => "Failed",
+            ];
+            return response()->json($arr, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Address $address)
     {
-        //
+        
     }
 }

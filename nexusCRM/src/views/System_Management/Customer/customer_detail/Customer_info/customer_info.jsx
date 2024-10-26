@@ -7,32 +7,36 @@ import {
 } from "react";
 import DatePicker from "react-datepicker";
 import { vi } from "date-fns/locale";
-import { format, parse, parseISO  } from "date-fns";
+import { format, parse, parseISO } from "date-fns";
 import GenderDropdown from "./gender_dropdown";
 import CustomerStatusDropdown from "./customer_status_dropdown";
 import axiosClient from "../../../../../axiosClient";
 import { CustomerValidation } from "../../../../../validation";
 import { toast, ToastContainer } from "react-toastify";
+import Skeleton from "../../../../../components/skeleton";
+import axios from "axios";
+// eslint-disable-next-line react/display-name,
+const CustomerInfo = forwardRef(
+    // eslint-disable-next-line react/prop-types
+    ({ customer, openUpdateButton, onCloseUpdate }, ref) => {
+        const [customers] = useState(customer);
 
-// eslint-disable-next-line react/display-name, react/prop-types
-const CustomerInfo = forwardRef(({ customer, openUpdateButton, onCloseUpdate }, ref) => {
-    const [customers] = useState(customer);
-
-    return (
-        <div className="flex py-6 flex-col items-start gap-6 self-stretch">            
-            <PersonalInfo
-                customer={customers}
-                openUpdateButton={openUpdateButton}
-                onCloseUpdate={onCloseUpdate}
-                ref={ref} // Truyền ref đến PersonalInfo
-            />
-            <Address customer={customers} />
-
-            <StatisticsActivity customer={customers} />
-            <ToastContainer />
-        </div>
-    );
-});
+        return (
+            <div className="flex py-6 flex-col items-start gap-6 self-stretch">
+                <PersonalInfo
+                    customer={customers}
+                    openUpdateButton={openUpdateButton}
+                    onCloseUpdate={onCloseUpdate}
+                    ref={ref} // Truyền ref đến PersonalInfo
+                />
+                <Address customer_id={customers.customer_id} />
+                <CustomerSocialMedia />
+                <StatisticsActivity customer={customers} />
+                <ToastContainer />
+            </div>
+        );
+    }
+);
 export default CustomerInfo;
 // eslint-disable-next-line  react/display-name
 export const PersonalInfo = forwardRef(
@@ -77,11 +81,11 @@ export const PersonalInfo = forwardRef(
         };
         const convertDate = (dateString) => {
             const date = parseISO(dateString); // Chuyển đổi chuỗi thành đối tượng Date
-            return format(date, 'dd/MM/yyyy'); // Định dạng lại thành d-m-Y
+            return format(date, "dd/MM/yyyy"); // Định dạng lại thành d-m-Y
         };
         const convertDateUpdate = (dateString) => {
-            const date = parse(dateString, 'dd/MM/yyyy', new Date()); // Chuyển đổi chuỗi thành đối tượng Date
-            return format(date, 'yyyy-MM-dd'); // Định dạng lại thành Y-m-d
+            const date = parse(dateString, "dd/MM/yyyy", new Date()); // Chuyển đổi chuỗi thành đối tượng Date
+            return format(date, "yyyy-MM-dd"); // Định dạng lại thành Y-m-d
         };
         // Chuyển birthDay (chuỗi) thành object Date để dùng trong DatePicker
         const [selectedDate, setSelectedDate] = useState(() =>
@@ -108,12 +112,11 @@ export const PersonalInfo = forwardRef(
         const handleGender = (gender) => {
             switch (gender) {
                 case "Male":
-                    return "Nam";                
+                    return "Nam";
                 default:
                     return "Nữ";
             }
-            
-        }
+        };
         //phone number input only number
         const handleKeyDown = (e) => {
             if (
@@ -142,7 +145,10 @@ export const PersonalInfo = forwardRef(
             setPhone(customer.phone_number);
             setBirthDay(
                 // eslint-disable-next-line react/prop-types
-                customer.date_of_birth === null ? "" : convertDate(customer.date_of_birth)
+                customer.date_of_birth === null
+                    ? ""
+                    : // eslint-disable-next-line react/prop-types
+                      convertDate(customer.date_of_birth)
             );
             // eslint-disable-next-line react/prop-types
             setStatus(customer.status);
@@ -173,8 +179,8 @@ export const PersonalInfo = forwardRef(
                     inputRef.current.focus(); // Đặt focus vào input
                 }
             },
-            submitForm: async () => {                                
-                try{
+            submitForm: async () => {
+                try {
                     const validationErrors = CustomerValidation({
                         fullname: fullName,
                         birthDay:
@@ -201,18 +207,31 @@ export const PersonalInfo = forwardRef(
                     setLoading(true);
                     //create payload when data was change
                     const payload = {};
-                    if(fullName !== customerRecord.full_name) payload.full_name = fullName;
-                    if(gender !== customerRecord.gender) payload.gender = gender === "Male" ? 0 : 1 ;
-                    if(birthDay !== (customerRecord.date_of_birth===null? "" : convertDate(customerRecord.date_of_birth))) payload.date_of_birth = convertDateUpdate(birthDay);
-                    if(email !== customerRecord.email) payload.email = email;
-                    if(phone !== customerRecord.phone_number) payload.phone_number = phone;
-                    if(status !== customerRecord.status)  payload.status = status;
-                    
-                    //eslint-disable-next-line react/prop-types                    
-                    const response = await axiosClient.patch(`/customer/update-customer/${customer.customer_id}`, payload);
-                    
-                    if(response.status === 200){
-                        toast.success("Cập nhật tài khoản thành công!", {
+                    if (fullName !== customerRecord.full_name)
+                        payload.full_name = fullName;
+                    if (gender !== customerRecord.gender)
+                        payload.gender = gender === "Male" ? 0 : 1;
+                    if (
+                        birthDay !==
+                        (customerRecord.date_of_birth === null
+                            ? ""
+                            : convertDate(customerRecord.date_of_birth))
+                    )
+                        payload.date_of_birth = convertDateUpdate(birthDay);
+                    if (email !== customerRecord.email) payload.email = email;
+                    if (phone !== customerRecord.phone_number)
+                        payload.phone_number = phone;
+                    if (status !== customerRecord.status)
+                        payload.status = status;
+
+                    const response = await axiosClient.patch(
+                        // eslint-disable-next-line react/prop-types
+                        `/customer/update-customer/${customer.customer_id}`,
+                        payload
+                    );
+
+                    if (response.status === 200) {
+                        toast.success("Cập nhật thông tin thành công!", {
                             position: "top-right",
                             autoClose: 4000,
                             closeOnClick: true,
@@ -231,7 +250,7 @@ export const PersonalInfo = forwardRef(
                             progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
                         });
                     }
-                }catch(error){
+                } catch (error) {
                     console.error(error);
                     toast.error("Đã có lỗi xảy ra khi cập nhật tài khoản", {
                         position: "top-right",
@@ -241,16 +260,15 @@ export const PersonalInfo = forwardRef(
                         draggable: true,
                         progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
                     });
-                }finally{
+                } finally {
                     setLoading(false);
                     onCloseUpdate(false);
                 }
-
             },
         }));
         //Submit form
         const onSubmit = (ev) => {
-            ev.preventDefault();            
+            ev.preventDefault();
         };
         return (
             <form
@@ -492,58 +510,350 @@ export const PersonalInfo = forwardRef(
                     </div>
                 </div>
                 {loading && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
-                        Đang cập nhật
-                    </h1>
-                </div>
-            )}
+                    <div className="absolute inset-0 bg-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
+                        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
+                        <h1 className="text-sm font-medium text-white">
+                            Đang cập nhật
+                        </h1>
+                    </div>
+                )}
             </form>
         );
     }
 );
-// eslint-disable-next-line no-unused-vars, react/prop-types
-export function Address({ customer }) {
+// eslint-disable-next-line , react/prop-types
+export function Address({ customer_id }) {
+    const [address, setAddress] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [loadingCreate, setLoadingCreate] = useState(false);
+    const [openCreateAddress, setOpenCreateAddress] = useState(false);
+    const [openSelectProvince, setOpenSelectProvince] = useState(false);
+    const [openSelectDistrict, setOpenSelectDistrict] = useState(false);
+    const [openSelectWard, setOpenSelectWard] = useState(false);
+    //set province
+    const [listProvince, getListProvince] = useState([]);
+    const [province, setProvince] = useState({});
+    //set district
+    const [listDistrict, getListDistrict] = useState([]);
+    const [district, setDistrict] = useState({});
+    //set ward
+    const [listWard, getListWard] = useState([]);
+    const [ward, setWard] = useState({});
+    //address line
+    const [addressLine, setAddressLine] = useState("");
+    //het list province
+    useEffect(() => {
+        getAddress();
+        getListProvinces();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    //get list district
+    useEffect(() => {
+        if (province || Object.keys(province).length > 0) {
+            getListDistricts(province.id);
+        }
+    }, [province]);
+
+    //get list ward
+    useEffect(() => {
+        if (district || Object.keys(district).length > 0) {
+            getListWards(district.id);
+        }
+    }, [district]);
+    const getListDistricts = async (id) => {
+        try {
+            const response = await axios.get(
+                `https://esgoo.net/api-tinhthanh/2/${id}.htm`
+            );
+            if (response.status === 200) {
+                getListDistrict(response.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getListWards = async (id) => {
+        try {
+            const response = await axios.get(
+                `https://esgoo.net/api-tinhthanh/3/${id}.htm`
+            );
+            if (response.status === 200) {
+                getListWard(response.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getAddress = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosClient.get(
+                "/address/get-address-by-customer",
+                {
+                    params: {
+                        customer_id: customer_id,
+                    },
+                }
+            );
+            if (response.status === 200) {
+                setAddress(response.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const getListProvinces = async () => {
+        try {
+            const response = await axios.get(
+                "https://esgoo.net/api-tinhthanh/1/0.htm"
+            );
+            if (response.status === 200) {
+                getListProvince(response.data.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const handleAddress = (add) => {
+        // let add_line = add.address_line,
+        //     add_province = add.province,
+        //     add_town = add.town,
+        //     add_ward = add.ward;
+
+        return (
+            add.address_line +
+            ", " +
+            add.ward +
+            ", " +
+            add.town +
+            ", " +
+            add.province
+        );
+    };
+    const handleChange = (e) => {
+        const maxWords = 100;
+        const value = e.target.value;
+        const words = value.trim().split(/\s+/);
+
+        // Kiểm tra số từ và ký tự đặc biệt
+        if (words.length <= maxWords) {
+            setAddressLine(value);
+        }
+    };
+    const onCreateAddress = async () => {
+        try {
+            setLoadingCreate(true);
+            const data = new FormData();
+            data.append("address_line", addressLine);
+            data.append("province", province.name);
+            data.append("town", ward.name);
+            data.append("ward", district.name);
+            data.append("country", "Việt Nam");
+            const response = await axiosClient.post(
+                "/address/create-customer-address",
+                data,
+                {
+                    params: {
+                        customer_id: customer_id,
+                    },
+                }
+            );
+            console.log(response);
+            if (response.status === 201) {
+                toast.success("Thêm địa chỉ thành công!", {
+                    position: "top-right",
+                    autoClose: 4000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                getAddress();
+                setOpenCreateAddress(false);
+                setProvince({});
+                setDistrict({});
+                setWard({});
+                setAddressLine("");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tạo địa chỉ:", error);
+        } finally {
+            setLoadingCreate(false);
+        }
+    };
     return (
         <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200">
             <h1 className="text-xl font-semibold text-[#171717]">Địa chỉ</h1>
-            <div className="flex flex-col items-start gap-4 self-stretch">
-                <div className="flex pb-3 justify-between items-center self-stretch border-b-[1px]">
-                    <div className="flex gap-3 items-center">
-                        <h1 className="text-base font-medium text-[#171717]">
-                            22/18 Cô Giang, Phường 1, Quận 1, TP.HCM
-                        </h1>
-                        <div className="flex px-2.5 py-0.5 justify-center items-center gap-2.5 rounded-full border border-[#BFDBFE] bg-[#EFF6FF]">
-                            <h1 className="text-sm font-medium text-[#2563EB]">
-                                Địa chỉ mặc định
+            {loading ? (
+                <div className="flex flex-col items-start gap-4 self-stretch">
+                    <Skeleton className="h-6 w-60" />
+                    <Skeleton className="h-6 w-60" />
+                    <Skeleton className="h-6 w-60" />
+                    <Skeleton className="h-6 w-20" />
+                </div>
+            ) : (
+                <div className="flex flex-col items-start gap-4 self-stretch">
+                    {address.map((add) => (
+                        <div
+                            key={add.address_id}
+                            className="flex pb-3 justify-between items-center self-stretch border-b-[1px]"
+                        >
+                            <div className="flex gap-3 items-center">
+                                <h1 className="text-base font-medium text-[#171717]">
+                                    {handleAddress(add)}
+                                </h1>
+                                {add.is_default_address && (
+                                    <div className="flex px-2.5 py-0.5 justify-center items-center gap-2.5 rounded-full border border-[#BFDBFE] bg-[#EFF6FF]">
+                                        <h1 className="text-sm font-medium text-[#2563EB]">
+                                            Địa chỉ mặc định
+                                        </h1>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-[#E5E5E5] bg-[#fff] cursor-pointer">
+                                <img src="/icons/ellipsis.svg" alt="" />
+                            </div>
+                        </div>
+                    ))}
+                    {openCreateAddress && (
+                        <div className="flex gap-3 items-start justify-start self-stretch">
+                            <input
+                                type="text"
+                                placeholder="Nhập địa chỉ"
+                                className="border border-gray-200 rounded-lg p-2 text-sm font-medium"
+                                onChange={handleChange}
+                                value={addressLine}
+                            />
+                            <div className="flex border border-gray-200 rounded-lg gap-2 p-2 cursor-pointer relative">
+                                <div className="flex flex-1">
+                                    <h1 className="text-sm font-medium text-[#171717]">
+                                        {ward && Object.keys(ward).length > 0
+                                            ? ward.name
+                                            : "Xã/Phường/Thị trấn"}
+                                    </h1>
+                                </div>
+                                <img
+                                    src="/icons/angle-down.svg"
+                                    alt="angle-down"
+                                    onClick={() => {
+                                        district &&
+                                            Object.keys(district).length > 0 &&
+                                            setOpenSelectWard(!openSelectWard);
+                                    }}
+                                />
+                                {openSelectWard && (
+                                    <SelectWardDropdown
+                                        listWard={listWard}
+                                        onClose={setOpenSelectWard}
+                                        onData={setWard}
+                                    />
+                                )}
+                            </div>
+                            <div className="flex border border-gray-200 rounded-lg gap-2 p-2 cursor-pointer relative">
+                                <div className="flex flex-1">
+                                    <h1 className="text-sm font-medium text-[#171717]">
+                                        {district &&
+                                        Object.keys(district).length > 0
+                                            ? district.name
+                                            : "Quận/Huyện"}
+                                    </h1>
+                                </div>
+                                <img
+                                    src="/icons/angle-down.svg"
+                                    alt="angle-down"
+                                    onClick={() => {
+                                        province &&
+                                            Object.keys(province).length > 0 &&
+                                            setOpenSelectDistrict(
+                                                !openSelectDistrict
+                                            );
+                                    }}
+                                />
+                                {openSelectDistrict && (
+                                    <SelectDistrictDropdown
+                                        listDistrict={listDistrict}
+                                        onClose={setOpenSelectDistrict}
+                                        onData={setDistrict}
+                                    />
+                                )}
+                            </div>
+                            <div className="flex border border-gray-200 rounded-lg gap-2 p-2 cursor-pointer relative">
+                                <div className="flex flex-1">
+                                    <h1 className="text-sm font-medium text-[#171717]">
+                                        {province &&
+                                        Object.keys(province).length > 0
+                                            ? province.name
+                                            : "Tỉnh/Thành"}
+                                    </h1>
+                                </div>
+                                <img
+                                    src="/icons/angle-down.svg"
+                                    alt="angle-down"
+                                    onClick={() =>
+                                        setOpenSelectProvince(
+                                            !openSelectProvince
+                                        )
+                                    }
+                                />
+                                {openSelectProvince && (
+                                    <SelectProvinceDropdown
+                                        listProvince={listProvince}
+                                        onClose={setOpenSelectProvince}
+                                        onData={setProvince}
+                                    />
+                                )}
+                            </div>
+                            {addressLine != "" &&
+                                province &&
+                                Object.keys(province).length > 0 &&
+                                district &&
+                                Object.keys(district).length > 0 &&
+                                ward &&
+                                Object.keys(ward).length > 0 && (
+                                    <div
+                                        onClick={() => {
+                                            onCreateAddress();
+                                        }}
+                                        className="flex p-2 cursor-pointer  items-center justify-center gap-2 self-stretch bg-orange-600 rounded-lg  hover:bg-orange-400"
+                                    >
+                                        <h1 className="text-xs font-semibold text-[#ffff]">
+                                            Cập nhật
+                                        </h1>
+                                    </div>
+                                )}
+                        </div>
+                    )}
+
+                    <div className="flex gap-3 items-center justify-center">
+                        <div
+                            onClick={() =>
+                                address.length < 10&&setOpenCreateAddress(!openCreateAddress)
+                            }
+                            className={`flex py-2 cursor-pointer px-3 items-center justify-center gap-2 self-stretch ${address.length < 10 && 'hover:bg-gray-600'}  rounded-lg w-[123px] h-8  ${address.length >= 10 ? 'bg-gray-400' : 'bg-[#171717]' } `}
+                        >
+                            <img src="/icons/plus.svg" alt="plus" />
+                            <h1 className="text-xs font-semibold text-[#ffff]">
+                                Thêm địa chỉ
                             </h1>
                         </div>
-                    </div>
-                    <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-[#E5E5E5] bg-[#fff] cursor-pointer">
-                        <img src="/icons/ellipsis.svg" alt="" />
-                    </div>
-                </div>
-                <div className="flex pb-3 justify-between items-center self-stretch border-b-[1px]">
-                    <div className="flex gap-3 items-center">
-                        <h1 className="text-base font-medium text-[#171717]">
-                            984 Huỳnh Tấn Phát, Phường Phú Mỹ, Quận 7, TP.HCM
-                        </h1>
-                        {/* <div className="flex px-2.5 py-0.5 justify-center items-center gap-2.5 rounded-full border border-[#BFDBFE] bg-[#EFF6FF]">
-                            <h1 className="text-sm font-medium text-[#2563EB]">Địa chỉ mặc định</h1>
-                        </div> */}
-                    </div>
-                    <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-[#E5E5E5] bg-[#fff] cursor-pointer">
-                        <img src="/icons/ellipsis.svg" alt="" />
+                        {address.length >= 10 && (
+                            <h1 className="text-sm font-medium text-red-600">
+                                Số lượng địa chỉ đã đạt giới hạn
+                            </h1>
+                        )}
                     </div>
                 </div>
-                <div className="flex py-2 cursor-pointer px-3 items-center justify-center gap-2 self-stretch bg-[#171717] rounded-lg w-[123px] h-8 hover:bg-gray-600">
-                    <img src="/icons/plus.svg" alt="plus" />
-                    <h1 className="text-xs font-semibold text-[#ffff]">
-                        Thêm địa chỉ
+            )}
+            {loadingCreate && (
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
+                    <h1 className="text-sm font-medium text-white">
+                        Đang thêm mới địa chỉ
                     </h1>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
@@ -1072,10 +1382,131 @@ export function StatisticsActivity({ customer }) {
     );
 }
 
-export function CustomerSocialMedia(){
-    return(
+export function CustomerSocialMedia() {
+    return (
         <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200">
+            <h1 className="text-xl font-semibold text-[#171717]">
+                Mạng xã hội
+            </h1>
+            <div className="flex flex-col self-stretch items-start gap-4">
+                <div className="flex pb-3 justify-between items-center self-stretch border-b">
+                    <div className="flex items-center gap-2">
+                        <img
+                            src="/icons/Facebook.svg"
+                            alt="facebook"
+                            className="w-6 h-6"
+                        />
+                        <div className="flex items-center gap-1.5">
+                            <h1 className="text-base font-medium text-[#171717]">
+                                Facebook
+                            </h1>
+                            <div className="w-2 h-2 bg-[#D4D4D4] rounded-full"></div>
+                            <h1 className="text-base font-medium text-[#171717]">
+                                @thanhbui_1205
+                            </h1>
+                        </div>
+                    </div>
+                    <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-[#E5E5E5] bg-[#fff] cursor-pointer">
+                        <img src="/icons/ellipsis.svg" alt="" />
+                    </div>
+                </div>
+                <div className="flex pb-3 justify-between items-center self-stretch border-b">
+                    <div className="flex items-center gap-2">
+                        <img
+                            src="/icons/Google.svg"
+                            alt="google"
+                            className="w-6 h-6"
+                        />
+                        <div className="flex items-center gap-1.5">
+                            <h1 className="text-base font-medium text-[#171717]">
+                                Google
+                            </h1>
+                            <div className="w-2 h-2 bg-[#D4D4D4] rounded-full"></div>
+                            <h1 className="text-base font-medium text-[#171717]">
+                                thanhbui120501@gmail.com
+                            </h1>
+                        </div>
+                    </div>
+                    <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-[#E5E5E5] bg-[#fff] cursor-pointer">
+                        <img src="/icons/ellipsis.svg" alt="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
+// eslint-disable-next-line react/prop-types
+export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
+    return (
+        <div className="flex flex-col absolute left-1 top-10 border bg-white p-2 w-40 h-40 overflow-y-auto overflow-x-hidden gap-2">
+            {
+                // eslint-disable-next-line react/prop-types
+                listProvince.map((pro) => (
+                    <div
+                        key={pro.id}
+                        className="flex hover:bg-gray-200 cursor-pointer"
+                        onClick={() => {
+                            onClose(false);
+                            onData(pro);
+                        }}
+                    >
+                        <h1 className="text-sm font-medium text-[#171717]">
+                            {pro.name}
+                        </h1>
+                    </div>
+                ))
+            }
+        </div>
+    );
+}
+
+// eslint-disable-next-line react/prop-types
+export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
+    return (
+        <div className="flex flex-col absolute left-1 top-10 border bg-white p-2 w-40 h-28 overflow-y-auto overflow-x-hidden gap-2">
+            {
+                // eslint-disable-next-line react/prop-types
+                listDistrict.map((dis) => (
+                    <div
+                        key={dis.id}
+                        className="flex hover:bg-gray-200 cursor-pointer"
+                        onClick={() => {
+                            onClose(false);
+                            onData(dis);
+                        }}
+                    >
+                        <h1 className="text-sm font-medium text-[#171717]">
+                            {dis.name}
+                        </h1>
+                    </div>
+                ))
+            }
+        </div>
+    );
+}
+
+// eslint-disable-next-line react/prop-types
+export function SelectWardDropdown({ listWard, onClose, onData }) {
+    return (
+        <div className="flex flex-col absolute left-1 top-10 border bg-white p-2 w-40 h-28 overflow-y-auto overflow-x-hidden gap-2">
+            {
+                // eslint-disable-next-line react/prop-types
+                listWard.map((war) => (
+                    <div
+                        key={war.id}
+                        className="flex hover:bg-gray-200 cursor-pointer"
+                        onClick={() => {
+                            onClose(false);
+                            onData(war);
+                        }}
+                    >
+                        <h1 className="text-sm font-medium text-[#171717]">
+                            {war.name}
+                        </h1>
+                    </div>
+                ))
+            }
         </div>
     );
 }
