@@ -13,6 +13,7 @@ use App\Http\Controllers\PasswordResetResourceController;
 use App\Http\Controllers\PromotionTypeResourceController;
 use App\Http\Controllers\PromotionResourceController;
 use App\Http\Controllers\SearchResourceController;
+use App\Http\Controllers\ProvincesResourceController;
 use App\Http\Controllers\RequestController;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Support\Facades\Route;
@@ -129,6 +130,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::controller(AddressResourceController::class)->group(function () {
             Route::get('/address/get-address-by-customer/','index')->name('api.address.get.by.customer'); //get address by customer
             Route::post('/address/create-customer-address/', 'store')->name('api.address.create.customer.address'); //crete customer address
+            Route::patch('/address/set-default-address/{address}','setDefaultAddress')->name('api.address.set.default.address'); //set default address
         });
+
+        //Province
+        Route::get('/province/get-list-province',[ProvincesResourceController::class, 'index'])->name('api.province.get.list.province'); // get list province
     });
 });

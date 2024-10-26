@@ -37,6 +37,7 @@ class AddressResource extends JsonResource
             'country' => $this->country,                          
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'is_default_address' => $this->is_default_address == 1 ? true : false,
             'deleted_status' => $this->status == 1 ? true : false,            
         ];
     }

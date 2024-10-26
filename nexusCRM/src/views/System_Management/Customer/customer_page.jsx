@@ -215,7 +215,6 @@ export default function Customer() {
         });
 
         try {
-            // eslint-disable-next-line no-unused-vars
             const response = await axiosClient.post(
                 `/customer/delete-customer/`,
                 data
