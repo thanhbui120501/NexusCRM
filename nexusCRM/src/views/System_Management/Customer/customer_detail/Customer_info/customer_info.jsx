@@ -647,9 +647,9 @@ export function Address({ customer_id }) {
             setLoadingCreate(true);
             const data = new FormData();
             data.append("address_line", addressLine);
-            data.append("province", province.name);
-            data.append("town", ward.name);
-            data.append("ward", district.name);
+            data.append("province", province.full_name);
+            data.append("town", ward.full_name);
+            data.append("ward", district.full_name);
             data.append("country", "Việt Nam");
             const response = await axiosClient.post(
                 "/address/create-customer-address",
@@ -730,7 +730,7 @@ export function Address({ customer_id }) {
                                 <div className="flex flex-1">
                                     <h1 className="text-sm font-medium text-[#171717]">
                                         {ward && Object.keys(ward).length > 0
-                                            ? ward.name
+                                            ? ward.full_name
                                             : "Xã/Phường/Thị trấn"}
                                     </h1>
                                 </div>
@@ -756,7 +756,7 @@ export function Address({ customer_id }) {
                                     <h1 className="text-sm font-medium text-[#171717]">
                                         {district &&
                                         Object.keys(district).length > 0
-                                            ? district.name
+                                            ? district.full_name
                                             : "Quận/Huyện"}
                                     </h1>
                                 </div>
@@ -784,7 +784,7 @@ export function Address({ customer_id }) {
                                     <h1 className="text-sm font-medium text-[#171717]">
                                         {province &&
                                         Object.keys(province).length > 0
-                                            ? province.name
+                                            ? province.full_name
                                             : "Tỉnh/Thành"}
                                     </h1>
                                 </div>
@@ -814,7 +814,15 @@ export function Address({ customer_id }) {
                                 Object.keys(ward).length > 0 && (
                                     <div
                                         onClick={() => {
-                                            onCreateAddress();
+                                            listDistrict.some(
+                                                (item) =>
+                                                    item.id === district.id
+                                            ) &&
+                                                listWard.some(
+                                                    (item) =>
+                                                        item.id === ward.id
+                                                ) &&
+                                                onCreateAddress();
                                         }}
                                         className="flex p-2 cursor-pointer  items-center justify-center gap-2 self-stretch bg-orange-600 rounded-lg  hover:bg-orange-400"
                                     >
@@ -829,9 +837,16 @@ export function Address({ customer_id }) {
                     <div className="flex gap-3 items-center justify-center">
                         <div
                             onClick={() =>
-                                address.length < 10&&setOpenCreateAddress(!openCreateAddress)
+                                address.length < 10 &&
+                                setOpenCreateAddress(!openCreateAddress)
                             }
-                            className={`flex py-2 cursor-pointer px-3 items-center justify-center gap-2 self-stretch ${address.length < 10 && 'hover:bg-gray-600'}  rounded-lg w-[123px] h-8  ${address.length >= 10 ? 'bg-gray-400' : 'bg-[#171717]' } `}
+                            className={`flex py-2 cursor-pointer px-3 items-center justify-center gap-2 self-stretch ${
+                                address.length < 10 && "hover:bg-gray-600"
+                            }  rounded-lg w-[123px] h-8  ${
+                                address.length >= 10
+                                    ? "bg-gray-400"
+                                    : "bg-[#171717]"
+                            } `}
                         >
                             <img src="/icons/plus.svg" alt="plus" />
                             <h1 className="text-xs font-semibold text-[#ffff]">
@@ -841,6 +856,15 @@ export function Address({ customer_id }) {
                         {address.length >= 10 && (
                             <h1 className="text-sm font-medium text-red-600">
                                 Số lượng địa chỉ đã đạt giới hạn
+                            </h1>
+                        )}
+                        {openCreateAddress && (listDistrict.some(
+                            (item) => item.id === district.id
+                        ) === false || addressLine === "" ||
+                            listWard.some((item) => item.id === ward.id) ===
+                                false) && (
+                            <h1 className="text-sm font-medium text-red-600">
+                                Địa chỉ không hợp lệ
                             </h1>
                         )}
                     </div>
@@ -1439,7 +1463,7 @@ export function CustomerSocialMedia() {
 // eslint-disable-next-line react/prop-types
 export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute left-1 top-10 border bg-white p-2 w-40 h-40 overflow-y-auto overflow-x-hidden gap-2">
+        <div className="flex flex-col absolute left-1 top-10 border bg-white p-2 w-52 h-40 overflow-y-auto overflow-x-hidden gap-2">
             {
                 // eslint-disable-next-line react/prop-types
                 listProvince.map((pro) => (
@@ -1452,7 +1476,7 @@ export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
                         }}
                     >
                         <h1 className="text-sm font-medium text-[#171717]">
-                            {pro.name}
+                            {pro.full_name}
                         </h1>
                     </div>
                 ))
@@ -1477,7 +1501,7 @@ export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
                         }}
                     >
                         <h1 className="text-sm font-medium text-[#171717]">
-                            {dis.name}
+                            {dis.full_name}
                         </h1>
                     </div>
                 ))
@@ -1502,7 +1526,7 @@ export function SelectWardDropdown({ listWard, onClose, onData }) {
                         }}
                     >
                         <h1 className="text-sm font-medium text-[#171717]">
-                            {war.name}
+                            {war.full_name}
                         </h1>
                     </div>
                 ))
