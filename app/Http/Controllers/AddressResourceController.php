@@ -9,6 +9,7 @@ use App\Http\Resources\AddressResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
+
 class AddressResourceController extends Controller
 {
     /**
@@ -147,4 +148,6 @@ class AddressResourceController extends Controller
         ];
         return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
+
+    
 }

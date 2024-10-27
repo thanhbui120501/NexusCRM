@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Province extends Model
+class District extends Model
 {
     use HasFactory, Notifiable;
     /**
@@ -26,10 +26,11 @@ class Province extends Model
      *
      * @var bool
      */
-    protected $table = 'provinces';
+    protected $table = 'districts';
     public $incrementing = false;
     protected $fillable = [
         'id',
+        'province_id',
         'name',
         'name_en',
         'full_name',
@@ -39,8 +40,8 @@ class Province extends Model
         'created_at',
         'updated_at',               
     ];
-    public function districts()
+    public function wards()
     {
-        return $this->hasMany(District::class, 'province_id', 'id');
+        return $this->hasMany(Ward::class, 'district_id', 'id');
     }
 }

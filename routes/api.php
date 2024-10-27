@@ -132,9 +132,16 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/address/create-customer-address/', 'store')->name('api.address.create.customer.address'); //crete customer address
             Route::patch('/address/set-default-address/{address}','setDefaultAddress')->name('api.address.set.default.address'); //set default address
             Route::delete('/address/delete-address/{address}','destroy')->name('api.address.delete.address'); //delete address
+            
         });
 
         //Province
-        Route::get('/province/get-list-province',[ProvincesResourceController::class, 'index'])->name('api.province.get.list.province'); // get list province
+        Route::controller(ProvincesResourceController::class)->group(function () {
+            Route::get('/province/get-list-province','index')->name('api.province.get.list.province'); // get list province
+            Route::get('/province/update-province','updateProvince')->name('api.update.province'); //update province
+            Route::get('/province/get-list-district/{province}','getListDistrict')->name('api.province.get.list.district'); // get list district
+            Route::get('/province/get-list-ward/{district}','getListWard')->name('api.province.get.list.ward'); // get list ward
+        });
+        
     });
 });

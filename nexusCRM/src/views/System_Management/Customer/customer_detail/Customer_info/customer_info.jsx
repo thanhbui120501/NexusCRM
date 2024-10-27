@@ -14,7 +14,7 @@ import axiosClient from "../../../../../axiosClient";
 import { CustomerValidation } from "../../../../../validation";
 import { toast, ToastContainer } from "react-toastify";
 import Skeleton from "../../../../../components/skeleton";
-import axios from "axios";
+
 // eslint-disable-next-line react/display-name,
 const CustomerInfo = forwardRef(
     // eslint-disable-next-line react/prop-types
@@ -551,6 +551,7 @@ export function Address({ customer_id }) {
     //get list district
     useEffect(() => {
         if (province || Object.keys(province).length > 0) {
+            console.log(province.id);
             getListDistricts(province.id);
         }
     }, [province]);
@@ -563,8 +564,8 @@ export function Address({ customer_id }) {
     }, [district]);
     const getListDistricts = async (id) => {
         try {
-            const response = await axios.get(
-                `https://esgoo.net/api-tinhthanh/2/${id}.htm`
+            const response = await axiosClient.get(
+                `/province/get-list-district/${id}`
             );
             if (response.status === 200) {
                 getListDistrict(response.data.data);
@@ -575,8 +576,8 @@ export function Address({ customer_id }) {
     };
     const getListWards = async (id) => {
         try {
-            const response = await axios.get(
-                `https://esgoo.net/api-tinhthanh/3/${id}.htm`
+            const response = await axiosClient.get(
+                `/province/get-list-ward/${id}`
             );
             if (response.status === 200) {
                 getListWard(response.data.data);
@@ -607,9 +608,10 @@ export function Address({ customer_id }) {
     };
     const getListProvinces = async () => {
         try {
-            const response = await axios.get(
-                "https://esgoo.net/api-tinhthanh/1/0.htm"
+            const response = await axiosClient.get(
+                "/province/get-list-province"
             );
+            
             if (response.status === 200) {
                 getListProvince(response.data.data);
             }
@@ -1492,7 +1494,7 @@ export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
         <div className="flex flex-col absolute left-1 top-10 border bg-white p-2 w-40 h-28 overflow-y-auto overflow-x-hidden gap-2">
             {
                 // eslint-disable-next-line react/prop-types
-                listDistrict.map((dis) => (
+                listDistrict?.map((dis) => (
                     <div
                         key={dis.id}
                         className="flex hover:bg-gray-200 cursor-pointer"

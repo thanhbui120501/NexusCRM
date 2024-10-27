@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('provinces', function (Blueprint $table) {
-            $table->id('province_id');  // Sử dụng 'province_id' làm khóa chính
-            $table->string('name')->unique();
-            $table->string('code')->unique()->nullable(); 
-            $table->string('division_type')->unique()->nullable();
-            $table->string('codename')->unique()->nullable();
-            $table->integer('phone_code')->unique()->nullable();
+            $table->string('id');  // Sử dụng 'province_id' làm khóa chính
+            $table->string('name');
+            $table->string('name_en');
+            $table->string('full_name');
+            $table->string('full_name_en');            
+            $table->string('latitude');             
+            $table->string('longitude');            
             $table->timestamps();
         });
     }
