@@ -11,7 +11,7 @@
         "laravel/passport": "*",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "twilio/sdk": "^6.0"
+        "twilio/sdk": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
