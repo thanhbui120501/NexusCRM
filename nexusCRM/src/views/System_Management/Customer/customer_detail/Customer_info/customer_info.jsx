@@ -87,6 +87,7 @@ export const PersonalInfo = forwardRef(
             const date = parse(dateString, "dd/MM/yyyy", new Date()); // Chuyển đổi chuỗi thành đối tượng Date
             return format(date, "yyyy-MM-dd"); // Định dạng lại thành Y-m-d
         };
+        
         // Chuyển birthDay (chuỗi) thành object Date để dùng trong DatePicker
         const [selectedDate, setSelectedDate] = useState(() =>
             convertStringToDate(birthDay)
