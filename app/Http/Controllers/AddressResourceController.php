@@ -137,6 +137,14 @@ class AddressResourceController extends Controller
      */
     public function destroy(Address $address)
     {
-        
+        $address->delete();
+
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Deleted Success",
+            'data' => "Success",
+        ];
+        return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
 }

@@ -131,6 +131,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/address/get-address-by-customer/','index')->name('api.address.get.by.customer'); //get address by customer
             Route::post('/address/create-customer-address/', 'store')->name('api.address.create.customer.address'); //crete customer address
             Route::patch('/address/set-default-address/{address}','setDefaultAddress')->name('api.address.set.default.address'); //set default address
+            Route::delete('/address/delete-address/{address}','destroy')->name('api.address.delete.address'); //delete address
         });
 
         //Province
