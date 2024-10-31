@@ -17,12 +17,11 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'username' => ['required'],
             'password' => ['required'],
-            'remember_token' => ['string'],
         ]);
-        $remember = ($request->has('remember_token') && $request->remember_token == 'true') ? true : false;
+
 
         //check username and password
-        if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password], $remember)) {
+        if (Auth::guard('api')->attempt(['username' => $request->username, 'password' => $request->password])) {
             //get user
             $user = Auth::guard('api')->user();
 

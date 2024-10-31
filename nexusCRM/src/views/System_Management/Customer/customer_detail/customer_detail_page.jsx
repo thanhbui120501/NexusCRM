@@ -145,8 +145,12 @@ export default function CustomerDetail() {
                             src={`http://127.0.0.1:8000/uploads/${
                                 customer != null && customer.image_name
                             }`}
-                            alt=""
+                            alt="avatar"
                             className="rounded-full w-16 h-16"
+                            onError={(e) => {
+                                e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                                e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                            }}
                         />
                     )}
                     {loading ? (

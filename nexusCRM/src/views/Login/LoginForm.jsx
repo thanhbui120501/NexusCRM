@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import axiosClient from "../../axiosClient";
 import { useStateContext } from "../../contexts/contextprovider";
 import DialogComponent from "../../components/dialog";
@@ -11,11 +11,16 @@ function LoginForm({ onLoading }) {
     //Handle show and hide password
     const [values, setValues] = React.useState({
         password: "",
-        username: "thanhbui120501",
+        username: "",
         showPassword: false,
         rememberPassword: false,
     });
-
+    //errorMessage
+    const [, setErrorMessage] = React.useState("");
+    //check lock login
+    const [isLocked, setIsLocked] = React.useState(false);
+    //set locked time
+    const [remainingTime, setRemainingTime] = React.useState(0);
     //set errors
     const [errors, setError] = React.useState({});
 
@@ -76,7 +81,34 @@ function LoginForm({ onLoading }) {
         bgColor: "",
         hoverColor: "",
     });
+    useEffect(() => {
+        const lockTime = localStorage.getItem("lockTime");
+        if (lockTime) {
+            const currentTime = Date.now();
+            const elapsedTime = currentTime - lockTime;
+            const initialRemainingTime = 60000 - elapsedTime;
+            if (initialRemainingTime > 0) {
+                setIsLocked(true);
+                setRemainingTime(Math.ceil(initialRemainingTime / 1000));
 
+                const countdownInterval = setInterval(() => {
+                    setRemainingTime((prevTime) => {
+                        if (prevTime <= 1) {
+                            clearInterval(countdownInterval);
+                            setIsLocked(false);
+                            localStorage.removeItem("lockTime");
+                            return 0;
+                        }
+                        return prevTime - 1;
+                    });
+                }, 1000);
+
+                return () => clearInterval(countdownInterval);
+            } else {
+                localStorage.removeItem("lockTime");
+            }
+        }
+    }, []);
     const handleClickToOpen = () => {
         setOpen(true);
     };
@@ -94,50 +126,68 @@ function LoginForm({ onLoading }) {
     const Submit = async (ev) => {
         try {
             ev.preventDefault();
+            if (isLocked) {
+                setErrorMessage(
+                    `Bạn đã thử đăng nhập quá nhiều lần. Vui lòng thử lại sau ${remainingTime} giây.`
+                );
+                return;
+            }
+
             onLoading(true);
             setError(LoginValidation(values));
 
             const data = new FormData();
             data.append("username", usernameRef.current.value);
             data.append("password", passwordRef.current.value);
-            data.append(
-                "remember_token",
-                values.rememberPassword ? "true" : "false"
-            );
 
             const response = await axiosClient.post("/account/login", data);
-            console.log(response.status);
             if (response.status === 200) {
-                setUser(response.data.data);
-                setToken(response.data.Bearer_token);
+                localStorage.removeItem("loginAttempts");
+                localStorage.removeItem("lockTime");
+                setUser(response.data.data, values.rememberPassword);
+                setToken(response.data.Bearer_token, values.rememberPassword);
                 setDialogMessage(null);
+                setErrorMessage("");
             }
-            // if (response.status === 401) {
-            //     setDialogMessage({
-            //         title: "Đăng nhập thất bại",
-            //         description:
-            //             "Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra lại thông tin đăng nhập. Xin cảm ơn ❤️",
-            //         color: "text-red-600",
-            //         bgColor: "bg-red-600",
-            //         hoverColor: "hover:bg-red-500",
-            //     });
-            // }
-            // if (response.status === 403) {
-            //     setDialogMessage({
-            //         title: "Đăng nhập thất bại",
-            //         description:
-            //             "Tài khoản của bạn đã bị vô hiệu hóa nên bạn không thể đăng nhập vào hệ thống, vui lòng liên hệ với quản trị liên để có thêm thông tin chi tiết. Xin cảm ơn ❤️",
-            //         color: "text-orange-600",
-            //         bgColor: "bg-orange-600",
-            //         hoverColor: "hover:bg-orange-500",
-            //     });
-            // }
         } catch (err) {
             const response = err.response;
+            const maxAttempts = 3;
+            const storedAttempts =
+                parseInt(localStorage.getItem("loginAttempts")) || 0;
             if (response.status === 422) {
                 console.log(response);
             }
             if (response.status === 401) {
+                const newAttempts = storedAttempts + 1;
+                if (newAttempts >= maxAttempts) {
+                    localStorage.setItem("lockTime", Date.now());
+                    setIsLocked(true);
+                    setRemainingTime(60);
+
+                    const countdownInterval = setInterval(() => {
+                        setRemainingTime((prevTime) => {
+                            if (prevTime <= 1) {
+                                clearInterval(countdownInterval);
+                                setIsLocked(false);
+                                localStorage.removeItem("lockTime");
+                                return 0;
+                            }
+                            return prevTime - 1;
+                        });
+                    }, 1000);
+                    localStorage.removeItem("loginAttempts");
+                    setErrorMessage(
+                        "Bạn đã thử đăng nhập quá nhiều lần. Vui lòng thử lại sau 60 giây."
+                    );
+                } else {
+                    localStorage.setItem("loginAttempts", newAttempts);
+                    setErrorMessage(
+                        `Đăng nhập thất bại. Bạn còn ${
+                            maxAttempts - newAttempts
+                        } lần thử.`
+                    );
+                }
+
                 setDialogMessage({
                     title: "Đăng nhập thất bại",
                     description:
@@ -262,6 +312,14 @@ function LoginForm({ onLoading }) {
                         Đăng nhập
                     </span>
                 </button>
+
+                {/* {errorMessage && <p className="text-sm font-medium text-red-600">{errorMessage}</p>} */}
+                {isLocked && (
+                    <p className="mt-2 text-sm font-medium text-red-600">
+                        Đăng nhập sai quá nhiều lần, thử lại sau {remainingTime}{" "}
+                        giây
+                    </p>
+                )}
                 <DialogComponent
                     open={open}
                     setOpen={setOpen}

@@ -8,7 +8,7 @@ export default function SideBar() {
     const [open, setOpen] = useState(true);
     const [openSubMenu, setOpenSubMenu] = useState(false);
     const [selectedTap, setTapSelected] = useState(0);
-    const localUser = JSON.parse(localStorage.getItem("USER"));
+    const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER"));
     const { id } = useParams();
     useEffect(() => {
 

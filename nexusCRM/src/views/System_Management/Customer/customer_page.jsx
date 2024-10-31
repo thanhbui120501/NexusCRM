@@ -8,7 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Customer() {
-    const localUser = JSON.parse(localStorage.getItem("USER"));
+    const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER")) ;
     //change url with no reload
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -662,6 +662,10 @@ export default function Customer() {
                                                     src={`http://127.0.0.1:8000/uploads/${customer.image_name}`}
                                                     alt="Avatar"
                                                     className="w-10 h-10 rounded-xl object-fill"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                                                        e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                    }}
                                                 />
                                             ) : (
                                                 <img
