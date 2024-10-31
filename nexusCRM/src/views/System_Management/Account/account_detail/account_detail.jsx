@@ -165,7 +165,7 @@ export default function AccountDetail() {
             }
         } catch (err) {
             const response = err.response;
-            console.log(response.message);
+            console.log(response);
         } finally {
             setLoading(false);
         }
@@ -224,16 +224,7 @@ export default function AccountDetail() {
                 data.append("phone_number", phoneNumber);
             //check status change?
             (status.value.toLowerCase() === "true") !== accountRecord.status &&
-                data.append("status", status.value);
-
-            // data.forEach((value, key) => {
-            //     // Check if value is a File (for images)
-            //     if (value instanceof File) {
-            //         console.log(key, value.name); // Print the filename for File objects
-            //     } else {
-            //         console.log(key, value); // Print the value directly for other types
-            //     }
-            // });
+                data.append("status", status.value);            
 
             const response = await axiosClient.post(
                 `account/update-account/${id}`,
@@ -372,6 +363,10 @@ export default function AccountDetail() {
                                                 }
                                                 alt="avatar_empty"
                                                 className="w-full h-full object-cover rounded-lg"
+                                                onError={(e) => {
+                                                    e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                                                    e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                }}
                                             />
                                         )}
                                     </div>

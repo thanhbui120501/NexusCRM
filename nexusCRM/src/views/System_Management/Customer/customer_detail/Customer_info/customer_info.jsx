@@ -87,7 +87,7 @@ export const PersonalInfo = forwardRef(
             const date = parse(dateString, "dd/MM/yyyy", new Date()); // Chuyển đổi chuỗi thành đối tượng Date
             return format(date, "yyyy-MM-dd"); // Định dạng lại thành Y-m-d
         };
-        
+
         // Chuyển birthDay (chuỗi) thành object Date để dùng trong DatePicker
         const [selectedDate, setSelectedDate] = useState(() =>
             convertStringToDate(birthDay)
@@ -550,15 +550,14 @@ export function Address({ customer_id }) {
     }, []);
     //get list district
     useEffect(() => {
-        if (province || Object.keys(province).length > 0) {
-            console.log(province.id);
+        if (province && Object.keys(province).length > 0) {
             getListDistricts(province.id);
         }
     }, [province]);
 
     //get list ward
     useEffect(() => {
-        if (district || Object.keys(district).length > 0) {
+        if (district && Object.keys(district).length > 0) {
             getListWards(district.id);
         }
     }, [district]);
@@ -611,7 +610,7 @@ export function Address({ customer_id }) {
             const response = await axiosClient.get(
                 "/province/get-list-province"
             );
-            
+
             if (response.status === 200) {
                 getListProvince(response.data.data);
             }
@@ -663,7 +662,7 @@ export function Address({ customer_id }) {
                     },
                 }
             );
-            console.log(response);
+
             if (response.status === 201) {
                 toast.success("Thêm địa chỉ thành công!", {
                     position: "top-right",
@@ -861,15 +860,17 @@ export function Address({ customer_id }) {
                                 Số lượng địa chỉ đã đạt giới hạn
                             </h1>
                         )}
-                        {openCreateAddress && (listDistrict.some(
-                            (item) => item.id === district.id
-                        ) === false || addressLine === "" ||
-                            listWard.some((item) => item.id === ward.id) ===
-                                false) && (
-                            <h1 className="text-sm font-medium text-red-600">
-                                Địa chỉ không hợp lệ
-                            </h1>
-                        )}
+                        {openCreateAddress &&
+                            (listDistrict.some(
+                                (item) => item.id === district.id
+                            ) === false ||
+                                addressLine === "" ||
+                                listWard.some((item) => item.id === ward.id) ===
+                                    false) && (
+                                <h1 className="text-sm font-medium text-red-600">
+                                    Địa chỉ không hợp lệ
+                                </h1>
+                            )}
                     </div>
                 </div>
             )}

@@ -3,7 +3,7 @@ import DropDownProfile from "./dropdown";
 import { useLocation, useParams } from "react-router-dom";
 
 export default function Header() {
-    const [localUser] = useState(JSON.parse(localStorage.getItem("USER")));
+    const [localUser] = useState(JSON.parse(localStorage.getItem("USER")||sessionStorage.getItem("USER")));
     const { id } = useParams();
     const [openProfile, setOpenProfile] = useState(false);
 
