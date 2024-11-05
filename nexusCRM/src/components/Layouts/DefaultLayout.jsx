@@ -3,6 +3,7 @@ import SideBar from "../Sidebar/sidebar";
 import { Outlet, Navigate } from "react-router-dom";
 import Header from "./header";
 import Footer from "./footer";
+
 export default function DefaultLayout() {
     // eslint-disable-next-line no-unused-vars
     const { user, token, setUser, setToken } = useStateContext();
@@ -11,6 +12,7 @@ export default function DefaultLayout() {
         return <Navigate to="/login" />;
     }
 
+    
     return (
         <main className="flex h-screen overflow-hidden font-sans">
             <SideBar />

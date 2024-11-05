@@ -48,6 +48,7 @@ class AuthController extends Controller
 
             //generate token, session, ip adress and user agent
             //$request->session()->regenerateToken(); 
+            $user->tokens()->delete();
             $token = $request->user('api')->createToken('authToken')->plainTextToken;
 
             // //get ipadress 

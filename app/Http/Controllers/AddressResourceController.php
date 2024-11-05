@@ -58,6 +58,7 @@ class AddressResourceController extends Controller
             'town' => 'required|string',
             'ward' => 'required|string',
             'country' => 'required|string',
+            'is_default_address' => 'required|string'
         ]);
         if ($validator->fails()) {
             $arr = [
@@ -79,6 +80,15 @@ class AddressResourceController extends Controller
                 ];
                 return response()->json($arr, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+            if ($addressCount === 0) {
+                $input['is_default_address'] = 1;
+            } else {
+                
+                if ($input['is_default_address'] == 1) {                    
+                    $setNormalAddress = Address::where('is_default_address', 1)->update(['is_default_address' => 0]);                   
+                }
+            }
+
             $input['customer_id'] = $request->customer_id;
             $address = Address::create($input);
             //dd($address);
@@ -103,13 +113,10 @@ class AddressResourceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Address $address)
-    {
-        
-    }
+    public function update(Request $request, Address $address) {}
     public function setDefaultAddress(Address $address)
     {
-        
+
         $setNormalAddress = Address::where('is_default_address', 1)->update(['is_default_address' => 0]);
         $setDefault = Address::where("address_id", $address->address_id)->update(['is_default_address' => 1]);
         $add = Address::where("address_id", $address->address_id)->first();
@@ -122,7 +129,7 @@ class AddressResourceController extends Controller
                 'data' => new AddressResource($add),
             ];
             return response()->json($arr, Response::HTTP_OK);
-        }else{
+        } else {
             //json arr
             $arr = [
                 'success' => true,
@@ -148,6 +155,4 @@ class AddressResourceController extends Controller
         ];
         return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
-
-    
 }

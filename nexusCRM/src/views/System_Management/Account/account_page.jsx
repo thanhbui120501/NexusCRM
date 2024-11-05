@@ -9,7 +9,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Account() {
-    const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER"));
+    const localUser = JSON.parse(
+        localStorage.getItem("USER") || sessionStorage.getItem("USER")
+    );
     //change url with no reload
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -19,7 +21,6 @@ export default function Account() {
     const [openDropDownData, setOpenDropDownData] = useState(false);
     const [users, setUsers] = useState([]);
     //total record
-    // eslint-disable-next-line no-unused-vars
     const [totalRecords, setTotalRecords] = useState(0);
     //total account this month
     const [accountThisMonth, setAccountThisMonth] = useState(0);
@@ -662,7 +663,8 @@ export default function Account() {
                                                     className="w-10 h-10 rounded-xl object-fill"
                                                     onError={(e) => {
                                                         e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                                                        e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                        e.target.src =
+                                                            "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
                                                     }}
                                                 />
                                             ) : (

@@ -14,7 +14,7 @@ import axiosClient from "../../../../../axiosClient";
 import { CustomerValidation } from "../../../../../validation";
 import { toast, ToastContainer } from "react-toastify";
 import Skeleton from "../../../../../components/skeleton";
-
+import AddressDialog from "./addressdialog";
 // eslint-disable-next-line react/display-name,
 const CustomerInfo = forwardRef(
     // eslint-disable-next-line react/prop-types
@@ -526,65 +526,39 @@ export const PersonalInfo = forwardRef(
 export function Address({ customer_id }) {
     const [address, setAddress] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [loadingCreate, setLoadingCreate] = useState(false);
-    const [openCreateAddress, setOpenCreateAddress] = useState(false);
-    const [openSelectProvince, setOpenSelectProvince] = useState(false);
-    const [openSelectDistrict, setOpenSelectDistrict] = useState(false);
-    const [openSelectWard, setOpenSelectWard] = useState(false);
-    //set province
-    const [listProvince, getListProvince] = useState([]);
-    const [province, setProvince] = useState({});
-    //set district
-    const [listDistrict, getListDistrict] = useState([]);
-    const [district, setDistrict] = useState({});
-    //set ward
-    const [listWard, getListWard] = useState([]);
-    const [ward, setWard] = useState({});
-    //address line
-    const [addressLine, setAddressLine] = useState("");
-    //het list province
+    const [updateAddress, onUpdateAddress] = useState(false);
+    //status update
+    const [statusCode, setStatusCode] = useState("");
+    //open address dialog
+    const [openAddressDialog, setOpenAddressDialog] = useState(false);
+    //het list address
     useEffect(() => {
+        if(statusCode != ""){
+            if(statusCode === 200){
+                toast.success("Thêm địa chỉ thành công!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }else{
+                toast.error("Thêm địa chỉ thất bại!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        }    
         getAddress();
-        getListProvinces();
+            
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    //get list district
-    useEffect(() => {
-        if (province && Object.keys(province).length > 0) {
-            getListDistricts(province.id);
-        }
-    }, [province]);
-
-    //get list ward
-    useEffect(() => {
-        if (district && Object.keys(district).length > 0) {
-            getListWards(district.id);
-        }
-    }, [district]);
-    const getListDistricts = async (id) => {
-        try {
-            const response = await axiosClient.get(
-                `/province/get-list-district/${id}`
-            );
-            if (response.status === 200) {
-                getListDistrict(response.data.data);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const getListWards = async (id) => {
-        try {
-            const response = await axiosClient.get(
-                `/province/get-list-ward/${id}`
-            );
-            if (response.status === 200) {
-                getListWard(response.data.data);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    }, [updateAddress]);
+      
     const getAddress = async () => {
         try {
             setLoading(true);
@@ -605,19 +579,6 @@ export function Address({ customer_id }) {
             setLoading(false);
         }
     };
-    const getListProvinces = async () => {
-        try {
-            const response = await axiosClient.get(
-                "/province/get-list-province"
-            );
-
-            if (response.status === 200) {
-                getListProvince(response.data.data);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const handleAddress = (add) => {
         // let add_line = add.address_line,
         //     add_province = add.province,
@@ -627,73 +588,44 @@ export function Address({ customer_id }) {
         return (
             add.address_line +
             ", " +
-            add.ward +
-            ", " +
             add.town +
+            ", " +
+            add.ward +
             ", " +
             add.province
         );
     };
-    const handleChange = (e) => {
-        const maxWords = 100;
-        const value = e.target.value;
-        const words = value.trim().split(/\s+/);
-
-        // Kiểm tra số từ và ký tự đặc biệt
-        if (words.length <= maxWords) {
-            setAddressLine(value);
-        }
-    };
-    const onCreateAddress = async () => {
-        try {
-            setLoadingCreate(true);
-            const data = new FormData();
-            data.append("address_line", addressLine);
-            data.append("province", province.full_name);
-            data.append("town", ward.full_name);
-            data.append("ward", district.full_name);
-            data.append("country", "Việt Nam");
-            const response = await axiosClient.post(
-                "/address/create-customer-address",
-                data,
-                {
-                    params: {
-                        customer_id: customer_id,
-                    },
-                }
-            );
-
-            if (response.status === 201) {
-                toast.success("Thêm địa chỉ thành công!", {
-                    position: "top-right",
-                    autoClose: 4000,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-                getAddress();
-                setOpenCreateAddress(false);
-                setProvince({});
-                setDistrict({});
-                setWard({});
-                setAddressLine("");
-            }
-        } catch (error) {
-            console.error("Lỗi khi tạo địa chỉ:", error);
-        } finally {
-            setLoadingCreate(false);
-        }
-    };
+    
     return (
         <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200">
-            <h1 className="text-xl font-semibold text-[#171717]">Địa chỉ</h1>
+            <div className="flex justify-between items-center self-stretch">
+                <h1 className="text-xl font-semibold text-[#171717]">
+                    Địa chỉ
+                </h1>
+                <div
+                    onClick={() =>
+                        address.length < 10 &&
+                        setOpenAddressDialog(!openAddressDialog)
+                    }
+                    className={`flex py-2 cursor-pointer px-3 items-center justify-center gap-2 self-stretch ${
+                        address.length < 10 && "hover:bg-gray-600"
+                    }  rounded-lg w-[123px] h-8  ${
+                        address.length >= 10 ? "bg-gray-400" : "bg-[#171717]"
+                    } `}
+                >
+                    <img src="/icons/plus.svg" alt="plus" />
+                    <h1 className="text-xs font-semibold text-[#ffff]">
+                        Thêm địa chỉ
+                    </h1>
+                </div>
+            </div>
+
             {loading ? (
                 <div className="flex flex-col items-start gap-4 self-stretch">
-                    <Skeleton className="h-6 w-60" />
-                    <Skeleton className="h-6 w-60" />
-                    <Skeleton className="h-6 w-60" />
-                    <Skeleton className="h-6 w-20" />
+                    <Skeleton className="h-6 w-96" />
+                    <Skeleton className="h-6 w-96" />
+                    <Skeleton className="h-6 w-96" />
+                    <Skeleton className="h-6 w-96" />
                 </div>
             ) : (
                 <div className="flex flex-col items-start gap-4 self-stretch">
@@ -719,169 +651,13 @@ export function Address({ customer_id }) {
                             </div>
                         </div>
                     ))}
-                    {openCreateAddress && (
-                        <div className="flex gap-3 items-start justify-start self-stretch">
-                            <input
-                                type="text"
-                                placeholder="Nhập địa chỉ"
-                                className="border border-gray-200 rounded-lg p-2 text-sm font-medium"
-                                onChange={handleChange}
-                                value={addressLine}
-                            />
-                            <div className="flex border border-gray-200 rounded-lg gap-2 p-2 cursor-pointer relative">
-                                <div className="flex flex-1">
-                                    <h1 className="text-sm font-medium text-[#171717]">
-                                        {ward && Object.keys(ward).length > 0
-                                            ? ward.full_name
-                                            : "Xã/Phường/Thị trấn"}
-                                    </h1>
-                                </div>
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    onClick={() => {
-                                        district &&
-                                            Object.keys(district).length > 0 &&
-                                            setOpenSelectWard(!openSelectWard);
-                                    }}
-                                />
-                                {openSelectWard && (
-                                    <SelectWardDropdown
-                                        listWard={listWard}
-                                        onClose={setOpenSelectWard}
-                                        onData={setWard}
-                                    />
-                                )}
-                            </div>
-                            <div className="flex border border-gray-200 rounded-lg gap-2 p-2 cursor-pointer relative">
-                                <div className="flex flex-1">
-                                    <h1 className="text-sm font-medium text-[#171717]">
-                                        {district &&
-                                        Object.keys(district).length > 0
-                                            ? district.full_name
-                                            : "Quận/Huyện"}
-                                    </h1>
-                                </div>
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    onClick={() => {
-                                        province &&
-                                            Object.keys(province).length > 0 &&
-                                            setOpenSelectDistrict(
-                                                !openSelectDistrict
-                                            );
-                                    }}
-                                />
-                                {openSelectDistrict && (
-                                    <SelectDistrictDropdown
-                                        listDistrict={listDistrict}
-                                        onClose={setOpenSelectDistrict}
-                                        onData={setDistrict}
-                                    />
-                                )}
-                            </div>
-                            <div className="flex border border-gray-200 rounded-lg gap-2 p-2 cursor-pointer relative">
-                                <div className="flex flex-1">
-                                    <h1 className="text-sm font-medium text-[#171717]">
-                                        {province &&
-                                        Object.keys(province).length > 0
-                                            ? province.full_name
-                                            : "Tỉnh/Thành"}
-                                    </h1>
-                                </div>
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    onClick={() =>
-                                        setOpenSelectProvince(
-                                            !openSelectProvince
-                                        )
-                                    }
-                                />
-                                {openSelectProvince && (
-                                    <SelectProvinceDropdown
-                                        listProvince={listProvince}
-                                        onClose={setOpenSelectProvince}
-                                        onData={setProvince}
-                                    />
-                                )}
-                            </div>
-                            {addressLine != "" &&
-                                province &&
-                                Object.keys(province).length > 0 &&
-                                district &&
-                                Object.keys(district).length > 0 &&
-                                ward &&
-                                Object.keys(ward).length > 0 && (
-                                    <div
-                                        onClick={() => {
-                                            listDistrict.some(
-                                                (item) =>
-                                                    item.id === district.id
-                                            ) &&
-                                                listWard.some(
-                                                    (item) =>
-                                                        item.id === ward.id
-                                                ) &&
-                                                onCreateAddress();
-                                        }}
-                                        className="flex p-2 cursor-pointer  items-center justify-center gap-2 self-stretch bg-orange-600 rounded-lg  hover:bg-orange-400"
-                                    >
-                                        <h1 className="text-xs font-semibold text-[#ffff]">
-                                            Cập nhật
-                                        </h1>
-                                    </div>
-                                )}
-                        </div>
-                    )}
-
-                    <div className="flex gap-3 items-center justify-center">
-                        <div
-                            onClick={() =>
-                                address.length < 10 &&
-                                setOpenCreateAddress(!openCreateAddress)
-                            }
-                            className={`flex py-2 cursor-pointer px-3 items-center justify-center gap-2 self-stretch ${
-                                address.length < 10 && "hover:bg-gray-600"
-                            }  rounded-lg w-[123px] h-8  ${
-                                address.length >= 10
-                                    ? "bg-gray-400"
-                                    : "bg-[#171717]"
-                            } `}
-                        >
-                            <img src="/icons/plus.svg" alt="plus" />
-                            <h1 className="text-xs font-semibold text-[#ffff]">
-                                Thêm địa chỉ
-                            </h1>
-                        </div>
-                        {address.length >= 10 && (
-                            <h1 className="text-sm font-medium text-red-600">
-                                Số lượng địa chỉ đã đạt giới hạn
-                            </h1>
-                        )}
-                        {openCreateAddress &&
-                            (listDistrict.some(
-                                (item) => item.id === district.id
-                            ) === false ||
-                                addressLine === "" ||
-                                listWard.some((item) => item.id === ward.id) ===
-                                    false) && (
-                                <h1 className="text-sm font-medium text-red-600">
-                                    Địa chỉ không hợp lệ
-                                </h1>
-                            )}
-                    </div>
+                    
                 </div>
             )}
-            {loadingCreate && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
-                        Đang thêm mới địa chỉ
-                    </h1>
-                </div>
-            )}
+            
+            {
+                openAddressDialog && <AddressDialog onClose={setOpenAddressDialog} customer_id={customer_id} updateAddress={updateAddress} onUpdateAddress={onUpdateAddress} setStatusCode={setStatusCode}/>
+            }
         </div>
     );
 }

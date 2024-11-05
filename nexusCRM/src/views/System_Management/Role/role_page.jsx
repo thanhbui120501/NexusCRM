@@ -71,6 +71,10 @@ export default function Role() {
               left: `${index * 24}px`,
               zIndex: 6 - index,
             }}
+            onError={(e) => {
+                e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+            }} 
           />
         ));
       
