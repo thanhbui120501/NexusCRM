@@ -481,6 +481,10 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                                     src={`http://127.0.0.1:8000/uploads/${mem.image_name}`}
                                                     alt="avatar-img"
                                                     className="rounded-full w-10 h-10"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                                                        e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                    }} 
                                                 />
                                                 <div className="flex flex-col items-start gap-1">
                                                     <h1 className="text-sm font-medium text-[#A3A3A3]">

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Account as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens as SanctumHasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Passport\HasApiTokens;
 
 //use Illuminate\Foundation\Auth\Account as Authenticatable;
 class Account extends Authenticatable
