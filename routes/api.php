@@ -102,6 +102,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::patch('/customer/update-customer/{customer}', 'update')->name('api.customer.update.customer'); // update customer by id
             Route::post('/customer/delete-customer', 'destroy')->name('api.customer.delete.customer'); // delete customer by id
             Route::get('/customer/get-email-phone-except/{customer}','getListPhoneAndEmail')->name('api.customer.get.email.phone'); //get list email and phone number except
+            Route::get('/customer/get-all-email-phone','getAllPhoneAndEmail')->name('api.customer.get.all.email.phone'); //get all  email and phone number except
+        
         });
         Route::controller(SearchResourceController::class)->group(function () {
             // Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');

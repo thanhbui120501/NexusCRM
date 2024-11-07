@@ -8,6 +8,9 @@ export default function AddressDialog({
     updateAddress,
     onUpdateAddress,
     setStatusCode,
+    addAddress,
+    listAddress,
+    type,
 }) {
     //set province
     const [listProvince, getListProvince] = useState([]);
@@ -130,6 +133,27 @@ export default function AddressDialog({
             onClose(false);
         } finally {
             setLoadingCreate(false);
+        }
+    };
+    const handldeAccept = () => {
+        if (type == "updated") {
+            if (
+                listDistrict.some((item) => item.id === district.id) &&
+                listWard.some((item) => item.id === ward.id)
+            ) {
+                onCreateAddress();
+            } else {
+                return;
+            }
+        } else {
+            addAddress(
+                province.full_name,
+                district.full_name,
+                ward.full_name,
+                addressLine,
+                defaultAddress
+            );
+            onClose(false);
         }
     };
     return (
@@ -365,6 +389,11 @@ export default function AddressDialog({
                     </div>
                 </div>
                 <div className="flex justify-end items-center gap-2 self-stretch">
+                    {listAddress != null && listAddress.length >= 10 && (
+                        <h1 className="text-sm font-medium text-red-600">
+                            Số lượng địa chỉ đã đạt giới hạn
+                        </h1>
+                    )}
                     {(listDistrict.some((item) => item.id === district.id) ===
                         false ||
                         addressLine === "" ||
@@ -374,6 +403,7 @@ export default function AddressDialog({
                             Địa chỉ không hợp lệ
                         </h1>
                     )}
+
                     <button
                         onClick={() => onClose(false)}
                         className="flex flex-col py-2 px-4 items-center justify-center gap-2 border border-[#E5E5E5] bg-[#fff] hover:bg-gray-200 rounded-lg"
@@ -390,15 +420,7 @@ export default function AddressDialog({
                         ward &&
                         Object.keys(ward).length > 0 && (
                             <button
-                                onClick={() => {
-                                    listDistrict.some(
-                                        (item) => item.id === district.id
-                                    ) &&
-                                        listWard.some(
-                                            (item) => item.id === ward.id
-                                        ) &&
-                                        onCreateAddress();
-                                }}
+                                onClick={handldeAccept}
                                 className="flex flex-col py-2 px-4 items-center justify-center gap-2 border  bg-[#171717] hover:bg-gray-500 rounded-lg"
                             >
                                 <h1 className="text-sm font-semibold text-[#fff]">

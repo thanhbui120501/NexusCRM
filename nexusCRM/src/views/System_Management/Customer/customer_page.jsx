@@ -8,7 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Customer() {
-    const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER")) ;
+    //const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER")) ;
     //change url with no reload
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -120,10 +120,7 @@ export default function Customer() {
             setSelectedACustomer([]); // Bỏ chọn tất cả
         } else {
             const allUserIds = customers
-                .filter(
-                    (user) =>
-                        localUser.role[0].role_level < user.role[0].role_level
-                )
+                
                 .map((user) => user.customer_id);
             setSelectedACustomer(allUserIds); // Chọn tất cả
         }
@@ -527,9 +524,9 @@ export default function Customer() {
                     {selectedCustomer.length == 0 ? (
                         <div
                             className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 hover:bg-[#C2410C] cursor-pointer"
-                            // onClick={() => {
-                            //     handleNavigation("/account/create");
-                            // }}
+                            onClick={() => {
+                                handleNavigation("/customer/create");
+                            }}
                         >
                             <div className="flex w-5 h-5 flex-col justify-center  ">
                                 <img
@@ -636,12 +633,12 @@ export default function Customer() {
                                         <td className="py-3 px-6 text-left">
                                             <input
                                                 type="checkbox"
-                                                disabled={
-                                                    localUser.role[0]
-                                                        .role_level >= 3
-                                                        ? true
-                                                        : false
-                                                }
+                                                // disabled={
+                                                //     localUser.role[0]
+                                                //         .role_level <= 4
+                                                //         ? true
+                                                //         : false
+                                                // }
                                                 checked={selectedCustomer.includes(
                                                     customer.customer_id
                                                 )}
