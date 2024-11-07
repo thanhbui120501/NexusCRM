@@ -63,7 +63,6 @@ export function Validation({
         }
     }
 
-    
     //validate password
     const passwordRegex =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$#%!@]).{6,14}$/;
@@ -130,18 +129,25 @@ export function Validation({
     return errors;
 }
 
-export function CustomerValidation({        
+export function CustomerValidation({
+    image,
     fullname = null,
     birthDay = null,
     email = null,
-    phone = null,   
+    phone = null,
     listPhoneNumber = [],
     listEmail = [],
-    
-}){
+}) {
     const errors = {
         status: true,
     };
+    if (image == null) {
+        //validate image
+        if (image === null) {
+            errors.image = "Vui lòng chọn ảnh.";
+            errors.status = false;
+        }
+    }
     //validate full name
     if (fullname == null || fullname === "") {
         errors.fullname = "Vui nhập họ và tên";
@@ -155,15 +161,18 @@ export function CustomerValidation({
         }
     }
 
-    //validate birthday   
-    if(birthDay != null || birthDay !== ""){       
+    //validate birthday
+    if(birthDay === ""){
+        errors.birthDay = "Vui lòng chọn ngày sinh";
+        errors.status = false;
+    }else{
         const today = new Date();
         if (birthDay >= today) {
             errors.birthDay = "Ngày sinh không hợp lệ";
             errors.status = false;
         }
     }
-
+    
     //validate email
     if (email == null || email === "") {
         errors.email = "Vui lòng nhập địa chỉ email";

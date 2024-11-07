@@ -8,7 +8,7 @@ export default function GenderDropdown({ onData, onClose }) {
         }
     }
     return (
-        <ul className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg top-16">
+        <ul className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg top-14">
             {genders.map((gender) => (
                 <li
                     key={gender}

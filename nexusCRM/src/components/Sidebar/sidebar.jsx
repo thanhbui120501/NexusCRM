@@ -14,15 +14,18 @@ export default function SideBar() {
 
         if(location.pathname === "/account" || (location.pathname.startsWith("/account/") && id) || location.pathname === "/account/create" ){
             setTapSelected(1);
+            setselectedSubMenuTap(0);
         }
         if(location.pathname === "/"){
             setTapSelected(0);
         }
         if(location.pathname === "/role"){
             setTapSelected(1);
+            setselectedSubMenuTap(1);
         }
         if(location.pathname === "/customer" || (location.pathname.startsWith("/customer/") && id) || location.pathname === "/customer/create" ){
             setTapSelected(1);
+            setselectedSubMenuTap(2);
         }
         if(location.pathname === "/selling"){
             setTapSelected(2);

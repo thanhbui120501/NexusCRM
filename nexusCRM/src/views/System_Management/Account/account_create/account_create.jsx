@@ -169,7 +169,7 @@ export default function AccountCreate() {
                     navigate("/account");
                 }, 5000);
             }
-            // eslint-disable-next-line no-unused-vars
+        
         } catch (err) {
             console.log(err);
             toast.error("Đã có lỗi xảy ra khi tạo tài khoản", {

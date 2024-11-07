@@ -240,6 +240,7 @@ export const PersonalInfo = forwardRef(
                             draggable: true,
                             progress: undefined,
                         });
+                        onCloseUpdate(false);
                     }
                     if (response.status === 400) {
                         toast.error("Cập nhật thất bại!", {
@@ -263,7 +264,6 @@ export const PersonalInfo = forwardRef(
                     });
                 } finally {
                     setLoading(false);
-                    onCloseUpdate(false);
                 }
             },
         }));
@@ -531,10 +531,12 @@ export function Address({ customer_id }) {
     const [statusCode, setStatusCode] = useState("");
     //open address dialog
     const [openAddressDialog, setOpenAddressDialog] = useState(false);
+    //type to open address dialog
+    const type = "updated";
     //het list address
     useEffect(() => {
-        if(statusCode != ""){
-            if(statusCode === 200){
+        if (statusCode != "") {
+            if (statusCode === 200) {
                 toast.success("Thêm địa chỉ thành công!", {
                     position: "top-right",
                     autoClose: 3000,
@@ -543,7 +545,7 @@ export function Address({ customer_id }) {
                     draggable: true,
                     progress: undefined,
                 });
-            }else{
+            } else {
                 toast.error("Thêm địa chỉ thất bại!", {
                     position: "top-right",
                     autoClose: 3000,
@@ -553,12 +555,12 @@ export function Address({ customer_id }) {
                     progress: undefined,
                 });
             }
-        }    
+        }
         getAddress();
-            
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [updateAddress]);
-      
+
     const getAddress = async () => {
         try {
             setLoading(true);
@@ -595,7 +597,7 @@ export function Address({ customer_id }) {
             add.province
         );
     };
-    
+
     return (
         <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200">
             <div className="flex justify-between items-center self-stretch">
@@ -651,13 +653,19 @@ export function Address({ customer_id }) {
                             </div>
                         </div>
                     ))}
-                    
                 </div>
             )}
-            
-            {
-                openAddressDialog && <AddressDialog onClose={setOpenAddressDialog} customer_id={customer_id} updateAddress={updateAddress} onUpdateAddress={onUpdateAddress} setStatusCode={setStatusCode}/>
-            }
+
+            {openAddressDialog && (
+                <AddressDialog
+                    onClose={setOpenAddressDialog}
+                    customer_id={customer_id}
+                    updateAddress={updateAddress}
+                    onUpdateAddress={onUpdateAddress}
+                    setStatusCode={setStatusCode}
+                    type={type}
+                />
+            )}
         </div>
     );
 }
