@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-
+use App\Models\Address;
 class Customer extends Model
 {
     use HasFactory, Notifiable;
@@ -49,4 +49,8 @@ class Customer extends Model
         'deleted_status',
         'status'
     ];
+
+    public function address(){
+        return $this->hasMany(Address::class, 'customer_id');
+    }
 }

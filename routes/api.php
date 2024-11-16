@@ -10,6 +10,7 @@ use App\Http\Controllers\DistributorResourceController;
 use App\Http\Controllers\LoginHistoryResourceController;
 use App\Http\Controllers\WarehouseResourceController;
 use App\Http\Controllers\PasswordResetResourceController;
+use App\Http\Controllers\ProductsResourceController;
 use App\Http\Controllers\PromotionTypeResourceController;
 use App\Http\Controllers\PromotionResourceController;
 use App\Http\Controllers\SearchResourceController;
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'v1'], function () {
-    //account login route
     Route::post('/account/login', [AuthController::class, 'login'])->middleware(HandleCors::class)->name('api.auth.login');
     //['auth:sanctum'] middleware routes
     Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -69,8 +69,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::controller(RequestController::class)->group(function(){
                 Route::delete('images/delete-unused-images','deleteUnusedImages')->name('api.delete.unused.images');
             });
-        });
-
+        });        
 
         //Auth logout
         Route::controller(AuthController::class)->group(function () {
@@ -79,7 +78,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         //Distrbutor routes
         Route::controller(DistributorResourceController::class)->group(function () {
-            Route::post('/distributor/get-all-distributor', 'index')->name('api.distributor.index'); //get all distributor
+            Route::get('/distributor/get-all-distributor', 'index')->name('api.distributor.index'); //get all distributor
             Route::post('/distributor/create-new-distributor', 'store')->name('api.distributor.store'); //create new distributor
             Route::get('/distributor/get-detail-distributor/{distributor}', 'show')->name('api.distributor.show'); //show distributor detail
             Route::patch('/distributor/update-distributor/{distributor}', 'update')->name('api.distributor.update'); //update distributor by id
@@ -87,7 +86,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
         //Warehouse routes
         Route::controller(WarehouseResourceController::class)->group(function () {
-            Route::post('/warehouse/get-all-warehouse', 'index')->name('api.warehouse.index'); //get all warehouse
+            Route::get('/warehouse/get-all-warehouse', 'index')->name('api.warehouse.index'); //get all warehouse
             Route::post('/warehouse/create-new-warehouse', 'store')->name('api.warehouse.store'); //create new warehouse
             Route::get('/warehouse/get-detail-warehouse/{warehouse}', 'show')->name('api.warehouse.show'); //show warehouse detail
             Route::patch('/warehouse/update-warehouse/{warehouse}', 'update')->name('api.warehouse.update'); //update warehouse by id
@@ -112,7 +111,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
         //Promotion Type routes
         Route::controller(PromotionTypeResourceController::class)->group(function () {
-            Route::post('/promotion-type/get-all-promotion-type', 'index')->name('api.promotion.type.index'); // show all promotion type
+            Route::get('/promotion-type/get-all-promotion-type', 'index')->name('api.promotion.type.index'); // show all promotion type
             Route::post('/promotion-type/create-new-promotion-type', 'store')->name('api.promotion.type.store'); // create new promotion type 
             Route::get('/promotion-type/get-promotion-type-by-id/{promotionType}', 'show')->name('api.promotion.type.show'); // get promotion type by id
             Route::patch('/promotion-type/update-promotion-type/{promotionType}', 'update')->name('api.promotion.type.update'); // update promotion type by id
@@ -121,7 +120,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         //Promotion routes
         Route::controller(PromotionResourceController::class)->group(function () {
-            Route::post('/promotion/get-all-promotion', 'index')->name('api.promotion.index'); // show all promotion 
+            Route::get('/promotion/get-all-promotion', 'index')->name('api.promotion.index'); // show all promotion 
             Route::post('/promotion/create-new-promotion', 'store')->name('api.promotion.store'); // create new promotion  
             Route::get('/promotion/get-promotion-by-id/{promotion}', 'show')->name('api.promotion.show'); // get promotion by id
             Route::patch('/promotion/update-promotion/{promotion}', 'update')->name('api.promotion.update'); // update promotion by id
@@ -145,5 +144,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/province/get-list-ward/{district}','getListWard')->name('api.province.get.list.ward'); // get list ward
         });
         
+        //Product Routes
+        Route::controller(ProductsResourceController::class)->group(function(){
+            Route::post('/products/create-new-product', 'store')->name('api.create.new.product'); //create new product
+            Route::get('/products/get-all-products', 'index')->name('api.get.all.products'); //get all products
+        });
     });
 });
