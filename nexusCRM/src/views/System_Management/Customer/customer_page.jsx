@@ -119,9 +119,7 @@ export default function Customer() {
         if (isAllSelected) {
             setSelectedACustomer([]); // Bỏ chọn tất cả
         } else {
-            const allUserIds = customers
-                
-                .map((user) => user.customer_id);
+            const allUserIds = customers.map((user) => user.customer_id);
             setSelectedACustomer(allUserIds); // Chọn tất cả
         }
         setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
@@ -462,6 +460,54 @@ export default function Customer() {
     //get statrindex in table
     const startIndex = (currentPage - 1) * showRowNumber + 1;
 
+    //handle customer status
+    const handleCustomerStatus = (sta) => {
+        switch (sta) {
+            case "Active":
+                return (
+                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
+                        <li className="font-medium text-sm text-[#16A34A]">
+                            Đang hoạt động
+                        </li>
+                    </ul>
+                );
+            case "Locked":
+                return (
+                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-yellow-400 bg-yellow-50">
+                        <li className="font-medium text-sm text-yellow-400">
+                            Tạm khóa
+                        </li>
+                    </ul>
+                );
+            case "Expired":
+                return (
+                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-blue-400 bg-blue-50">
+                        <li className="font-medium text-sm text-blue-400">
+                            Đóng băng
+                        </li>
+                    </ul>
+                );
+            default:
+                return (
+                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
+                        <li className="font-medium text-sm text-[#DC2626]">
+                            Ngưng hoạt động
+                        </li>
+                    </ul>
+                );
+        }
+        // <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
+        //                                             <li className="font-medium text-sm text-[#16A34A]">
+        //                                                 Đang hoạt động
+        //                                             </li>
+        //                                         </ul>
+        //                                     ) : (
+        //                                         <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
+        //                                             <li className="font-medium text-sm text-[#DC2626]">
+        //                                                 Ngưng hoạt động
+        //                                             </li>
+        //                                         </ul>
+    };
     return (
         <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
             <ToastContainer />
@@ -661,7 +707,8 @@ export default function Customer() {
                                                     className="w-10 h-10 rounded-xl object-fill"
                                                     onError={(e) => {
                                                         e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                                                        e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                        e.target.src =
+                                                            "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
                                                     }}
                                                 />
                                             ) : (
@@ -682,25 +729,12 @@ export default function Customer() {
                                             {customer.email}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {}
-                                            129, Phan Văn Hớn, P. Tân Thới Nhất,
-                                            q12, TP Hồ Chí Minh
+                                            {customer.address}
                                         </td>
                                         <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
-                                            {/* {user.status == 1 ? (
-                                                <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
-                                                    <li className="font-medium text-sm text-[#16A34A]">
-                                                        Đang hoạt động
-                                                    </li>
-                                                </ul>
-                                            ) : (
-                                                <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
-                                                    <li className="font-medium text-sm text-[#DC2626]">
-                                                        Ngưng hoạt động
-                                                    </li>
-                                                </ul>
-                                            )} */}
-                                            {}
+                                            {handleCustomerStatus(
+                                                customer.status
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
