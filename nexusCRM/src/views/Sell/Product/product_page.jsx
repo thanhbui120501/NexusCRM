@@ -1,25 +1,26 @@
 import { useState, useEffect } from "react";
-import ShowDataDropDown from "../Account/showDataDropdown";
+import ShowDataDropDown from "../../System_Management/Account/showDataDropdown";
 import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
-import ShowFillter from "../Account/showFillter";
+import ShowFillter from "../../System_Management/Account/showFillter";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Customer() {
-    //const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER")) ;
+export default function ProductPage() {
+    // const localUser = JSON.parse(
+    //     localStorage.getItem("USER") || sessionStorage.getItem("USER")
+    // );
     //change url with no reload
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     //
-    const [selectedCustomer, setSelectedACustomer] = useState([]);
+    const [selectedProducts, setSelectedProducts] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
-    const [customers, setCustomers] = useState([]);
+    const [products, setProducts] = useState([]);
     //total record
-    // eslint-disable-next-line no-unused-vars
-    const [totalRecords, setTotalRecords] = useState(0);
+    // const [totalRecords, setTotalRecords] = useState(0);
     // //total account this month
     // const [accountThisMonth, setAccountThisMonth] = useState(0);
     // //total disable account
@@ -63,14 +64,14 @@ export default function Customer() {
     const [dataCallback, onCallBackDataFillter] = useState({
         startD: null,
         endD: null,
-        customer_id: null,
+        account_id: null,
     });
 
     const onCallbackFillter = (val) => {
         onCallBackDataFillter({
             startD: val.startD,
             endD: val.endD,
-            customer_id: val.id,
+            account_id: val.id,
         });
     };
     //callback from showfillter
@@ -106,39 +107,39 @@ export default function Customer() {
     };
 
     const handleCheckboxChange = (id) => {
-        if (selectedCustomer.includes(id)) {
-            setSelectedACustomer(
-                selectedCustomer.filter((userId) => userId !== id)
+        if (selectedProducts.includes(id)) {
+            setSelectedProducts(
+                selectedProducts.filter((ProductId) => ProductId !== id)
             );
         } else {
-            setSelectedACustomer([...selectedCustomer, id]);
+            setSelectedProducts([...selectedProducts, id]);
         }
     };
 
     const handleSelectAll = () => {
         if (isAllSelected) {
-            setSelectedACustomer([]); // Bỏ chọn tất cả
+            setSelectedProducts([]); // Bỏ chọn tất cả
         } else {
-            const allUserIds = customers.map((user) => user.customer_id);
-            setSelectedACustomer(allUserIds); // Chọn tất cả
+            const allProIds = products.map((pro) => pro.product_id);
+            setSelectedProducts(allProIds); // Chọn tất cả
         }
-        setIsAllSelected(!isAllSelected); // Đảo trạng thái isAllSelected
+        setIsAllSelected(!isAllSelected);
     };
     const callbackSubmitfillter = (val) => {
         submitFillter(val);
     };
-    const getCustomerByKeyword = async () => {
+    const getUserByKeyword = async () => {
         if (!keywordFromUrl || keywordFromUrl == "") return;
         try {
             const response = await axiosClient.get(
-                "/customer/search-customer-by-keyword",
+                "/products/search-products-by-keyword",
                 {
                     params: {
                         keyword: keywordFromUrl,
                     },
                 }
             );
-            setCustomers(response.data.data);
+            setProducts(response.data.data);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -150,11 +151,11 @@ export default function Customer() {
                 params: {
                     start_date: dataCallback.startD,
                     end_date: dataCallback.end_date,
-                    created_by: dataCallback.customer_id,
+                    created_by: dataCallback.account_id,
                 },
             });
             submitFillter(false);
-            setCustomers(response.data.data);
+            setProducts(response.data.data);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -169,13 +170,13 @@ export default function Customer() {
             console.log(response.message);
         }
     };
-    const getCustomers = async (page, limit) => {
+    const getUsers = async (page, limit) => {
         try {
             const offset = (page - 1) * limit;
 
             setLoading(true);
             const response = await axiosClient.get(
-                "/customer/get-list-customer",
+                "/products/get-all-products",
                 {
                     params: {
                         limit: limit,
@@ -185,8 +186,8 @@ export default function Customer() {
             );
 
             //set user and records
-            setCustomers(response.data.data);
-            setTotalRecords(response.data.totalRecords);
+            setProducts(response.data.data);
+            // setTotalRecords(response.data.totalRecords);
             // setDisableAccount(response.data.total_disable_account);
             // setLastMonthUser(response.data.account_lastmonth);
             // setDisableAccountLastMonth(response.data.disable_account_lastmonth);
@@ -203,29 +204,28 @@ export default function Customer() {
         }
     };
 
-    const deletedCustomer = async () => {
+    const deletedProducts = async () => {
         const data = new FormData();
-        selectedCustomer.forEach((user, index) => {
-            data.append(`customers[${index}]`, user);
+        selectedProducts.forEach((pro, index) => {
+            data.append(`products[${index}]`, pro);
         });
 
         try {
+            // eslint-disable-next-line no-unused-vars
             const response = await axiosClient.post(
-                `/customer/delete-customer`,
+                "/products/delete-product",
                 data
             );
-            if (response.status === 204) {
-                toast.success("Xóa khách hàng thành công!", {
-                    position: "top-right",
-                    autoClose: 5000,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            }
-            getCustomers(currentPage, showRowNumber);
-            setSelectedACustomer([]);
+            toast.success("Xóa sản phẩm thành công!", {
+                position: "top-right",
+                autoClose: 3000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            getUsers(currentPage, showRowNumber);
+            setSelectedProducts([]);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -234,7 +234,7 @@ export default function Customer() {
     // Lấy keyword từ URL (nếu có)
     const keywordFromUrl = searchParams.get("keyword") || "";
     useEffect(() => {
-        getCustomerByKeyword();
+        getUserByKeyword();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [keywordFromUrl]);
     useEffect(() => {
@@ -243,7 +243,7 @@ export default function Customer() {
     }, [isSubmitFillter]);
     //get user by number row
     useEffect(() => {
-        getCustomers(currentPage, showRowNumber);
+        getUsers(currentPage, showRowNumber);
         getListAdmin();
     }, [currentPage, showRowNumber]);
     // if (loading) return <p>Loading...</p>;
@@ -255,7 +255,7 @@ export default function Customer() {
         if (keyword.trim()) {
             navigate(`?keyword=${keyword}`);
         } else {
-            navigate("/customer"); // Nếu không có keyword, điều hướng về trang chính
+            navigate("/products"); // Nếu không có keyword, điều hướng về trang chính
         }
     };
     const handlePageChange = (page) => {
@@ -457,71 +457,58 @@ export default function Customer() {
         return pages;
     };
 
-    //get statrindex in table
-    const startIndex = (currentPage - 1) * showRowNumber + 1;
-
-    //handle customer status
-    const handleCustomerStatus = (sta) => {
-        switch (sta) {
+    //handle status
+    const handleProductStatus = (status) => {
+        switch (status) {
             case "Active":
                 return (
-                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
-                        <li className="font-medium text-sm text-[#16A34A]">
-                            Đang hoạt động
-                        </li>
-                    </ul>
+                    <>
+                        <div className="flex px-3 py-1 justify-center items-center gap-2.5 rounded-md bg-[#16A34A]">
+                            <h1 className="text-sm font-medium text-[#fff]">
+                                Active
+                            </h1>
+                        </div>
+                    </>
                 );
-            case "Locked":
+            case "Inactive":
                 return (
-                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-yellow-400 bg-yellow-50">
-                        <li className="font-medium text-sm text-yellow-400">
-                            Tạm khóa
-                        </li>
-                    </ul>
-                );
-            case "Expired":
-                return (
-                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-blue-400 bg-blue-50">
-                        <li className="font-medium text-sm text-blue-400">
-                            Đóng băng
-                        </li>
-                    </ul>
+                    <>
+                        <div className="flex px-3 py-1 justify-center items-center gap-2.5 rounded-md bg-[#DC2626]">
+                            <h1 className="text-sm font-medium text-[#fff]">
+                                Inactive
+                            </h1>
+                        </div>
+                    </>
                 );
             default:
                 return (
-                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
-                        <li className="font-medium text-sm text-[#DC2626]">
-                            Ngưng hoạt động
-                        </li>
-                    </ul>
+                    <>
+                        <div className="flex px-3 py-1 justify-center items-center gap-2.5 rounded-md bg-yellow-500">
+                            <h1 className="text-sm font-medium text-[#fff]">
+                                Discontineu
+                            </h1>
+                        </div>
+                    </>
                 );
         }
-        // <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
-        //                                             <li className="font-medium text-sm text-[#16A34A]">
-        //                                                 Đang hoạt động
-        //                                             </li>
-        //                                         </ul>
-        //                                     ) : (
-        //                                         <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
-        //                                             <li className="font-medium text-sm text-[#DC2626]">
-        //                                                 Ngưng hoạt động
-        //                                             </li>
-        //                                         </ul>
     };
+    //get statrindex in table
+    const startIndex = (currentPage - 1) * showRowNumber + 1;
+
     return (
         <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
                     <h1 className="self-stretch text-gray-900 font-semibold text-3xl">
-                        Khách hàng
+                        Sản phẩm
                     </h1>
                     <h1 className="self-stretch text-gray-400 font-medium text-base">
-                        Quản lí tất cả khách hàng tại đây
+                        Quản lí tất sản phẩm tại đây
                     </h1>
                 </div>
                 <div className="relative flex items-center gap-2">
-                    {customers.length !== 0 && (
+                    {products.length !== 0 && (
                         <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
                             <img
                                 src="/icons/search.svg"
@@ -538,15 +525,15 @@ export default function Customer() {
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
                                     }
-                                    placeholder="Tìm kiếm khách hàng"
+                                    placeholder="Tìm kiếm sản phẩm"
                                 />
                             </div>
                         </div>
                     )}
-                    {customers.length !== 0 && (
+                    {products.length !== 0 && (
                         <img src="/icons/line.svg" alt="icon-statistics" />
                     )}
-                    {customers.length !== 0 && (
+                    {products.length !== 0 && (
                         <div
                             className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
                             onClick={() => setOpenFillter(!openFillter)}
@@ -567,11 +554,11 @@ export default function Customer() {
                             onSubmit={callbackSubmitfillter}
                         />
                     )}
-                    {selectedCustomer.length == 0 ? (
+                    {selectedProducts.length == 0 ? (
                         <div
                             className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 hover:bg-[#C2410C] cursor-pointer"
                             onClick={() => {
-                                handleNavigation("/customer/create");
+                                handleNavigation("/products/create");
                             }}
                         >
                             <div className="flex w-5 h-5 flex-col justify-center  ">
@@ -589,11 +576,11 @@ export default function Customer() {
                         <div
                             className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] cursor-pointer onClick={()=>{}}"
                             onClick={() => {
-                                deletedCustomer();
+                                deletedProducts();
                             }}
                         >
                             <h1 className="text-center font-semibold text-sm text-white">
-                                Xóa ({selectedCustomer.length})
+                                Xóa ({selectedProducts.length})
                             </h1>
                         </div>
                     )}
@@ -607,18 +594,18 @@ export default function Customer() {
                 lastmonthUser={lastmonthUser}
                 disableAccountLastMonth={disableAccountLastMonth}
             /> */}
-            {customers.length === 0 && !loading ? (
+            {products.length === 0 && !loading ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
                     <h1 className="text-base font-medium text-red-600">
-                        Chưa có khách hàng nào trên hệ thống!
+                        Chưa có sản phẩm nào trên hệ thống!
                     </h1>
                     <h1
                         onClick={() => {
-                            handleNavigation("/account/create");
+                            handleNavigation("/products/create");
                         }}
                         className="cursor-pointer text-blue-600 text-sm font-medium underline"
                     >
-                        Thêm khách hàng ngay
+                        Thêm sản phẩm ngay
                     </h1>
                 </div>
             ) : (
@@ -627,7 +614,7 @@ export default function Customer() {
                         <table className="w-full table-fixed bg-white ">
                             <thead className="rounded-t-lg sticky top-0 z-10">
                                 <tr className="bg-gray-50 text-gray-500 text-sm font-medium">
-                                    <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg w-[5%]">
+                                    <th className="py-3 px-6 text-left w-[6%]">
                                         <input
                                             type="checkbox"
                                             checked={isAllSelected}
@@ -638,39 +625,44 @@ export default function Customer() {
                                     <th className="py-3 px-6 text-center w-[5%]">
                                         #
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[12%] whitespace-nowrap">
-                                        Ảnh đại diện
-                                    </th>
-                                    <th className="py-3 px-6 text-left w-[15%] whitespace-nowrap">
-                                        Tên khách hàng
-                                    </th>
-                                    <th className="py-3 px-6 text-left w-[15%] whitespace-nowrap">
-                                        Số điện thoại
+                                    <th className="py-3 px-6 text-left w-[18%] whitespace-nowrap">
+                                        Ảnh sản phẩm
                                     </th>
                                     <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
-                                        Email
+                                        Mã sản phẩm
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[25%] whitespace-nowrap">
-                                        Địa chỉ
+                                    <th className="py-3 px-6 text-left w-[18%] whitespace-nowrap">
+                                        Tên sản phẩm
                                     </th>
-
-                                    <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg w-[20%] whitespace-nowrap ">
+                                    <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
+                                        Nhà phân phối
+                                    </th>
+                                    <th className="py-3 px-6 text-left w-[22%] whitespace-nowrap">
+                                        Kho
+                                    </th>
+                                    <th className="py-3 px-6 text-right w-[15%] whitespace-nowrap">
+                                        Số lượng
+                                    </th>
+                                    <th className="py-3 px-6 text-right w-[20%] whitespace-nowrap">
+                                        Giá
+                                    </th>
+                                    <th className="py-3 px-6 text-left  w-[20%] whitespace-nowrap">
                                         Trạng thái
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="text-gray-600 text-sm font-light">
-                                {customers.map((customer, index) => (
+                                {products.map((product, index) => (
                                     <tr
-                                        key={customer.customer_id}
+                                        key={product.product_id}
                                         onDoubleClick={() => {
                                             handleNavigation(
-                                                `/customer/${customer.customer_id}`
+                                                `/products/${product.product_id}`
                                             );
                                         }}
                                         className={`border-b border-gray-200 hover:bg-orange-100 ${
-                                            selectedCustomer.includes(
-                                                customer.customer_id
+                                            selectedProducts.includes(
+                                                product.product_id
                                             )
                                                 ? "bg-orange-100"
                                                 : ""
@@ -679,18 +671,12 @@ export default function Customer() {
                                         <td className="py-3 px-6 text-left">
                                             <input
                                                 type="checkbox"
-                                                // disabled={
-                                                //     localUser.role[0]
-                                                //         .role_level <= 4
-                                                //         ? true
-                                                //         : false
-                                                // }
-                                                checked={selectedCustomer.includes(
-                                                    customer.customer_id
+                                                checked={selectedProducts.includes(
+                                                    product.product_id
                                                 )}
                                                 onChange={() =>
                                                     handleCheckboxChange(
-                                                        customer.customer_id
+                                                        product.product_id
                                                     )
                                                 }
                                                 className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
@@ -700,9 +686,9 @@ export default function Customer() {
                                             {startIndex + index}
                                         </td>
                                         <td className="py-3 px-6 text-left">
-                                            {customer.image_name ? (
+                                            {product.images ? (
                                                 <img
-                                                    src={`http://127.0.0.1:8000/uploads/${customer.image_name}`}
+                                                    src={`http://127.0.0.1:8000/product_image/${product.images}`}
                                                     alt="Avatar"
                                                     className="w-10 h-10 rounded-xl object-fill"
                                                     onError={(e) => {
@@ -720,20 +706,28 @@ export default function Customer() {
                                             )}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.full_name}
+                                            {product.product_id}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.phone_number}
+                                            {product.product_name}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.email}
+                                            {product.distributor}
                                         </td>
                                         <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.address}
+                                            {product.warehouses}
                                         </td>
-                                        <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
-                                            {handleCustomerStatus(
-                                                customer.status
+                                        <td className="py-3 px-6  text-right font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            {product.product_quantity}
+                                        </td>
+                                        <td className="py-3 px-6 text-right font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            {product.selling_price.toLocaleString(
+                                                "en-US"
+                                            )}
+                                        </td>
+                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            {handleProductStatus(
+                                                product.status
                                             )}
                                         </td>
                                     </tr>
@@ -830,7 +824,7 @@ export default function Customer() {
                 <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
                     <h1 className="text-sm font-medium text-white">
-                        Đang tải danh sách khách hàng
+                        Đang tải danh sách nhân viên
                     </h1>
                 </div>
             )}
@@ -1035,3 +1029,4 @@ export default function Customer() {
 //             </div>
 //         </div>
 //     );
+// }

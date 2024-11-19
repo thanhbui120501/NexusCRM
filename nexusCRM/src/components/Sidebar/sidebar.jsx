@@ -6,55 +6,86 @@ export default function SideBar() {
     const location = useLocation();
     //set open sidebar
     const [open, setOpen] = useState(true);
+    //system manage
     const [openSubMenu, setOpenSubMenu] = useState(false);
+    const [selectedSubMenuTap, setselectedSubMenuTap] = useState(0);
+    //tap selected
     const [selectedTap, setTapSelected] = useState(0);
-    const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER"));
+    //selling tap selected
+    const [openSellSubMenu, setOpenSellSubMenu] = useState(false);
+    const [selectedSellSubMenuTap, setselectedSellSubMenuTap] = useState(0);
+    //get local user or session user
+    const localUser = JSON.parse(
+        localStorage.getItem("USER") || sessionStorage.getItem("USER")
+    );
+    //get id user
     const { id } = useParams();
+    //get current route
     useEffect(() => {
-
-        if(location.pathname === "/account" || (location.pathname.startsWith("/account/") && id) || location.pathname === "/account/create" ){
+        if (
+            location.pathname === "/account" ||
+            (location.pathname.startsWith("/account/") && id) ||
+            location.pathname === "/account/create"
+        ) {
             setTapSelected(1);
             setselectedSubMenuTap(0);
         }
-        if(location.pathname === "/"){
+        if (location.pathname === "/") {
             setTapSelected(0);
         }
-        if(location.pathname === "/role"){
+        if (location.pathname === "/role") {
             setTapSelected(1);
             setselectedSubMenuTap(1);
         }
-        if(location.pathname === "/customer" || (location.pathname.startsWith("/customer/") && id) || location.pathname === "/customer/create" ){
+        if (
+            location.pathname === "/customer" ||
+            (location.pathname.startsWith("/customer/") && id) ||
+            location.pathname === "/customer/create"
+        ) {
             setTapSelected(1);
             setselectedSubMenuTap(2);
         }
-        if(location.pathname === "/selling"){
+        if (location.pathname === "/products") {
             setTapSelected(2);
+            setselectedSellSubMenuTap(0);
         }
-        if(location.pathname === "/sell-program"){
+        if (location.pathname === "/warehouses") {
+            setTapSelected(2);
+            setselectedSellSubMenuTap(1);
+        }
+        if (location.pathname === "/orders") {
+            setTapSelected(2);
+            setselectedSellSubMenuTap(2);
+        }
+        if (location.pathname === "/sell-program") {
             setTapSelected(3);
         }
-        if(location.pathname === "/setting"){
+        if (location.pathname === "/setting") {
             setTapSelected(4);
         }
-        if(location.pathname === "/help"){
+        if (location.pathname === "/help") {
             setTapSelected(5);
-        }        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    //set tap
+    //set Tap Manage Selected
     const setTapManageSelected = () => {
         setOpenSubMenu(!openSubMenu);
         setTapSelected(1);
     };
-
+    //set Tap Manage Selected
+    const setTapSellingSelected = () => {
+        setOpenSellSubMenu(!openSellSubMenu);
+        setTapSelected(2);
+    };
+    //navigator
     const navigate = useNavigate();
-
+    //handle navigate
     const handleNavigation = (path) => {
         navigate(path);
     };
 
-    const [selectedSubMenuTap, setselectedSubMenuTap] = useState(0);
     // eslint-disable-next-line no-unused-vars
     const menus = [
         {
@@ -95,7 +126,7 @@ export default function SideBar() {
     return (
         <div className="flex h-screen ">
             <nav
-                className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-gray-50  transition-all ${
+                className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-gray-50 overflow-y-auto overflow-x-hidden  transition-all ${
                     open ? "w-72" : "w-20"
                 } duration-300 relative`}
             >
@@ -165,7 +196,7 @@ export default function SideBar() {
                 </div>
                 <div
                     key={0}
-                    className={`flex p-4 gap-2 items-center ${
+                    className={`flex p-4 gap-2 items-center rounded-lg ${
                         !open && "mt-2"
                     } self-stretch ${
                         !open && "w-[52px] h-[52px]"
@@ -195,7 +226,7 @@ export default function SideBar() {
                 {localUser.role[0].role_level <= 3 && (
                     <div
                         key={1}
-                        className={`flex p-4 items-center justify-between ${
+                        className={`flex p-4 items-center justify-between rounded-lg ${
                             !open && "w-[52px] h-[52px]"
                         } self-stretch cursor-pointer hover:bg-white ${
                             selectedTap == 1 && "bg-white"
@@ -204,8 +235,8 @@ export default function SideBar() {
                     >
                         <div className="flex items-center gap-2">
                             <img
-                                src="/icons/system_manage_icon.svg"
-                                alt="icon-statistics"
+                                src="/icons/folder-open.svg"
+                                alt="folder-open"
                                 className="flex flex-col justify-center w-5 h-5"
                             />
                             <h1
@@ -233,7 +264,6 @@ export default function SideBar() {
                 {localUser.role[0].role_level <= 3 && openSubMenu && open && (
                     <div className="flex flex-col items-start animate-fade-in">
                         <div
-                            key={0}
                             className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
                             onClick={() => {
                                 setselectedSubMenuTap(0);
@@ -250,7 +280,6 @@ export default function SideBar() {
                             </h1>
                         </div>
                         <div
-                            key={1}
                             className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
                             onClick={() => {
                                 setselectedSubMenuTap(1);
@@ -267,7 +296,6 @@ export default function SideBar() {
                             </h1>
                         </div>
                         <div
-                            key={2}
                             className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
                             onClick={() => {
                                 setselectedSubMenuTap(2);
@@ -287,32 +315,99 @@ export default function SideBar() {
                 )}
                 <div
                     key={2}
-                    className={`flex p-4 gap-2 items-center ${
+                    className={`flex p-4 items-center justify-between rounded-lg ${
                         !open && "w-[52px] h-[52px]"
-                    }  self-stretch cursor-pointer hover:bg-white ${
+                    } self-stretch cursor-pointer hover:bg-white ${
                         selectedTap == 2 && "bg-white"
                     }`}
-                    onClick={() => {
-                        setTapSelected(2);
-                        handleNavigation("/selling");
-                    }}
+                    onClick={setTapSellingSelected}
                 >
-                    <img
-                        src="/icons/selling.svg"
-                        alt="icon-statistics"
-                        className="flex flex-col justify-center w-5 h-5 "
-                    />
-                    <h1
-                        className={`text-sm font-medium text-gray-900 duration-300 ${
-                            !open && "scale-0"
-                        } `}
+                    <div className="flex items-center gap-2">
+                        <img
+                            src="/icons/bag-shopping.svg"
+                            alt="bag-shopping"
+                            className="flex flex-col justify-center w-5 h-5"
+                        />
+                        <h1
+                            className={`text-sm font-medium text-gray-900 duration-300 ${
+                                !open && "scale-0"
+                            } `}
+                        >
+                            Bán hàng
+                        </h1>
+                    </div>
+                    <button
+                        className="flex flex-col justify-center items-center gap-[10px]"
+                        onClick={() => setOpenSellSubMenu(!openSellSubMenu)}
                     >
-                        Bán hàng
-                    </h1>
+                        <img
+                            src="/icons/statis_more_icon.svg"
+                            alt="icon-statistics"
+                            className={`flex flex-col justify-center w-4 h-4 ${
+                                !open && "scale-0"
+                            } ${openSellSubMenu && "rotate-90"}`}
+                        />
+                    </button>
                 </div>
+                {openSellSubMenu && open && (
+                    <div className="flex flex-col items-start animate-fade-in">
+                        <div
+                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                            onClick={() => {
+                                setselectedSellSubMenuTap(0);
+                                handleNavigation("/products");
+                            }}
+                        >
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <h1
+                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                    selectedSellSubMenuTap == 0 &&
+                                    "text-gray-900"
+                                }`}
+                            >
+                                Sản phẩm
+                            </h1>
+                        </div>
+                        <div
+                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                            onClick={() => {
+                                setselectedSellSubMenuTap(1);
+                                handleNavigation("/warehouses");
+                            }}
+                        >
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <h1
+                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                    selectedSellSubMenuTap == 1 &&
+                                    "text-gray-900"
+                                }`}
+                            >
+                                Kho
+                            </h1>
+                        </div>
+                        <div
+                            className="flex p-4 items-center gap-2 self-stretch cursor-pointer"
+                            onClick={() => {
+                                setselectedSellSubMenuTap(2);
+                                handleNavigation("/orders");
+                            }}
+                        >
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <h1
+                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
+                                    selectedSellSubMenuTap == 2 &&
+                                    "text-gray-900"
+                                }`}
+                            >
+                                Đơn hàng
+                            </h1>
+                        </div>
+                    </div>
+                )}
+
                 <div
                     key={3}
-                    className={`flex p-4 gap-2 items-center self-stretch ${
+                    className={`flex p-4 gap-2 items-center self-stretch rounded-lg ${
                         !open && "w-[52px] h-[52px]"
                     }  cursor-pointer hover:bg-white ${
                         selectedTap == 3 && "bg-white"
@@ -348,7 +443,7 @@ export default function SideBar() {
                 </div>
                 <div
                     key={4}
-                    className={`flex p-4 gap-2 items-center self-stretch ${
+                    className={`flex p-4 gap-2 items-center self-stretch rounded-lg ${
                         !open && "w-[52px] h-[52px]"
                     }  cursor-pointer hover:bg-white ${
                         selectedTap == 4 && "bg-white"
@@ -373,7 +468,7 @@ export default function SideBar() {
                 </div>
                 <div
                     key={5}
-                    className={`flex p-4 gap-2 items-center self-stretch ${
+                    className={`flex p-4 gap-2 items-center self-stretch rounded-lg ${
                         !open && "w-[52px] h-[52px]"
                     }  cursor-pointer hover:bg-white ${
                         selectedTap == 5 && "bg-white"

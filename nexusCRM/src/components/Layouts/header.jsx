@@ -3,7 +3,11 @@ import DropDownProfile from "./dropdown";
 import { useLocation, useParams } from "react-router-dom";
 
 export default function Header() {
-    const [localUser] = useState(JSON.parse(localStorage.getItem("USER")||sessionStorage.getItem("USER")));
+    const [localUser] = useState(
+        JSON.parse(
+            localStorage.getItem("USER") || sessionStorage.getItem("USER")
+        )
+    );
     const { id } = useParams();
     const [openProfile, setOpenProfile] = useState(false);
 
@@ -31,6 +35,19 @@ export default function Header() {
                     <span className="pr-3">Quản lí hệ thống</span>
                     <span>/</span>
                     <span className="pr-3 pl-3">Khách hàng</span>
+                    <span>/</span>
+                    <span className="font-medium text-sm text-gray-900 pl-3">
+                        {id}
+                    </span>
+                </h1>
+            );
+        }
+        if (location.pathname.startsWith("/products/") && id) {
+            return (
+                <h1 className="font-medium text-sm text-gray-400">
+                    <span className="pr-3">Bán hàng</span>
+                    <span>/</span>
+                    <span className="pr-3 pl-3">Sản phẩm</span>
                     <span>/</span>
                     <span className="font-medium text-sm text-gray-900 pl-3">
                         {id}
@@ -134,11 +151,53 @@ export default function Header() {
                         </h1>
                     </>
                 );
-            case "/selling":
+            case "/products":
                 return (
                     <>
-                        <h1 className="font-medium text-sm text-gray-900">
-                            Bán hàng
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Bán hàng</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Sản phẩm
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/products/create":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Bán hàng</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="pr-3 pl-3">Sản phẩm</span>
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Thêm mới
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/warehouses":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Bán hàng</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Kho
+                            </span>
+                        </h1>
+                    </>
+                );
+            case "/orders":
+                return (
+                    <>
+                        <h1 className="font-medium text-sm text-gray-400">
+                            <span className="pr-3">Bán hàng</span>{" "}
+                            <span>/</span>{" "}
+                            <span className="font-medium text-sm text-gray-900 pl-3">
+                                Đơn hàng
+                            </span>
                         </h1>
                     </>
                 );
