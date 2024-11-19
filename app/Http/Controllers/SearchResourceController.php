@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Resources\AccountResource;
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Customer;
+use App\Models\Product;
 use Illuminate\Http\Response;
 
 class SearchResourceController extends Controller
@@ -106,6 +108,22 @@ class SearchResourceController extends Controller
             'status_code' => 200,
             'message' => "List of customer result",
             'data' => CustomerResource::collection($accounts)
+        ];
+        return response()->json($arr, Response::HTTP_OK);
+    }
+
+    public function searchProductsByKeyWord(Request $request){
+        $keyword = $request->input('keyword');
+
+        $products = Product::where('product_id', 'like', "%{$keyword}%")
+            ->orWhere('product_name', 'like', "%{$keyword}%")                      
+            ->get();
+
+        $arr = [
+            'success' => true,
+            'status_code' => 200,
+            'message' => "List of products result",
+            'data' => ProductResource::collection($products)
         ];
         return response()->json($arr, Response::HTTP_OK);
     }

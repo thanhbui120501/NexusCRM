@@ -22,8 +22,8 @@ class ProductsResourceController extends Controller
     {
         $limit = $request->query('limit', 100000);
         $offset = $request->query('offset', 0);
-        $promotions = Product::offset($offset)->limit($limit)->get();
-        $count = Product::count();
+        $promotions = Product::where('deleted_status',0)->offset($offset)->limit($limit)->get();
+        $count = Product::where('deleted_status',0)->count();
         $arr = [
             'success' => true,
             'status_code' => 200,
@@ -121,8 +121,52 @@ class ProductsResourceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'products' => 'required|array',
+        ]);
+        //delete: update status -> 0        
+        if ($validator->fails()) {
+            $arr = [
+                'success' => false,
+                'status_code' => 200,
+                'message' => "Failed",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arr, Response::HTTP_OK);
+        }
+        $products = $request->input('products');
+        //$userRequest = $request->user();
+
+        foreach ($products as $product) {            
+            $delete = Product::where('product_id', $product)->update(['deleted_status' => true]);
+            //save acctivity
+            // $account = Account::where('account_id', $user)->first();
+
+            // $newRequest = (new RequestController)->makeActivityRequest(
+            //     'Account Deleted',
+            //     'Account',
+            //     (new RequestController)->getActivityContent("Account Deleted", $request, null, $account->username),
+            //     $userRequest->account_id,
+            //     $userRequest->username
+            // );
+            // $result = (new ActivityHistoryResourceController)->store($newRequest);                // Thực hiện các xử lý cần thiết
+        }
+
+        //return json message
+        $arr = [
+            'success' => true,
+            'status_code' => 204,
+            'message' => "Account has been deleted",
+            'data' => "Success!",
+            // 'activity' => [
+            //     'activity_name' => $result->activity_name,
+            //     'activity_type' => $result->activity_type,
+            //     'activity_content' => $result->activity_content,
+            //     'activity_time' => $result->created_at,
+            // ],
+        ];
+        return response()->json($arr, Response::HTTP_NO_CONTENT);
     }
 }

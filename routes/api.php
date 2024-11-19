@@ -107,7 +107,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::controller(SearchResourceController::class)->group(function () {
             // Route::get('account/account-fillter', 'accountFillter')->name('api.account.fillter');
             // Route::get('account/get-list-admin', 'getAccountsWithCreatedUsers')->name('api.account.get.list.admin');
-            Route::get('customer/search-customer-by-keyword', 'searchCustomerByKeyWord')->name('api.customer.search.by.keyword');
+            Route::get('customer/search-customer-by-keyword', 'searchCustomerByKeyWord')->name('api.customer.search.by.keyword'); //get customers by keyword
+            Route::get('products/search-products-by-keyword', 'searchProductsByKeyWord')->name('api.products.search.by.keyword'); //get products by keyword
         });
         //Promotion Type routes
         Route::controller(PromotionTypeResourceController::class)->group(function () {
@@ -146,8 +147,9 @@ Route::group(['prefix' => 'v1'], function () {
         
         //Product Routes
         Route::controller(ProductsResourceController::class)->group(function(){
-            Route::post('/products/create-new-product', 'store')->name('api.create.new.product'); //create new product
-            Route::get('/products/get-all-products', 'index')->name('api.get.all.products'); //get all products
+            Route::post('/products/create-new-product', 'store')->name('api.product.create.new.product'); //create new product
+            Route::get('/products/get-all-products', 'index')->name('api.product.get.all.products'); //get all products
+            Route::post('/products/delete-product', 'destroy')->name('api.product.delete.product'); // delete product by id            
         });
     });
 });

@@ -374,9 +374,8 @@ class AccountResourceController extends Controller
         $users = $request->input('users');
         $userRequest = $request->user();
 
-        foreach ($users as $user) {
-            $delete =  DB::table('accounts')->where('account_id', $user)->update(['deleted_status' => true]);
-
+        foreach ($users as $user) {            
+            $delete = Account::where('account_id', $user)->update(['deleted_status' => true]);
             //save acctivity
             $account = Account::where('account_id', $user)->first();
 
