@@ -66,7 +66,7 @@ export default function DropDownProfile() {
         <div className="flex flex-col gap-4 dropDownProfile bg-gray-50">
             <div className="flex justify-start items-center gap-2 hover:bg-white cursor-pointer">
                 <FaUser />
-                <h1 className="text-base font-medium">Thông tin</h1>
+                <h1 className="text-base font-medium">Thông tin cá nhân</h1>
             </div>
             <div
                 className="flex justify-start items-center gap-2 hover:bg-white cursor-pointer text-red-600"

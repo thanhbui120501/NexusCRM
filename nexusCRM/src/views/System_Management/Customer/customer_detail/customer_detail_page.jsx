@@ -132,7 +132,7 @@ export default function CustomerDetail() {
     };
     
     return (
-        <div className="flex flex-col items-center self-stretch px-6 overflow-y-auto overflow-x-hidden">
+        <>
             <div
                 name="customer-header"
                 className="flex py-6 justify-between items-start self-stretch"
@@ -271,7 +271,7 @@ export default function CustomerDetail() {
                     </h1>
                 </div>
             )}
-        </div>
+        </>
     );
 }
 

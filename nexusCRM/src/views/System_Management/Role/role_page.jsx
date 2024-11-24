@@ -94,7 +94,7 @@ export default function Role() {
         return avatars;
     };
     return (
-        <div className="flex flex-col px-6 items-start flex-1 self-stretch overflow-y-auto overflow-x-hidden">
+        <>
             <div className="flex py-6 justify-between items-end self-stretch gap-2">
                 <div className="flex flex-col items-start gap-2 flex-1">
                     <h1 className="font-semibold text-3xl text-[#171717]">
@@ -203,6 +203,6 @@ export default function Role() {
                 role={roleItem}
                 onUpdated={setHasUpdated}
             />
-        </div>
+        </>
     );
 }

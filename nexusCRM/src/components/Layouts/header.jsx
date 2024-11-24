@@ -222,7 +222,7 @@ export default function Header() {
         }
     };
     return (
-        <div className="relative flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 border-b-2 border-gray-200">
+        <div className="relative flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 border-gray-200 w-[1200px] mx-auto">
             <div className="flex flex-col items-start w-[798px] gap-[10px]">
                 {getTitle()}
             </div>

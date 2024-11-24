@@ -4,7 +4,7 @@ import ShowDataDropDown from "./showDataDropdown";
 import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
 import ShowFillter from "./showFillter";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,12 +14,13 @@ export default function Account() {
     );
     //change url with no reload
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const [keyword, setKeyword] = useState("");
     //
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
     const [users, setUsers] = useState([]);
+    const [usersCount, setUsersCount] = useState(1);
     //total record
     const [totalRecords, setTotalRecords] = useState(0);
     //total account this month
@@ -35,6 +36,7 @@ export default function Account() {
     const [showRowNumber, setShowRowNumber] = useState(5);
     //set loading
     const [loading, setLoading] = useState(true);
+    const [loadingSearch, setLoadingSearch] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [accecpt, setAccecpt] = useState(false);
     const [open, setOpen] = useState(false);
@@ -133,20 +135,28 @@ export default function Account() {
         submitFillter(val);
     };
     const getUserByKeyword = async () => {
-        if (!keywordFromUrl || keywordFromUrl == "") return;
         try {
+            setLoadingSearch(true);
+            if (!keyword || keyword == "") {
+                getUsers(currentPage, showRowNumber);
+            }
             const response = await axiosClient.get(
                 "/account/search-account-by-keyword",
                 {
                     params: {
-                        keyword: keywordFromUrl,
+                        keyword: keyword,
                     },
                 }
             );
             setUsers(response.data.data);
+            //set pages
+            const pages = Math.ceil(response.data.data.length / showRowNumber);
+            setTotalPages(pages);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
+        } finally {
+            setLoadingSearch(false);
         }
     };
     const getFillterData = async () => {
@@ -188,6 +198,7 @@ export default function Account() {
 
             //set user and records
             setUsers(response.data.data);
+            setUsersCount(response.data.data.length);
             setTotalRecords(response.data.totalRecords);
             setDisableAccount(response.data.total_disable_account);
             setLastMonthUser(response.data.account_lastmonth);
@@ -232,12 +243,7 @@ export default function Account() {
             console.log(response.message);
         }
     };
-    // Lấy keyword từ URL (nếu có)
-    const keywordFromUrl = searchParams.get("keyword") || "";
-    useEffect(() => {
-        getUserByKeyword();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [keywordFromUrl]);
+
     useEffect(() => {
         isSubmitFillter && getFillterData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -253,11 +259,14 @@ export default function Account() {
     //change url
     const handleSearch = (keyword) => {
         // Cập nhật URL với keyword trong query string
-        if (keyword.trim()) {
-            navigate(`?keyword=${keyword}`);
+        if (keyword.trim() != "") {
+            getUserByKeyword();
         } else {
-            navigate("/account"); // Nếu không có keyword, điều hướng về trang chính
+            getUsers(currentPage, showRowNumber); // Nếu không có keyword, điều hướng về trang chính
         }
+    };
+    const handleChange = (keyword) => {
+        setKeyword(keyword);
     };
     const handlePageChange = (page) => {
         if (page !== currentPage) {
@@ -462,7 +471,7 @@ export default function Account() {
     const startIndex = (currentPage - 1) * showRowNumber + 1;
 
     return (
-        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
+        <>
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
@@ -474,42 +483,43 @@ export default function Account() {
                     </h1>
                 </div>
                 <div className="relative flex items-center gap-2">
-                    {users.length !== 0 && (
-                        <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
-                            <img
-                                src="/icons/search.svg"
-                                alt="icon-search"
-                                className={`w-5 h-5 cursor-pointer`}
-                                onClick={() => {
-                                    handleSearch(keywordFromUrl);
-                                }}
-                            />
-                            <div className="flex items-center gap-[2px] ml-2 flex-1">
-                                <input
-                                    type="text"
-                                    value={keywordFromUrl}
-                                    onChange={(e) =>
-                                        handleSearch(e.target.value)
-                                    }
-                                    placeholder="Tìm kiếm tài khoản"
+                    {loadingSearch && (
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-orange-600 border-solid"></div>
+                    )}
+                    {usersCount > 0 && (
+                        <>
+                            <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
+                                <img
+                                    src="/icons/search.svg"
+                                    alt="icon-search"
+                                    className={`w-5 h-5 cursor-pointer`}
+                                    onClick={() => {
+                                        handleSearch(keyword);
+                                    }}
+                                />
+                                <div className="flex items-center gap-[2px] ml-2 flex-1">
+                                    <input
+                                        type="text"
+                                        value={keyword}
+                                        onChange={(e) =>
+                                            handleChange(e.target.value)
+                                        }
+                                        placeholder="Tìm kiếm tài khoản"
+                                    />
+                                </div>
+                            </div>
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <div
+                                className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
+                                // onClick={() => setOpenFillter(!openFillter)}
+                            >
+                                <img
+                                    src="/icons/sliders.svg"
+                                    alt="icon-sliders"
+                                    className="flex flex-col items-center w-5 h-5 "
                                 />
                             </div>
-                        </div>
-                    )}
-                    {users.length !== 0 && (
-                        <img src="/icons/line.svg" alt="icon-statistics" />
-                    )}
-                    {users.length !== 0 && (
-                        <div
-                            className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                            onClick={() => setOpenFillter(!openFillter)}
-                        >
-                            <img
-                                src="/icons/sliders.svg"
-                                alt="icon-sliders"
-                                className="flex flex-col items-center w-5 h-5 "
-                            />
-                        </div>
+                        </>
                     )}
                     {openFillter && (
                         <ShowFillter
@@ -560,7 +570,7 @@ export default function Account() {
                 lastmonthUser={lastmonthUser}
                 disableAccountLastMonth={disableAccountLastMonth}
             />
-            {users.length === 0 && !loading ? (
+            {usersCount.length == 0 && !loading ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
                     <h1 className="text-base font-medium text-red-600">
                         Chưa có nhân viên nào trên hệ thống!
@@ -615,104 +625,116 @@ export default function Account() {
                                 </tr>
                             </thead>
                             <tbody className="text-gray-600 text-sm font-light">
-                                {users.map((user, index) => (
-                                    <tr
-                                        key={user.account_id}
-                                        onDoubleClick={() => {
-                                            handleNavigation(
-                                                `/account/${user.account_id}`
-                                            );
-                                        }}
-                                        className={`border-b border-gray-200 hover:bg-orange-100 ${
-                                            selectedUsers.includes(
-                                                user.account_id
-                                            )
-                                                ? "bg-orange-100"
-                                                : ""
-                                        }`}
-                                    >
-                                        <td className="py-3 px-6 text-left">
-                                            <input
-                                                type="checkbox"
-                                                disabled={
-                                                    localUser.role[0]
-                                                        .role_level >=
-                                                    user.role[0].role_level
-                                                        ? true
-                                                        : false
-                                                }
-                                                checked={selectedUsers.includes(
-                                                    user.account_id
-                                                )}
-                                                onChange={() =>
-                                                    handleCheckboxChange(
-                                                        user.account_id
-                                                    )
-                                                }
-                                                className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
-                                            />
-                                        </td>
-                                        <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
-                                            {startIndex + index}
-                                        </td>
-                                        <td className="py-3 px-6 text-left">
-                                            {user.image_name ? (
-                                                <img
-                                                    src={`http://127.0.0.1:8000/uploads/${user.image_name}`}
-                                                    alt="Avatar"
-                                                    className="w-10 h-10 rounded-xl object-fill"
-                                                    onError={(e) => {
-                                                        e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                                                        e.target.src =
-                                                            "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
-                                                    }}
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={`/images/avatar.png`}
-                                                    alt="Avatar"
-                                                    className="w-10 h-10 rounded-xl object-fill"
-                                                />
-                                            )}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.username}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.full_name}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.phone_number}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {user.email}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            <ul>
-                                                {user.role.map((r) => (
-                                                    <li key={r.role_id}>
-                                                        {r.role_name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </td>
-                                        <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
-                                            {user.status == 1 ? (
-                                                <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
-                                                    <li className="font-medium text-sm text-[#16A34A]">
-                                                        Đang hoạt động
-                                                    </li>
-                                                </ul>
-                                            ) : (
-                                                <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
-                                                    <li className="font-medium text-sm text-[#DC2626]">
-                                                        Ngưng hoạt động
-                                                    </li>
-                                                </ul>
-                                            )}
+                                {users.length == 0 && !loading ? (
+                                    <tr>
+                                        <td
+                                            colSpan="10"
+                                            className="py-6 text-center text-gray-500"
+                                        >
+                                            Không có tài khoản nào được tìm thấy
                                         </td>
                                     </tr>
-                                ))}
+                                ) : (
+                                    users.map((user, index) => (
+                                        <tr
+                                            key={user.account_id}
+                                            onDoubleClick={() => {
+                                                handleNavigation(
+                                                    `/account/${user.account_id}`
+                                                );
+                                            }}
+                                            className={`border-b border-gray-200 hover:bg-orange-100 ${
+                                                selectedUsers.includes(
+                                                    user.account_id
+                                                )
+                                                    ? "bg-orange-100"
+                                                    : ""
+                                            }`}
+                                        >
+                                            <td className="py-3 px-6 text-left">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={
+                                                        localUser.role[0]
+                                                            .role_level >=
+                                                        user.role[0].role_level
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    checked={selectedUsers.includes(
+                                                        user.account_id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleCheckboxChange(
+                                                            user.account_id
+                                                        )
+                                                    }
+                                                    className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
+                                                />
+                                            </td>
+                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
+                                                {startIndex + index}
+                                            </td>
+                                            <td className="py-3 px-6 text-left">
+                                                {user.image_name ? (
+                                                    <img
+                                                        src={`http://127.0.0.1:8000/uploads/${user.image_name}`}
+                                                        alt="Avatar"
+                                                        className="w-10 h-10 rounded-xl object-fill"
+                                                        onError={(e) => {
+                                                            e.target.onerror =
+                                                                null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                                                            e.target.src =
+                                                                "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src={`/images/avatar.png`}
+                                                        alt="Avatar"
+                                                        className="w-10 h-10 rounded-xl object-fill"
+                                                    />
+                                                )}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {user.username}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {user.full_name}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {user.phone_number}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {user.email}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                <ul>
+                                                    {user.role.map((r) => (
+                                                        <li key={r.role_id}>
+                                                            {r.role_name}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </td>
+                                            <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
+                                                {user.status == 1 ? (
+                                                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
+                                                        <li className="font-medium text-sm text-[#16A34A]">
+                                                            Đang hoạt động
+                                                        </li>
+                                                    </ul>
+                                                ) : (
+                                                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
+                                                        <li className="font-medium text-sm text-[#DC2626]">
+                                                            Ngưng hoạt động
+                                                        </li>
+                                                    </ul>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -820,7 +842,7 @@ export default function Account() {
                 bgColor={dialog.bgColor}
                 hoverColor={dialog.hoverColor}
             />
-        </div>
+        </>
     );
 }
 

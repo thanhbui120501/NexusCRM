@@ -12,13 +12,16 @@ export default function DefaultLayout() {
         return <Navigate to="/login" />;
     }
 
-    
     return (
         <main className="flex h-screen overflow-hidden font-sans">
             <SideBar />
             <div className="flex flex-col items-start gap-[10px] flex-1">
                 <Header />
-                <Outlet />
+                <hr className="border-t border-[#E5E5E5] w-full" />
+                <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto overflow-x-hidden max-w-[1200px] w-[1200px] mx-auto">
+                    <Outlet />
+                </div>
+                <hr className="border-t border-[#E5E5E5] w-full" />
                 <Footer />
             </div>
         </main>
