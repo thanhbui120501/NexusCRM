@@ -3,7 +3,7 @@ import ShowDataDropDown from "../Account/showDataDropdown";
 import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
 import ShowFillter from "../Account/showFillter";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,28 +11,22 @@ export default function Customer() {
     //const localUser = JSON.parse(localStorage.getItem("USER") || sessionStorage.getItem("USER")) ;
     //change url with no reload
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const [keyword, setKeyword] = useState("");
     //
     const [selectedCustomer, setSelectedACustomer] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [openDropDownData, setOpenDropDownData] = useState(false);
     const [customers, setCustomers] = useState([]);
+    const [customersCount, setCustomerCount] = useState(1);
     //total record
     // eslint-disable-next-line no-unused-vars
     const [totalRecords, setTotalRecords] = useState(0);
-    // //total account this month
-    // const [accountThisMonth, setAccountThisMonth] = useState(0);
-    // //total disable account
-    // const [disableAccount, setDisableAccount] = useState(0);
-    // //total user lastmonth
-    // const [lastmonthUser, setLastMonthUser] = useState(0);
-    // //get disable account last month
-    // const [disableAccountLastMonth, setDisableAccountLastMonth] = useState(0);
     //total pages
     const [totalPages, setTotalPages] = useState(0);
     const [showRowNumber, setShowRowNumber] = useState(5);
     //set loading
     const [loading, setLoading] = useState(true);
+    const [loadingSearch, setLoadingSearch] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [accecpt, setAccecpt] = useState(false);
     const [open, setOpen] = useState(false);
@@ -128,20 +122,28 @@ export default function Customer() {
         submitFillter(val);
     };
     const getCustomerByKeyword = async () => {
-        if (!keywordFromUrl || keywordFromUrl == "") return;
         try {
+            setLoadingSearch(true);
+            if (!keyword || keyword == "") {
+                getCustomers(currentPage, showRowNumber);
+            }
             const response = await axiosClient.get(
                 "/customer/search-customer-by-keyword",
                 {
                     params: {
-                        keyword: keywordFromUrl,
+                        keyword: keyword,
                     },
                 }
             );
             setCustomers(response.data.data);
+            //set pages
+            const pages = Math.ceil(response.data.data.length / showRowNumber);
+            setTotalPages(pages);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
+        } finally {
+            setLoadingSearch(false);
         }
     };
     const getFillterData = async () => {
@@ -186,11 +188,9 @@ export default function Customer() {
 
             //set user and records
             setCustomers(response.data.data);
+            setCustomerCount(response.data.data.length);
             setTotalRecords(response.data.totalRecords);
-            // setDisableAccount(response.data.total_disable_account);
-            // setLastMonthUser(response.data.account_lastmonth);
-            // setDisableAccountLastMonth(response.data.disable_account_lastmonth);
-            // setAccountThisMonth(response.data.account_this_month);
+
             //set pages
             const pages = Math.ceil(response.data.totalRecords / limit);
             setTotalPages(pages);
@@ -231,12 +231,7 @@ export default function Customer() {
             console.log(response.message);
         }
     };
-    // Lấy keyword từ URL (nếu có)
-    const keywordFromUrl = searchParams.get("keyword") || "";
-    useEffect(() => {
-        getCustomerByKeyword();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [keywordFromUrl]);
+
     useEffect(() => {
         isSubmitFillter && getFillterData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -252,11 +247,14 @@ export default function Customer() {
     //change url
     const handleSearch = (keyword) => {
         // Cập nhật URL với keyword trong query string
-        if (keyword.trim()) {
-            navigate(`?keyword=${keyword}`);
+        if (keyword.trim() != "") {
+            getCustomerByKeyword();
         } else {
-            navigate("/customer"); // Nếu không có keyword, điều hướng về trang chính
+            getCustomers(currentPage, showRowNumber); // Nếu không có keyword, điều hướng về trang chính
         }
+    };
+    const handleChange = (keyword) => {
+        setKeyword(keyword);
     };
     const handlePageChange = (page) => {
         if (page !== currentPage) {
@@ -509,7 +507,7 @@ export default function Customer() {
         //                                         </ul>
     };
     return (
-        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch pl-6 pr-6 overflow-y-auto">
+        <>
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
@@ -521,42 +519,43 @@ export default function Customer() {
                     </h1>
                 </div>
                 <div className="relative flex items-center gap-2">
-                    {customers.length !== 0 && (
-                        <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
-                            <img
-                                src="/icons/search.svg"
-                                alt="icon-search"
-                                className={`w-5 h-5 cursor-pointer`}
-                                onClick={() => {
-                                    handleSearch(keywordFromUrl);
-                                }}
-                            />
-                            <div className="flex items-center gap-[2px] ml-2 flex-1">
-                                <input
-                                    type="text"
-                                    value={keywordFromUrl}
-                                    onChange={(e) =>
-                                        handleSearch(e.target.value)
-                                    }
-                                    placeholder="Tìm kiếm khách hàng"
+                    {loadingSearch && (
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-orange-600 border-solid"></div>
+                    )}
+                    {customersCount > 0 && (
+                        <>
+                            <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
+                                <img
+                                    src="/icons/search.svg"
+                                    alt="icon-search"
+                                    className={`w-5 h-5 cursor-pointer`}
+                                    onClick={() => {
+                                        handleSearch(keyword);
+                                    }}
+                                />
+                                <div className="flex items-center gap-[2px] ml-2 flex-1">
+                                    <input
+                                        type="text"
+                                        value={keyword}
+                                        onChange={(e) =>
+                                            handleChange(e.target.value)
+                                        }
+                                        placeholder="Tìm kiếm sản phẩm"
+                                    />
+                                </div>
+                            </div>
+                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <div
+                                className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
+                                // onClick={() => setOpenFillter(!openFillter)}
+                            >
+                                <img
+                                    src="/icons/sliders.svg"
+                                    alt="icon-sliders"
+                                    className="flex flex-col items-center w-5 h-5 "
                                 />
                             </div>
-                        </div>
-                    )}
-                    {customers.length !== 0 && (
-                        <img src="/icons/line.svg" alt="icon-statistics" />
-                    )}
-                    {customers.length !== 0 && (
-                        <div
-                            className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                            onClick={() => setOpenFillter(!openFillter)}
-                        >
-                            <img
-                                src="/icons/sliders.svg"
-                                alt="icon-sliders"
-                                className="flex flex-col items-center w-5 h-5 "
-                            />
-                        </div>
+                        </>
                     )}
                     {openFillter && (
                         <ShowFillter
@@ -599,15 +598,7 @@ export default function Customer() {
                     )}
                 </div>
             </div>
-            {/* <AccountStatistics
-                loading={loading}
-                users={totalRecords}
-                userThisMonth={accountThisMonth}
-                disableAccount={disableAccount}
-                lastmonthUser={lastmonthUser}
-                disableAccountLastMonth={disableAccountLastMonth}
-            /> */}
-            {customers.length === 0 && !loading ? (
+            {customersCount == 0 && !loading ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
                     <h1 className="text-base font-medium text-red-600">
                         Chưa có khách hàng nào trên hệ thống!
@@ -660,84 +651,97 @@ export default function Customer() {
                                 </tr>
                             </thead>
                             <tbody className="text-gray-600 text-sm font-light">
-                                {customers.map((customer, index) => (
-                                    <tr
-                                        key={customer.customer_id}
-                                        onDoubleClick={() => {
-                                            handleNavigation(
-                                                `/customer/${customer.customer_id}`
-                                            );
-                                        }}
-                                        className={`border-b border-gray-200 hover:bg-orange-100 ${
-                                            selectedCustomer.includes(
-                                                customer.customer_id
-                                            )
-                                                ? "bg-orange-100"
-                                                : ""
-                                        }`}
-                                    >
-                                        <td className="py-3 px-6 text-left">
-                                            <input
-                                                type="checkbox"
-                                                // disabled={
-                                                //     localUser.role[0]
-                                                //         .role_level <= 4
-                                                //         ? true
-                                                //         : false
-                                                // }
-                                                checked={selectedCustomer.includes(
-                                                    customer.customer_id
-                                                )}
-                                                onChange={() =>
-                                                    handleCheckboxChange(
-                                                        customer.customer_id
-                                                    )
-                                                }
-                                                className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
-                                            />
-                                        </td>
-                                        <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
-                                            {startIndex + index}
-                                        </td>
-                                        <td className="py-3 px-6 text-left">
-                                            {customer.image_name ? (
-                                                <img
-                                                    src={`http://127.0.0.1:8000/uploads/${customer.image_name}`}
-                                                    alt="Avatar"
-                                                    className="w-10 h-10 rounded-xl object-fill"
-                                                    onError={(e) => {
-                                                        e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                                                        e.target.src =
-                                                            "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
-                                                    }}
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={`/images/avatar.png`}
-                                                    alt="Avatar"
-                                                    className="w-10 h-10 rounded-xl object-fill"
-                                                />
-                                            )}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.full_name}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.phone_number}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.email}
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
-                                            {customer.address}
-                                        </td>
-                                        <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
-                                            {handleCustomerStatus(
-                                                customer.status
-                                            )}
+                                {customers.length == 0 && !loading ? (
+                                    <tr>
+                                        <td
+                                            colSpan="10"
+                                            className="py-6 text-center text-gray-500"
+                                        >
+                                            Không có khách hàng nào được tìm
+                                            thấy
                                         </td>
                                     </tr>
-                                ))}
+                                ) : (
+                                    customers.map((customer, index) => (
+                                        <tr
+                                            key={customer.customer_id}
+                                            onDoubleClick={() => {
+                                                handleNavigation(
+                                                    `/customer/${customer.customer_id}`
+                                                );
+                                            }}
+                                            className={`border-b border-gray-200 hover:bg-orange-100 ${
+                                                selectedCustomer.includes(
+                                                    customer.customer_id
+                                                )
+                                                    ? "bg-orange-100"
+                                                    : ""
+                                            }`}
+                                        >
+                                            <td className="py-3 px-6 text-left">
+                                                <input
+                                                    type="checkbox"
+                                                    // disabled={
+                                                    //     localUser.role[0]
+                                                    //         .role_level <= 4
+                                                    //         ? true
+                                                    //         : false
+                                                    // }
+                                                    checked={selectedCustomer.includes(
+                                                        customer.customer_id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleCheckboxChange(
+                                                            customer.customer_id
+                                                        )
+                                                    }
+                                                    className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
+                                                />
+                                            </td>
+                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
+                                                {startIndex + index}
+                                            </td>
+                                            <td className="py-3 px-6 text-left">
+                                                {customer.image_name ? (
+                                                    <img
+                                                        src={`http://127.0.0.1:8000/uploads/${customer.image_name}`}
+                                                        alt="Avatar"
+                                                        className="w-10 h-10 rounded-xl object-fill"
+                                                        onError={(e) => {
+                                                            e.target.onerror =
+                                                                null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                                                            e.target.src =
+                                                                "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src={`/images/avatar.png`}
+                                                        alt="Avatar"
+                                                        className="w-10 h-10 rounded-xl object-fill"
+                                                    />
+                                                )}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {customer.full_name}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {customer.phone_number}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {customer.email}
+                                            </td>
+                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                                {customer.address}
+                                            </td>
+                                            <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
+                                                {handleCustomerStatus(
+                                                    customer.status
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -845,193 +849,6 @@ export default function Customer() {
                 bgColor={dialog.bgColor}
                 hoverColor={dialog.hoverColor}
             />
-        </div>
+        </>
     );
 }
-
-// export function AccountStatistics({
-//     loading,
-//     users,
-//     userThisMonth,
-//     disableAccount,
-//     lastmonthUser,
-//     disableAccountLastMonth,
-// }) {
-//     //format number
-//     const formatNumber = (value) => {
-//         if (Number.isInteger(value)) {
-//             return value;
-//         }
-
-//         return value.toFixed(2);
-//     };
-//     //get percent
-//     const getAccountPercent = (current, lastmonth) => {
-//         let grow = loading ? 0 : current - lastmonth;
-//         if (lastmonth === 0) {
-//             if (current === 0) {
-//                 return (
-//                     <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
-//                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
-//                             <img
-//                                 src="/icons/arrow-trend-up.svg"
-//                                 alt="arrow-trend-up"
-//                             />
-//                             <h1 className="text-[#16A34A] font-medium text-sm">
-//                                 0 %
-//                             </h1>
-//                         </div>
-//                     </div>
-//                 );
-//             }
-//             return (
-//                 <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
-//                     <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
-//                         <img
-//                             src="/icons/arrow-trend-up.svg"
-//                             alt="arrow-trend-up"
-//                         />
-//                         <h1 className="text-[#16A34A] font-medium text-sm">
-//                             100 %
-//                         </h1>
-//                     </div>
-//                 </div>
-//             );
-//         }
-//         if (grow === 0) {
-//             return (
-//                 <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
-//                     <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
-//                         <img
-//                             src="/icons/arrow-trend-up.svg"
-//                             alt="arrow-trend-up"
-//                         />
-//                         <h1 className="text-[#16A34A] font-medium text-sm">
-//                             0 %
-//                         </h1>
-//                     </div>
-//                 </div>
-//             );
-//         } else {
-//             if (grow > 0) {
-//                 let percent = formatNumber((grow / lastmonth) * 100);
-//                 return (
-//                     <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
-//                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
-//                             <img
-//                                 src="/icons/arrow-trend-up.svg"
-//                                 alt="arrow-trend-up"
-//                             />
-//                             <h1 className="text-[#16A34A] font-medium text-sm">
-//                                 {percent} %
-//                             </h1>
-//                         </div>
-//                     </div>
-//                 );
-//             } else {
-//                 let percent = formatNumber((grow / lastmonth) * 100);
-//                 return (
-//                     <div className="flex items-center justify-center gap-2.5 border border-b-[#FECACA] bg-[#FEF2F2] rounded-full">
-//                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
-//                             <img
-//                                 src="/icons/arrow-trend-down.svg"
-//                                 alt="arrow-trend-down"
-//                             />
-//                             <h1 className="text-[#DC2626] font-medium text-sm">
-//                                 {percent * -1} %
-//                             </h1>
-//                         </div>
-//                     </div>
-//                 );
-//             }
-//         }
-//     };
-
-//     return (
-//         <div className="flex pb-6 items-center self-stretch">
-//             <div className="flex items-center gap-6 flex-1">
-//                 <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
-//                     <div className="flex items-center gap-2">
-//                         <h1 className="text-base font-medium text-gray-900">
-//                             Tổng tài khoản
-//                         </h1>
-//                         <img
-//                             src="/icons/circle-info.svg"
-//                             alt="icon-info"
-//                             className="cursor-pointer"
-//                         />
-//                     </div>
-//                     <h1 className="text-4xl font-bold text-gray-900">
-//                         {loading ? 0 : users + 1}
-//                     </h1>
-//                     <div className="flex items-center gap-2 self-stretch">
-//                         <h1 className="font-medium text-base text-[#A3A3A3]">
-//                             so với tháng trước
-//                         </h1>
-
-//                         {getAccountPercent(userThisMonth, lastmonthUser)}
-//                     </div>
-//                 </div>
-//                 <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
-//                     <div className="flex items-center gap-2">
-//                         <h1 className="text-base font-medium text-gray-900">
-//                             Tài khoản ngưng hoạt động
-//                         </h1>
-//                         <img
-//                             src="/icons/circle-info.svg"
-//                             alt="icon-info"
-//                             className="cursor-pointer"
-//                         />
-//                     </div>
-//                     <h1 className="text-4xl font-bold text-gray-900">
-//                         {loading
-//                             ? 0
-//                             : formatNumber(
-//                                   (disableAccount / (users + 1)) * 100
-//                               )}
-//                         %
-//                     </h1>
-//                     <div className="flex items-center gap-2 self-stretch">
-//                         <h1 className="font-medium text-base text-[#A3A3A3]">
-//                             so với tháng trước
-//                         </h1>
-//                         {getAccountPercent(
-//                             disableAccount,
-//                             disableAccountLastMonth
-//                         )}
-//                     </div>
-//                 </div>
-//                 <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
-//                     <div className="flex items-center gap-2">
-//                         <h1 className="text-base font-medium text-gray-900">
-//                             Doanh thu/Tài khoản
-//                         </h1>
-//                         <img
-//                             src="/icons/circle-info.svg"
-//                             alt="icon-info"
-//                             className="cursor-pointer"
-//                         />
-//                     </div>
-//                     <h1 className="text-4xl font-bold text-gray-900">
-//                         2,250,000,000
-//                     </h1>
-//                     <div className="flex items-center gap-2 self-stretch">
-//                         <h1 className="font-medium text-base text-[#A3A3A3]">
-//                             so với tháng trước
-//                         </h1>
-//                         <div className="flex items-center justify-center gap-2.5 border bg-[#F0FDF4] rounded-full">
-//                             <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
-//                                 <img
-//                                     src="/icons/arrow-trend-up.svg"
-//                                     alt="arrow-trend-up"
-//                                 />
-//                                 <h1 className="text-[#16A34A] font-medium text-sm">
-//                                     12 %
-//                                 </h1>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );

@@ -281,7 +281,7 @@ export default function AccountDetail() {
         formRef.current.dispatchEvent(new Event("submit", { bubbles: true }));
     };
     return (
-        <div className="flex flex-col h-full items-start gap-3 justify-start self-stretch overflow-y-auto overflow-x-hidden">
+        <>
             <ToastContainer />
             <div className="flex pl-6 pr-6 pb-6 pt-3 flex-col items-start gap-3 self-stretch">
                 <div className="flex justify-between items-end self-stretch">
@@ -784,6 +784,6 @@ export default function AccountDetail() {
                     </h1>
                 </div>
             )}
-        </div>
+        </>
     );
 }

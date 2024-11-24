@@ -73,11 +73,17 @@ export default function SideBar() {
     const setTapManageSelected = () => {
         setOpenSubMenu(!openSubMenu);
         setTapSelected(1);
+        setOpenSellSubMenu(false);
+        setselectedSubMenuTap(0);
+        handleNavigation("/account");
     };
     //set Tap Manage Selected
     const setTapSellingSelected = () => {
         setOpenSellSubMenu(!openSellSubMenu);
         setTapSelected(2);
+        setOpenSubMenu(false);
+        setselectedSellSubMenuTap(0);
+        handleNavigation("/products");
     };
     //navigator
     const navigate = useNavigate();

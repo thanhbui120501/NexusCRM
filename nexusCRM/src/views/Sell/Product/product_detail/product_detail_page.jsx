@@ -5,6 +5,8 @@ export default function ProductDetailPage(){
     const { id } = useParams();
 
     return(
-        <h1>Mã sản phẩm {id}</h1>
+        <>
+            <h1>Mã sản phẩm {id}</h1>
+        </>        
     );
 }

@@ -250,7 +250,7 @@ export default function CustomerCreate() {
         return format(date, "dd/MM/yyyy"); // Định dạng lại thành d-m-Y
     };
     return (
-        <div className="flex px-6 flex-col items-center self-stretch overflow-y-auto overflow-x-hidden">
+        <>
             <div
                 name="tittle"
                 className="flex py-6 justify-between items-end self-stretch"
@@ -562,7 +562,7 @@ export default function CustomerCreate() {
                 </div>
             )}
             <ToastContainer />
-        </div>
+        </>
     );
 }
 

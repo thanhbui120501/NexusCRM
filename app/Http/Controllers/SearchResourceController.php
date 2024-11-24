@@ -76,7 +76,7 @@ class SearchResourceController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $accounts = Account::where('username', 'like', "%{$keyword}%")
+        $accounts = Account::where('username', 'like', "%{$keyword}%")->where('deleted_status',0)   
             ->orWhere('phone_number', 'like', "%{$keyword}%")
             ->orWhere('full_name', 'like', "%{$keyword}%")
             ->orWhere('email', 'like', "%{$keyword}%")
@@ -97,10 +97,10 @@ class SearchResourceController extends Controller
     public function searchCustomerByKeyWord(Request $request){
         $keyword = $request->input('keyword');
 
-        $accounts = Customer::where('customer_id', 'like', "%{$keyword}%")
+        $accounts = Customer::where('customer_id', 'like', "%{$keyword}%")->where('deleted_status',0)   
             ->orWhere('phone_number', 'like', "%{$keyword}%")
             ->orWhere('full_name', 'like', "%{$keyword}%")
-            ->orWhere('email', 'like', "%{$keyword}%")            
+            ->orWhere('email', 'like', "%{$keyword}%")         
             ->get();
 
         $arr = [
@@ -115,8 +115,8 @@ class SearchResourceController extends Controller
     public function searchProductsByKeyWord(Request $request){
         $keyword = $request->input('keyword');
 
-        $products = Product::where('product_id', 'like', "%{$keyword}%")
-            ->orWhere('product_name', 'like', "%{$keyword}%")                      
+        $products = Product::where('product_id', 'like', "%{$keyword}%")->where('deleted_status',0)   
+            ->orWhere('product_name', 'like', "%{$keyword}%")                     
             ->get();
 
         $arr = [
