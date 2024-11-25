@@ -152,9 +152,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                         key={i}
                         className={`flex ${
                             currentPage === i
-                                ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                : "text-gray-900 hover:text-white hover:bg-gray-900"
-                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(i)}
                     >
@@ -170,9 +170,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={i}
                             className={`flex ${
                                 currentPage === i
-                                    ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(i)}
                         >
@@ -183,7 +183,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 pages.push(
                     <div
                         key={"more_0"}
-                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                         type="text"
                     >
                         ...
@@ -194,11 +194,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                         key={totalPages}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                         }
                             
-                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(totalPages)}
                     >
@@ -212,11 +212,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -226,7 +226,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     pages.push(
                         <div
                             key={"more_1"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -238,9 +238,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default text-text-white"
+                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -254,11 +254,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -268,7 +268,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     pages.push(
                         <div
                             key={"more_2"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -280,9 +280,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default text-text-white"
+                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -293,7 +293,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     pages.push(
                         <div
                             key={"more_3"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -304,9 +304,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={totalPages}
                             className={`flex ${
                                 currentPage === totalPages
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(totalPages)}
                         >
@@ -320,7 +320,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
     };
     return (
         <div
-            className={`flex flex-col items-start fixed top-0 right-0 h-screen w-[712px] bg-white shadow-lg transform ${
+            className={`flex flex-col items-start fixed top-0 right-0 h-screen w-[712px] bg-background-surface_default shadow-lg transform ${
                 isOpen ? "translate-x-0" : "translate-x-full"
             }  transition-transform duration-300 ease-in-out z-[200] overflow-y-auto overflow-x-hidden `}
         >
@@ -329,7 +329,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 id="header"
                 className="flex px-6 py-4 justify-between items-center self-stretch"
             >
-                <h1 className="text-gray-900 text-base font-medium">
+                <h1 className="text-text-primary text-base font-medium">
                     Chi tiết chức vụ
                 </h1>
                 <ToastContainer />
@@ -337,7 +337,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     onClick={() => {
                         onData(false);
                     }}
-                    className="flex  justify-center items-center gap-2 border rounded-lg bg-white w-8 h-8 cursor-pointer"
+                    className="flex  justify-center items-center gap-2 border rounded-lg bg-background-surface_default w-8 h-8 cursor-pointer"
                 >
                     <img
                         src="/icons/xmark.svg"
@@ -347,7 +347,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 </div>
             </div>
             <div className="flex h-2 py-2.5 flex-col justify-between items-start self-stretch flex-shrink-0">
-                <div className="w-full h-[1px] min-h-[1px] bg-gray-300 block "></div>
+                <div className="w-full h-[1px] min-h-[1px] bg-background-neutral-subtle_disabled block "></div>
             </div>
             <div
                 name="body"
@@ -355,10 +355,10 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 className="flex p-6 flex-col items-start gap-6 flex-1 self-stretch"
             >
                 <div className="flex flex-col items-start gap-3 self-stretch">
-                    <h1 className="text-xl font-semibold text-gray-900">
+                    <h1 className="text-xl font-semibold text-text-primary">
                         {role.role_name}
                     </h1>
-                    <h1 className="text-base font-medium text-[#A3A3A3]">
+                    <h1 className="text-base font-medium text-text-secondary">
                         {role.description}
                     </h1>
                 </div>
@@ -373,23 +373,23 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             handleCheckboxChange(e.target.checked);
                         }}
                         //onClick={() => {updateStatus();}}
-                        className="h-4 w-4  bg-gray-100 border-gray-300 rounded-lg accent-[#EA580C]"
+                        className="h-4 w-4  bg-gray-100 border-gray-300 rounded-lg accent-background-brand-default"
                     />
-                    <h1 className="text-base font-medium text-[#171717]">
+                    <h1 className="text-base font-medium text-text-primary">
                         Hoạt động
                     </h1>
                 </div>
                 <div className="flex flex-col items-start gap-3 self-stretch">
-                    <h1 className="text-base font-semibold text-[#171717]">
+                    <h1 className="text-base font-semibold text-text-primary">
                         Phân quyền chức năng
                     </h1>
                     <div className="grid grid-cols-4 gap-2">
                         {role?.role_function?.map((func, index) => (
                             <div
                                 key={index}
-                                className="flex px-3 py-1 justify-center items-center gap-2.5 border bg-[#fafafa] rounded-full"
+                                className="flex px-3 py-1 justify-center items-center gap-2.5 border bg-background-neutral-subtle rounded-full"
                             >
-                                <h1 className="text-sm font-medium text-[#171717]">
+                                <h1 className="text-sm font-medium text-text-primary">
                                     {func}
                                 </h1>
                             </div>
@@ -417,11 +417,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             name="title"
                             className="flex justify-between items-center self-stretch"
                         >
-                            <h1 className="text-base font-semibold text-gray-900">
+                            <h1 className="text-base font-semibold text-text-primary">
                                 Danh sách nhân viên
                             </h1>
                             <div className="flex items-center gap-2">
-                                <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
+                                <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-border-neutral-default">
                                     <img
                                         src="/icons/search.svg"
                                         alt="icon-search"
@@ -442,8 +442,10 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                     alt="icon-statistics"
                                 />
                                 <div
-                                    className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                                    onClick={() => {showErrorToast();}}
+                                    className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-border-neutral-default cursor-pointer"
+                                    onClick={() => {
+                                        showErrorToast();
+                                    }}
                                 >
                                     <img
                                         src="/icons/sliders.svg"
@@ -483,33 +485,34 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                                     className="rounded-full w-10 h-10"
                                                     onError={(e) => {
                                                         e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                                                        e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
-                                                    }} 
+                                                        e.target.src =
+                                                            "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                                    }}
                                                 />
                                                 <div className="flex flex-col items-start gap-1">
-                                                    <h1 className="text-sm font-medium text-[#A3A3A3]">
+                                                    <h1 className="text-sm font-medium text-text-secondary">
                                                         {mem.account_id}
                                                     </h1>
-                                                    <h1 className="text-base font-semibold text-gray-900">
+                                                    <h1 className="text-base font-semibold text-text-primary">
                                                         {mem.full_name}
                                                     </h1>
                                                 </div>
                                             </div>
                                             {mem.status ? (
-                                                <div className="flex justify-center items-center gap-2.5 border border-[#16A34A] bg-[#F0FDF4]  rounded-[4px] px-3 py-1">
-                                                    <h1 className="font-medium text-sm text-[#16A34A]">
+                                                <div className="flex justify-center items-center gap-2.5 border border-border-positive-default bg-background-positive-subtle  rounded-[4px] px-3 py-1">
+                                                    <h1 className="font-medium text-sm text-text-positive">
                                                         Đang hoạt động
                                                     </h1>
                                                 </div>
                                             ) : (
-                                                <div className="flex justify-center items-center gap-2.5 border border-[#DC2626] bg-[#FEF2F2] rounded-[4px] px-3 py-1">
-                                                    <h1 className="font-medium text-sm text-[#DC2626]">
+                                                <div className="flex justify-center items-center gap-2.5 border border-border-negative-default bg-background-negative-subtle rounded-[4px] px-3 py-1">
+                                                    <h1 className="font-medium text-sm text-text-negative">
                                                         Ngưng hoạt động
                                                     </h1>
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="w-full h-px bg-gray-300"></div>
+                                        <div className="w-full h-px bg-background-neutral-subtle_disabled"></div>
                                     </div>
                                 ))}
                         </div>
@@ -517,13 +520,13 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                         <div className="flex justify-between items-center self-stretch">
                             <div className="relative overflow-visible flex flex-col items-start gap-1 max-h-none">
                                 <div
-                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-gray-200"
+                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-border-neutral-subtle"
                                     onClick={() => {
                                         setOpenDropDownData(!openDropDownData);
                                         handleSetTotalPages();
                                     }}
                                 >
-                                    <h1 className="text-gray-900 font-medium text-sm cursor-pointer">
+                                    <h1 className="text-text-primary font-medium text-sm cursor-pointer">
                                         {showRowNumber}
                                     </h1>
                                     <img
@@ -542,7 +545,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => handlePrev()}
-                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                                     type="button"
                                 >
                                     <svg
@@ -562,7 +565,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
 
                                 <button
                                     onClick={() => handleNext()}
-                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                                     type="button"
                                 >
                                     <svg
@@ -585,9 +588,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
             </div>
 
             {loading && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
+                <div className="absolute inset-0 bg-background-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
                         Đang cập nhật
                     </h1>
                 </div>

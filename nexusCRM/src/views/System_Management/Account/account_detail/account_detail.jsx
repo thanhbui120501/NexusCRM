@@ -286,14 +286,14 @@ export default function AccountDetail() {
             <div className="flex pl-6 pr-6 pb-6 pt-3 flex-col items-start gap-3 self-stretch">
                 <div className="flex justify-between items-end self-stretch">
                     <div className="flex flex-col items-start gap-2 flex-1">
-                        <h1 className="font-semibold text-3xl text-[#171717]">
+                        <h1 className="font-semibold text-3xl text-text-primary">
                             Chi tiết tài khoản
                         </h1>
-                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                        <h1 className="font-medium text-base text-text-secondary">
                             Thông tin chi tiết tài khoản
                         </h1>
                         {!allowUpdate && (
-                            <h1 className="font-medium text-base text-red-600">
+                            <h1 className="font-medium text-base text-text-negative">
                                 Bạn không thể thay đổi thông tin cho tài khoản
                                 này
                             </h1>
@@ -306,8 +306,8 @@ export default function AccountDetail() {
                         <div
                             className={`flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch ${
                                 allowUpdate
-                                    ? "bg-[#EA580C] hover:bg-[#C2410C]"
-                                    : "bg-orange-400"
+                                    ? "bg-background-brand-default hover:bg-background-brand-hover"
+                                    : "bg-background-brand-disable"
                             }   rounded-lg `}
                         >
                             <img
@@ -315,7 +315,7 @@ export default function AccountDetail() {
                                 alt="save"
                                 className="flex w-5 h-5 flex-col justify-center"
                             />
-                            <h1 className="text-sm font-semibold text-[#fff]">
+                            <h1 className="text-sm font-semibold text-text-white">
                                 Lưu
                             </h1>
                         </div>
@@ -325,18 +325,18 @@ export default function AccountDetail() {
             <div className="flex px-6 pb-6 flex-col items-start gap-6 self-stretch">
                 <form
                     ref={formRef}
-                    className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-gray-200"
+                    className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-border-neutral-default"
                     encType="multipart/form-data"
                     onSubmit={onSubmit}
                     autoComplete="off"
                 >
-                    <h1 className="text-xl font-semibold text-[#171717]">
+                    <h1 className="text-xl font-semibold text-text-primary">
                         Thông tin tài khoản
                     </h1>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex w-[250px] flex-col items-start gap-2 ">
                             <div className="flex flex-col items-start gap-2.5 self-stretch">
-                                <h1 className="font-medium text-sm text-[#171717]">
+                                <h1 className="font-medium text-sm text-text-primary">
                                     Ảnh đại diện
                                 </h1>
                             </div>
@@ -347,13 +347,13 @@ export default function AccountDetail() {
                                         "p-6"
                                     } items-center gap-2.5 rounded-lg border ${
                                         errorMessage || errors.image
-                                            ? "border-[#DC2626]"
-                                            : "border-gray-200"
+                                            ? "border-border-negative-default"
+                                            : "border-border-neutral-default"
                                     }  border-dashed h-[68px] w-[68px]`}
                                 >
                                     <div className="flex flex-col justify-center items-center gap-2.5 w-full h-full">
                                         {loading ? (
-                                            <div className="animate-spin rounded-full h-4 w-4 border-t-4 border-orange-600 border-solid"></div>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-t-4 border-border-brand-default border-solid"></div>
                                         ) : (
                                             <img
                                                 src={
@@ -375,8 +375,8 @@ export default function AccountDetail() {
                                     <div
                                         className={`flex flex-col items-start gap-2.5 rounded-lg cursor-pointer ${
                                             allowUpdate
-                                                ? "bg-[#171717] hover:bg-[#262626]"
-                                                : "bg-gray-400"
+                                                ? "bg-background-neutral-default hover:bg-background-neutral-hover"
+                                                : "bg-background-neutral-disable"
                                         }  px-3 py-2 justify-center `}
                                         onClick={() =>
                                             allowUpdate &&
@@ -385,7 +385,7 @@ export default function AccountDetail() {
                                                 .click()
                                         }
                                     >
-                                        <h1 className="font-semibold text-xs text-[#fff]">
+                                        <h1 className="font-semibold text-xs text-text-white">
                                             Tải ảnh
                                         </h1>
                                     </div>
@@ -397,13 +397,13 @@ export default function AccountDetail() {
                                         style={{ display: "none" }} // Hide input
                                     />
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#fff] px-3 py-2 justify-center border border-[#E5E5E5]"
+                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-background-surface_default px-3 py-2 justify-center border border-border-neutral-default"
                                         onClick={() => {
                                             setAvatar(imgFirst);
                                             setImage(null);
                                         }}
                                     >
-                                        <h1 className="font-semibold text-xs text-[#171717]">
+                                        <h1 className="font-semibold text-xs text-text-primary">
                                             Xóa ảnh
                                         </h1>
                                     </div>
@@ -416,7 +416,7 @@ export default function AccountDetail() {
                                         : "invisible"
                                 }`}
                             >
-                                <h1 className="font-medium text-sm text-[#DC2626]">
+                                <h1 className="font-medium text-sm text-text-negative">
                                     {errorMessage && errorMessage}
                                     {errors.image && errors.image}
                                 </h1>
@@ -425,14 +425,14 @@ export default function AccountDetail() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Tên tài khoản
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.username
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 }`}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -454,7 +454,7 @@ export default function AccountDetail() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.username
                                         ? errors.username
@@ -463,14 +463,14 @@ export default function AccountDetail() {
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Mật khẩu
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.password
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } `}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -511,7 +511,7 @@ export default function AccountDetail() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.password
                                         ? errors.password
@@ -522,14 +522,14 @@ export default function AccountDetail() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Tên nhân viên
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.fullname
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } `}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -551,7 +551,7 @@ export default function AccountDetail() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.fullname
                                         ? errors.fullname
@@ -560,14 +560,14 @@ export default function AccountDetail() {
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Ngày sinh
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.birthDay
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } relative`}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -612,7 +612,7 @@ export default function AccountDetail() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.birthDay
                                         ? errors.birthDay
@@ -623,14 +623,14 @@ export default function AccountDetail() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Chức vụ
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-border-neutral-default">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
                                         disabled={!allowUpdate}
-                                        className="w-full font-medium text-sm text-[#171717]"
+                                        className="w-full font-medium text-sm text-text-primary"
                                         value={roleItem.role_id}
                                         onChange={(e) => {
                                             const selectedRole = role.find(
@@ -656,21 +656,21 @@ export default function AccountDetail() {
                                 className={`flex justify-center items-center gap-2.5 max-w-[500px] `}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     Mã chức vụ: {roleItem.role_id}
                                 </h1>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Email
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.email
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } `}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -692,7 +692,7 @@ export default function AccountDetail() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.email ? errors.email : "username"}
                                 </h1>
@@ -701,10 +701,10 @@ export default function AccountDetail() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Số điện thoại
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-border-neutral-default">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         readOnly={!allowUpdate}
@@ -725,21 +725,21 @@ export default function AccountDetail() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.phone ? errors.phone : "phone"}
                                 </h1>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 ">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Trạng thái
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-border-neutral-default">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
                                         disabled={!allowUpdate}
-                                        className="w-full font-medium text-sm text-[#171717]"
+                                        className="w-full font-medium text-sm text-text-primary"
                                         value={status.code}
                                         onChange={(e) => {
                                             const selectedStatus =
@@ -766,7 +766,7 @@ export default function AccountDetail() {
                                 className={`flex justify-center items-center gap-2.5 max-w-[500px] invisible`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     Trạng thái
                                 </h1>
@@ -777,9 +777,9 @@ export default function AccountDetail() {
                 <AccountActivity id={id} />
             </div>
             {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
+                <div className="fixed flex flex-col inset-0 bg-background-black bg-opacity-50 z-10 items-center justify-center">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
                         Đang tải thông tin
                     </h1>
                 </div>

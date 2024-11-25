@@ -79,7 +79,7 @@ export default function AccountCreate() {
     const handleChange = (e) => {
         // Chỉ cho phép nhập tối đa 10 ký tự
         if (e.target.value.length <= 10) {
-            setPhoneNumber(e.target.value)
+            setPhoneNumber(e.target.value);
         }
     };
     //get role
@@ -114,7 +114,6 @@ export default function AccountCreate() {
     const onSubmit = async (ev) => {
         ev.preventDefault();
         try {
-            
             const validationErrors = Validation({
                 image: image,
                 username: username,
@@ -169,7 +168,6 @@ export default function AccountCreate() {
                     navigate("/account");
                 }, 5000);
             }
-        
         } catch (err) {
             console.log(err);
             toast.error("Đã có lỗi xảy ra khi tạo tài khoản", {
@@ -180,7 +178,7 @@ export default function AccountCreate() {
                 draggable: true,
                 progress: undefined, // bạn có thể bỏ qua hoặc chỉnh sửa theo nhu cầu
             });
-        }finally{
+        } finally {
             setLoading(false);
         }
     };
@@ -194,10 +192,10 @@ export default function AccountCreate() {
             <div className="flex pl-6 pr-6 pb-6 pt-3 flex-col items-start gap-3 self-stretch">
                 <div className="flex justify-between items-end self-stretch">
                     <div className="flex flex-col items-start gap-2 flex-1">
-                        <h1 className="font-semibold text-3xl text-[#171717]">
+                        <h1 className="font-semibold text-3xl text-text-primary">
                             Thêm mới tài khoản
                         </h1>
-                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                        <h1 className="font-medium text-base text-text-secondary">
                             Thêm mới tài khoản để sẵn sàng sử dụng website
                         </h1>
                     </div>
@@ -205,13 +203,13 @@ export default function AccountCreate() {
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={handleExternalSubmit}
                     >
-                        <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-[#EA580C] rounded-lg hover:bg-[#C2410C]">
+                        <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-background-brand-default rounded-lg hover:bg-background-brand-hover">
                             <img
                                 src="/icons/save.svg"
                                 alt="save"
                                 className="flex w-5 h-5 flex-col justify-center"
                             />
-                            <h1 className="text-sm font-semibold text-[#fff]">
+                            <h1 className="text-sm font-semibold text-text-white">
                                 Lưu
                             </h1>
                         </div>
@@ -221,18 +219,18 @@ export default function AccountCreate() {
             <div className="flex px-6 pb-6 flex-col items-start gap-6 self-stretch">
                 <form
                     ref={formRef}
-                    className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-gray-200"
+                    className="flex p-6 flex-col items-start gap-3 self-stretch border rounded-xl border-border-neutral-default"
                     encType="multipart/form-data"
                     onSubmit={onSubmit}
                     autoComplete="off"
                 >
-                    <h1 className="text-xl font-semibold text-[#171717]">
+                    <h1 className="text-xl font-semibold text-text-primary">
                         Thông tin tài khoản
                     </h1>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex w-[250px] flex-col items-start gap-2 ">
                             <div className="flex flex-col items-start gap-2.5 self-stretch">
-                                <h1 className="font-medium text-sm text-[#171717]">
+                                <h1 className="font-medium text-sm text-text-primary">
                                     Ảnh đại diện
                                 </h1>
                             </div>
@@ -243,8 +241,8 @@ export default function AccountCreate() {
                                         "p-6"
                                     } items-center gap-2.5 rounded-lg border ${
                                         errorMessage || errors.image
-                                            ? "border-[#DC2626]"
-                                            : "border-gray-200"
+                                            ? "border-border-negative-default"
+                                            : "border-border-neutral-default"
                                     }  border-dashed h-[68px] w-[68px]`}
                                 >
                                     <div className="flex flex-col justify-center items-center gap-2.5 w-full h-full">
@@ -266,14 +264,14 @@ export default function AccountCreate() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#171717] px-3 py-2 justify-center hover:bg-[#262626]"
+                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-background-neutral-default px-3 py-2 justify-center hover:bg-background-neutral-hover"
                                         onClick={() =>
                                             document
                                                 .getElementById("avatarInput")
                                                 .click()
                                         }
                                     >
-                                        <h1 className="font-semibold text-xs text-[#fff]">
+                                        <h1 className="font-semibold text-xs text-text-white">
                                             Tải ảnh
                                         </h1>
                                     </div>
@@ -285,7 +283,7 @@ export default function AccountCreate() {
                                         style={{ display: "none" }} // Ẩn input
                                     />
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#fff] px-3 py-2 justify-center border border-[#E5E5E5]"
+                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-background-surface_default px-3 py-2 justify-center border border-border-neutral-default"
                                         onClick={() => {
                                             setAvatar(
                                                 "/icons/avatar_empty.svg"
@@ -293,7 +291,7 @@ export default function AccountCreate() {
                                             setImage(null);
                                         }}
                                     >
-                                        <h1 className="font-semibold text-xs text-[#171717]">
+                                        <h1 className="font-semibold text-xs text-text-primary">
                                             Xóa ảnh
                                         </h1>
                                     </div>
@@ -306,7 +304,7 @@ export default function AccountCreate() {
                                         : "invisible"
                                 }`}
                             >
-                                <h1 className="font-medium text-sm text-[#DC2626]">
+                                <h1 className="font-medium text-sm text-text-negative">
                                     {errorMessage && errorMessage}
                                     {errors.image && errors.image}
                                 </h1>
@@ -315,14 +313,14 @@ export default function AccountCreate() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Tên tài khoản
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.username
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 }`}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -343,7 +341,7 @@ export default function AccountCreate() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.username
                                         ? errors.username
@@ -352,14 +350,14 @@ export default function AccountCreate() {
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Mật khẩu
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.password
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } `}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -397,7 +395,7 @@ export default function AccountCreate() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.password
                                         ? errors.password
@@ -408,14 +406,14 @@ export default function AccountCreate() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Tên nhân viên
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.fullname
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } `}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -436,7 +434,7 @@ export default function AccountCreate() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.fullname
                                         ? errors.fullname
@@ -445,14 +443,14 @@ export default function AccountCreate() {
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Ngày sinh
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.birthDay
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } relative`}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -496,7 +494,7 @@ export default function AccountCreate() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.birthDay
                                         ? errors.birthDay
@@ -507,13 +505,13 @@ export default function AccountCreate() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Chức vụ
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-border-neutral-default">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <select
-                                        className="w-full font-medium text-sm text-[#171717]"
+                                        className="w-full font-medium text-sm text-text-primary"
                                         onChange={(e) => {
                                             const selectedRole = role.find(
                                                 (r) =>
@@ -522,15 +520,17 @@ export default function AccountCreate() {
                                             setRoleItem(selectedRole);
                                         }}
                                     >
-                                        {role.map((option, index) => (
-                                            option.status && 
-                                            <option
-                                                key={index}
-                                                value={option.role_id}
-                                            >
-                                                {option.role_name}
-                                            </option>
-                                        ))}
+                                        {role.map(
+                                            (option, index) =>
+                                                option.status && (
+                                                    <option
+                                                        key={index}
+                                                        value={option.role_id}
+                                                    >
+                                                        {option.role_name}
+                                                    </option>
+                                                )
+                                        )}
                                     </select>
                                 </div>
                             </div>
@@ -538,21 +538,21 @@ export default function AccountCreate() {
                                 className={`flex justify-center items-center gap-2.5 max-w-[500px] `}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     Mã chức vụ: {roleItem.role_id}
                                 </h1>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Email
                             </h1>
                             <div
                                 className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg ${
                                     errors.email
-                                        ? "border-[#DC2626]"
-                                        : "border-[#E5E5E5]"
+                                        ? "border-border-negative-default"
+                                        : "border-border-neutral-default"
                                 } `}
                             >
                                 <div className="flex items-center gap-0.5 flex-1">
@@ -573,7 +573,7 @@ export default function AccountCreate() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.email ? errors.email : "username"}
                                 </h1>
@@ -582,17 +582,15 @@ export default function AccountCreate() {
                     </div>
                     <div className="flex items-center gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Số điện thoại
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-border-neutral-default">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         type="text"
                                         value={phoneNumber}
-                                        onChange={(e) =>
-                                            handleChange(e)
-                                        }
+                                        onChange={(e) => handleChange(e)}
                                         onKeyDown={handleKeyDown}
                                         placeholder="Nhập số điện thoại"
                                         className="w-full"
@@ -605,17 +603,17 @@ export default function AccountCreate() {
                                 }`}
                             >
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.phone ? errors.phone : "phone"}
                                 </h1>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 invisible">
-                            <h1 className="font-medium text-sm text-[#171717]">
+                            <h1 className="font-medium text-sm text-text-primary">
                                 Email
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg border-border-neutral-default">
                                 <div className="flex items-center gap-0.5 flex-1">
                                     <input
                                         type="email"
@@ -626,9 +624,9 @@ export default function AccountCreate() {
                             </div>
                         </div>
                         {loading && (
-                            <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-10 items-center justify-center">
-                                <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                                <h1 className="text-sm font-medium text-white">
+                            <div className="fixed flex flex-col inset-0 bg-background-black bg-opacity-50 z-10 items-center justify-center">
+                                <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                                <h1 className="text-sm font-medium text-text-white">
                                     Đang thêm nhân viên
                                 </h1>
                             </div>

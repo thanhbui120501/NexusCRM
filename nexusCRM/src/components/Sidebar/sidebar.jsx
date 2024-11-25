@@ -132,7 +132,7 @@ export default function SideBar() {
     return (
         <div className="flex h-screen ">
             <nav
-                className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-gray-50 overflow-y-auto overflow-x-hidden  transition-all ${
+                className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-background-neutral-subtle overflow-y-auto overflow-x-hidden transition-all ${
                     open ? "w-72" : "w-20"
                 } duration-300 relative`}
             >
@@ -149,7 +149,7 @@ export default function SideBar() {
                             className={`object-contain aspect-square w-8`}
                         />
                         <h1
-                            className={`text-base font-bold duration-300 ${
+                            className={`text-base font-bold text-text-primary duration-300 ${
                                 !open && "scale-0"
                             }`}
                         >
@@ -157,7 +157,7 @@ export default function SideBar() {
                         </h1>
                     </div>
                     <div
-                        className={`flex justify-center items-center w-8 h-8 gap-5 p-2 rounded-lg border-[#E5E5E5] border bg-white duration-300 ${
+                        className={`flex justify-center items-center w-8 h-8 gap-5 p-2 rounded-lg border-border-neutral-subtle border bg-background-surface_default duration-300 ${
                             !open && "scale-0"
                         } cursor-pointer `}
                         onClick={() => setOpen((open) => !open)}
@@ -179,7 +179,7 @@ export default function SideBar() {
                     }`}
                 >
                     <button
-                        className={`flex justify-center items-center gap-5 p-2 rounded-lg border-[#E5E5E5] border bg-white`}
+                        className={`flex justify-center items-center gap-5 p-2 rounded-lg border-border-neutral-subtle border bg-background-surface_default`}
                         onClick={() => setOpen((open) => !open)}
                     >
                         <img
@@ -195,7 +195,7 @@ export default function SideBar() {
                     }  pt-3 pb-3 pl-4 pr-4 items-center self-stretch duration-300`}
                 >
                     <h1
-                        className={`text-sm font-medium text-gray-400 duration-500 `}
+                        className={`text-sm font-medium text-text-secondary duration-500 `}
                     >
                         TỔNG QUAN
                     </h1>
@@ -206,8 +206,8 @@ export default function SideBar() {
                         !open && "mt-2"
                     } self-stretch ${
                         !open && "w-[52px] h-[52px]"
-                    } cursor-pointer hover:bg-white ${
-                        selectedTap == 0 && "bg-white"
+                    } cursor-pointer hover:bg-background-surface_default ${
+                        selectedTap == 0 && "bg-background-surface_default"
                     }`}
                     onClick={() => {
                         setTapSelected(0);
@@ -221,7 +221,7 @@ export default function SideBar() {
                     />
                     {open && (
                         <h1
-                            className={`text-sm font-medium text-gray-900 duration-300 ${
+                            className={`text-sm font-medium text-text-primary duration-300 ${
                                 !open && "scale-0"
                             } `}
                         >
@@ -234,8 +234,8 @@ export default function SideBar() {
                         key={1}
                         className={`flex p-4 items-center justify-between rounded-lg ${
                             !open && "w-[52px] h-[52px]"
-                        } self-stretch cursor-pointer hover:bg-white ${
-                            selectedTap == 1 && "bg-white"
+                        } self-stretch cursor-pointer hover:bg-background-surface_default ${
+                            selectedTap == 1 && "bg-background-surface_default"
                         }`}
                         onClick={setTapManageSelected}
                     >
@@ -246,7 +246,7 @@ export default function SideBar() {
                                 className="flex flex-col justify-center w-5 h-5"
                             />
                             <h1
-                                className={`text-sm font-medium text-gray-900 duration-300 ${
+                                className={`text-sm font-medium text-text-primary duration-300 ${
                                     !open && "scale-0"
                                 } `}
                             >
@@ -278,8 +278,10 @@ export default function SideBar() {
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSubMenuTap == 0 && "text-gray-900"
+                                className={`font-medium text-sm  hover:text-text-primary ${
+                                    selectedSubMenuTap == 0
+                                        ? "text-text-primary"
+                                        : "text-text-secondary"
                                 }`}
                             >
                                 Tài khoản
@@ -294,8 +296,10 @@ export default function SideBar() {
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSubMenuTap == 1 && "text-gray-900"
+                                className={`font-medium text-sm  hover:text-text-primary ${
+                                    selectedSubMenuTap == 1
+                                        ? "text-text-primary"
+                                        : "text-text-secondary"
                                 }`}
                             >
                                 Chức vụ
@@ -310,8 +314,10 @@ export default function SideBar() {
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSubMenuTap == 2 && "text-gray-900"
+                                className={`font-medium text-sm  hover:text-text-primary ${
+                                    selectedSubMenuTap == 2
+                                        ? "text-text-primary"
+                                        : "text-text-secondary"
                                 }`}
                             >
                                 Khách hàng
@@ -323,8 +329,8 @@ export default function SideBar() {
                     key={2}
                     className={`flex p-4 items-center justify-between rounded-lg ${
                         !open && "w-[52px] h-[52px]"
-                    } self-stretch cursor-pointer hover:bg-white ${
-                        selectedTap == 2 && "bg-white"
+                    } self-stretch cursor-pointer hover:bg-background-surface_default ${
+                        selectedTap == 2 && "bg-background-surface_default"
                     }`}
                     onClick={setTapSellingSelected}
                 >
@@ -335,7 +341,7 @@ export default function SideBar() {
                             className="flex flex-col justify-center w-5 h-5"
                         />
                         <h1
-                            className={`text-sm font-medium text-gray-900 duration-300 ${
+                            className={`text-sm font-medium text-text-primary duration-300 ${
                                 !open && "scale-0"
                             } `}
                         >
@@ -366,9 +372,10 @@ export default function SideBar() {
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSellSubMenuTap == 0 &&
-                                    "text-gray-900"
+                                className={`font-medium text-sm  hover:text-text-primary ${
+                                    selectedSellSubMenuTap == 0
+                                        ? "text-text-primary"
+                                        : "text-text-secondary"
                                 }`}
                             >
                                 Sản phẩm
@@ -383,9 +390,10 @@ export default function SideBar() {
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSellSubMenuTap == 1 &&
-                                    "text-gray-900"
+                                className={`font-medium text-sm  hover:text-text-primary ${
+                                    selectedSellSubMenuTap == 1
+                                        ? "text-text-primary"
+                                        : "text-text-secondary"
                                 }`}
                             >
                                 Kho
@@ -400,9 +408,10 @@ export default function SideBar() {
                         >
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <h1
-                                className={`font-medium text-sm text-gray-400 hover:text-gray-900 ${
-                                    selectedSellSubMenuTap == 2 &&
-                                    "text-gray-900"
+                                className={`font-medium text-sm  hover:text-text-primary ${
+                                    selectedSellSubMenuTap == 2
+                                        ? "text-text-primary"
+                                        : "text-text-secondary"
                                 }`}
                             >
                                 Đơn hàng
@@ -415,8 +424,8 @@ export default function SideBar() {
                     key={3}
                     className={`flex p-4 gap-2 items-center self-stretch rounded-lg ${
                         !open && "w-[52px] h-[52px]"
-                    }  cursor-pointer hover:bg-white ${
-                        selectedTap == 3 && "bg-white"
+                    }  cursor-pointer hover:bg-background-surface_default ${
+                        selectedTap == 3 && "bg-background-surface_default"
                     }`}
                     onClick={() => {
                         setTapSelected(3);
@@ -429,7 +438,7 @@ export default function SideBar() {
                         className="flex flex-col justify-center w-5 h-5 "
                     />
                     <h1
-                        className={`text-sm font-medium text-gray-900 duration-300 ${
+                        className={`text-sm font-medium text-text-primary duration-300 ${
                             !open && "scale-0"
                         } `}
                     >
@@ -442,7 +451,7 @@ export default function SideBar() {
                     }  pr-4 items-center self-stretch duration-300`}
                 >
                     <h1
-                        className={`text-sm font-medium text-gray-400 duration-500 `}
+                        className={`text-sm font-medium text-text-secondary duration-500 `}
                     >
                         CÀI ĐẶT
                     </h1>
@@ -451,8 +460,8 @@ export default function SideBar() {
                     key={4}
                     className={`flex p-4 gap-2 items-center self-stretch rounded-lg ${
                         !open && "w-[52px] h-[52px]"
-                    }  cursor-pointer hover:bg-white ${
-                        selectedTap == 4 && "bg-white"
+                    }  cursor-pointer hover:bg-background-surface_default ${
+                        selectedTap == 4 && "bg-background-surface_default"
                     }`}
                     onClick={() => {
                         setTapSelected(4);
@@ -465,7 +474,7 @@ export default function SideBar() {
                         className="flex flex-col justify-center w-5 h-5 "
                     />
                     <h1
-                        className={`text-sm font-medium text-gray-900 duration-300 ${
+                        className={`text-sm font-medium text-text-primary duration-300 ${
                             !open && "scale-0"
                         } `}
                     >
@@ -476,8 +485,8 @@ export default function SideBar() {
                     key={5}
                     className={`flex p-4 gap-2 items-center self-stretch rounded-lg ${
                         !open && "w-[52px] h-[52px]"
-                    }  cursor-pointer hover:bg-white ${
-                        selectedTap == 5 && "bg-white"
+                    }  cursor-pointer hover:bg-background-surface_default ${
+                        selectedTap == 5 && "bg-background-surface_default"
                     }`}
                     onClick={() => {
                         setTapSelected(5);
@@ -490,7 +499,7 @@ export default function SideBar() {
                         className="flex flex-col justify-center w-5 h-5 "
                     />
                     <h1
-                        className={`text-sm font-medium text-gray-900 duration-300 ${
+                        className={`text-sm font-medium text-text-primary duration-300 ${
                             !open && "scale-0"
                         } `}
                     >

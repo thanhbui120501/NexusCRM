@@ -288,9 +288,9 @@ export default function Customer() {
                         key={i}
                         className={`flex ${
                             currentPage === i
-                                ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                : "text-gray-900 hover:text-white hover:bg-gray-900"
-                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(i)}
                     >
@@ -306,9 +306,9 @@ export default function Customer() {
                             key={i}
                             className={`flex ${
                                 currentPage === i
-                                    ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(i)}
                         >
@@ -319,7 +319,7 @@ export default function Customer() {
                 pages.push(
                     <div
                         key={"more_0"}
-                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                         type="text"
                     >
                         ...
@@ -330,11 +330,11 @@ export default function Customer() {
                         key={totalPages}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                         }
                             
-                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(totalPages)}
                     >
@@ -348,11 +348,11 @@ export default function Customer() {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -362,7 +362,7 @@ export default function Customer() {
                     pages.push(
                         <div
                             key={"more_1"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -374,9 +374,9 @@ export default function Customer() {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default text-text-white"
+                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -390,11 +390,11 @@ export default function Customer() {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -404,7 +404,7 @@ export default function Customer() {
                     pages.push(
                         <div
                             key={"more_2"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -416,9 +416,9 @@ export default function Customer() {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default text-text-white"
+                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -429,7 +429,7 @@ export default function Customer() {
                     pages.push(
                         <div
                             key={"more_3"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -440,9 +440,9 @@ export default function Customer() {
                             key={totalPages}
                             className={`flex ${
                                 currentPage === totalPages
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(totalPages)}
                         >
@@ -511,20 +511,20 @@ export default function Customer() {
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
-                    <h1 className="self-stretch text-gray-900 font-semibold text-3xl">
+                    <h1 className="self-stretch text-text-primary font-semibold text-3xl">
                         Khách hàng
                     </h1>
-                    <h1 className="self-stretch text-gray-400 font-medium text-base">
+                    <h1 className="self-stretch text-text-secondary font-medium text-base">
                         Quản lí tất cả khách hàng tại đây
                     </h1>
                 </div>
                 <div className="relative flex items-center gap-2">
                     {loadingSearch && (
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-orange-600 border-solid"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-border-brand-default border-solid"></div>
                     )}
                     {customersCount > 0 && (
                         <>
-                            <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
+                            <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-border-neutral-default">
                                 <img
                                     src="/icons/search.svg"
                                     alt="icon-search"
@@ -546,7 +546,7 @@ export default function Customer() {
                             </div>
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <div
-                                className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
+                                className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-border-neutral-default cursor-pointer"
                                 // onClick={() => setOpenFillter(!openFillter)}
                             >
                                 <img
@@ -568,7 +568,7 @@ export default function Customer() {
                     )}
                     {selectedCustomer.length == 0 ? (
                         <div
-                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 hover:bg-[#C2410C] cursor-pointer"
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-background-brand-default hover:bg-background-brand-hover cursor-pointer"
                             onClick={() => {
                                 handleNavigation("/customer/create");
                             }}
@@ -580,18 +580,18 @@ export default function Customer() {
                                     className=""
                                 />
                             </div>
-                            <h1 className="text-center font-semibold text-sm text-white">
+                            <h1 className="text-center font-semibold text-sm text-text-white">
                                 Thêm mới
                             </h1>
                         </div>
                     ) : (
                         <div
-                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] cursor-pointer onClick={()=>{}}"
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-background-negative-default hover:bg-background-negative-hover cursor-pointer"
                             onClick={() => {
                                 deletedCustomer();
                             }}
                         >
-                            <h1 className="text-center font-semibold text-sm text-white">
+                            <h1 className="text-center font-semibold text-sm text-text-white">
                                 Xóa ({selectedCustomer.length})
                             </h1>
                         </div>
@@ -600,14 +600,14 @@ export default function Customer() {
             </div>
             {customersCount == 0 && !loading ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
-                    <h1 className="text-base font-medium text-red-600">
+                    <h1 className="text-base font-medium text-text-negative">
                         Chưa có khách hàng nào trên hệ thống!
                     </h1>
                     <h1
                         onClick={() => {
                             handleNavigation("/account/create");
                         }}
-                        className="cursor-pointer text-blue-600 text-sm font-medium underline"
+                        className="cursor-pointer text-text-info text-sm font-medium underline"
                     >
                         Thêm khách hàng ngay
                     </h1>
@@ -615,15 +615,15 @@ export default function Customer() {
             ) : (
                 <div className="flex pb-6 flex-col items-start gap-3 self-stretch">
                     <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto  max-w-full">
-                        <table className="w-full table-fixed bg-white ">
+                        <table className="w-full table-fixed bg-background-surface_default ">
                             <thead className="rounded-t-lg sticky top-0 z-10">
-                                <tr className="bg-gray-50 text-gray-500 text-sm font-medium">
+                                <tr className="bg-gray-50 text-text-gray text-sm font-medium">
                                     <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg w-[5%]">
                                         <input
                                             type="checkbox"
                                             checked={isAllSelected}
                                             onChange={handleSelectAll}
-                                            className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
+                                            className="accent-background-brand-default border-2 border-gray-500 w-6 h-5"
                                         />
                                     </th>
                                     <th className="py-3 px-6 text-center w-[5%]">
@@ -655,7 +655,7 @@ export default function Customer() {
                                     <tr>
                                         <td
                                             colSpan="10"
-                                            className="py-6 text-center text-gray-500"
+                                            className="py-6 text-center text-text-gray"
                                         >
                                             Không có khách hàng nào được tìm
                                             thấy
@@ -670,11 +670,11 @@ export default function Customer() {
                                                     `/customer/${customer.customer_id}`
                                                 );
                                             }}
-                                            className={`border-b border-gray-200 hover:bg-orange-100 ${
+                                            className={`border-b border-border-neutral-subtle hover:bg-background-brand-subtle_hover ${
                                                 selectedCustomer.includes(
                                                     customer.customer_id
                                                 )
-                                                    ? "bg-orange-100"
+                                                    ? "bg-background-brand-subtle_hover"
                                                     : ""
                                             }`}
                                         >
@@ -695,10 +695,10 @@ export default function Customer() {
                                                             customer.customer_id
                                                         )
                                                     }
-                                                    className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
+                                                    className="accent-background-brand-default border-2 w-6 h-5"
                                                 />
                                             </td>
-                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
+                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-text-primary">
                                                 {startIndex + index}
                                             </td>
                                             <td className="py-3 px-6 text-left">
@@ -722,16 +722,16 @@ export default function Customer() {
                                                     />
                                                 )}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {customer.full_name}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {customer.phone_number}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {customer.email}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {customer.address}
                                             </td>
                                             <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
@@ -749,12 +749,12 @@ export default function Customer() {
                         <div className=" flex items-start gap-3">
                             <div className="relative overflow-visible flex flex-col items-start gap-1 max-h-none">
                                 <div
-                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-gray-200"
+                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-border-neutral-subtle"
                                     onClick={() =>
                                         setOpenDropDownData(!openDropDownData)
                                     }
                                 >
-                                    <h1 className="text-gray-900 font-medium text-sm cursor-pointer">
+                                    <h1 className="text-text-primary font-medium text-sm cursor-pointer">
                                         {showRowNumber}
                                     </h1>
                                     <img
@@ -771,20 +771,20 @@ export default function Customer() {
                                 )}
                             </div>
 
-                            <h1 className="text-gray-900 font-medium text-sm mt-2">
+                            <h1 className="text-text-primary font-medium text-sm mt-2">
                                 Hiển thị 1 - {showRowNumber} dòng dữ liệu{" "}
                             </h1>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => handlePageChange(1)}
-                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default active:text-text-white active:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Đầu tiên
                             </button>
                             <button
                                 onClick={() => handlePrev()}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
                                 <svg
@@ -804,7 +804,7 @@ export default function Customer() {
 
                             <button
                                 onClick={() => handleNext()}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
                                 <svg
@@ -822,7 +822,7 @@ export default function Customer() {
                             </button>
                             <button
                                 onClick={() => handlePageChange(totalPages)}
-                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default active:text-text-white active:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Cuối cùng
                             </button>
@@ -831,9 +831,9 @@ export default function Customer() {
                 </div>
             )}
             {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
+                <div className="fixed flex flex-col inset-0 bg-background-black bg-opacity-50 z-[100] items-center justify-center gap-4">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
                         Đang tải danh sách khách hàng
                     </h1>
                 </div>

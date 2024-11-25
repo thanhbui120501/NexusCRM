@@ -222,12 +222,12 @@ export default function Header() {
         }
     };
     return (
-        <div className="relative flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 border-gray-200 w-[1200px] mx-auto">
+        <div className="relative flex pl-6 pt-3 pr-3 pb-3 justify-between items-center gap-3 self-stretch h-14 w-[1200px] mx-auto">
             <div className="flex flex-col items-start w-[798px] gap-[10px]">
                 {getTitle()}
             </div>
             <div className="flex">
-                <div className="flex p-[10px] justify-center items-center gap-2 border border-b-[#E5E5E5] bg-[#FFFFFF] rounded-lg cursor-pointer">
+                <div className="flex p-[10px] justify-center items-center gap-2 border border-b-border-neutral-default bg-background-surface_default rounded-lg cursor-pointer">
                     <img
                         src="/icons/bell.svg"
                         alt="icon-statistics"
@@ -248,13 +248,13 @@ export default function Header() {
                                 alt="avatar"
                                 className="w-10 h-10 rounded-xl object-cover"
                             />
-                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-background-positive-default rounded-full border-2 border-border-neutral-default"></div>
                         </div>
                         <div className="flex flex-col items-start w-[126px] gap-[2px]">
-                            <h1 className="self-stretch text-sm font-medium text-gray-900 text-ellipsis whitespace-nowrap overflow-hidden">
+                            <h1 className="self-stretch text-sm font-medium text-text-primary text-ellipsis whitespace-nowrap overflow-hidden">
                                 {localUser.full_name}
                             </h1>
-                            <h1 className="self-stretch text-xs font-medium text-gray-400 text-ellipsis whitespace-nowrap overflow-hidden">
+                            <h1 className="self-stretch text-xs font-medium text-text-secondary text-ellipsis whitespace-nowrap overflow-hidden">
                                 {localUser.email}
                             </h1>
                         </div>
@@ -267,29 +267,6 @@ export default function Header() {
                         } cursor-pointer`}
                         onClick={() => setOpenProfile(!openProfile)}
                     />
-
-                    {/* <select
-                            id="options"
-                            value={selectedOption}
-                            onChange={handleChange}
-                            
-                        >
-                            <option value="">
-                                <img
-                                    src="/icons/statis_more_icon.svg"
-                                    alt="icon-selected"
-                                    className={`w-5 h-5 ${
-                                        openProfile ? "rotate-90" : "rotate-0"
-                                    } cursor-pointer`}
-                                    
-                                />
-                            </option>
-                            {options.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select> */}
                 </div>
             </div>
             {openProfile && <DropDownProfile />}
