@@ -6,7 +6,7 @@ import axiosClient from "../../../../axiosClient";
 import { useParams } from "react-router-dom";
 import Skeleton from "../../../../components/skeleton";
 export default function CustomerDetail() {
-    const personalInfoRef = useRef(); 
+    const personalInfoRef = useRef();
     //get account_id
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState("info");
@@ -127,10 +127,10 @@ export default function CustomerDetail() {
     };
     const handleSubmit = () => {
         if (personalInfoRef.current) {
-          personalInfoRef.current.submitForm(); // Gọi phương thức submit từ PersonalInfo
+            personalInfoRef.current.submitForm(); // Gọi phương thức submit từ PersonalInfo
         }
     };
-    
+
     return (
         <>
             <div
@@ -139,7 +139,7 @@ export default function CustomerDetail() {
             >
                 <div className="flex items-center gap-3">
                     {loading ? (
-                        <div className="animate-spin border-t-4 border-orange-600 border-solid rounded-full w-16 h-16"></div>
+                        <div className="animate-spin border-t-4 border-border-brand-default border-solid rounded-full w-16 h-16"></div>
                     ) : (
                         <img
                             src={`http://127.0.0.1:8000/uploads/${
@@ -149,7 +149,8 @@ export default function CustomerDetail() {
                             className="rounded-full w-16 h-16"
                             onError={(e) => {
                                 e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                                e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                                e.target.src =
+                                    "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
                             }}
                         />
                     )}
@@ -162,13 +163,13 @@ export default function CustomerDetail() {
                                     {customer != null && customer.full_name}
                                 </h1>
 
-                                <div className="flex py-1 pl-2 pr-2.5 justify-center items-center gap-2.5 border border-[#FEF08A] rounded-full bg-[#FEFCE8]">
+                                <div className="flex py-1 pl-2 pr-2.5 justify-center items-center gap-2.5 border border-border-warning-focus rounded-full bg-background-warning-subtle">
                                     <img
                                         src="/icons/crown.svg"
                                         alt="crown"
                                         className="w-4 h-4"
                                     />
-                                    <h1 className="text-sm font-medium text-yellow-500">
+                                    <h1 className="text-sm font-medium text-text-yellow">
                                         {getCustomerClass(
                                             customer != null &&
                                                 customer.customer_class
@@ -176,7 +177,7 @@ export default function CustomerDetail() {
                                     </h1>
                                 </div>
                             </div>
-                            <h1 className="text-base font-medium text-[#A3A3A3]">
+                            <h1 className="text-base font-medium text-text-secondary">
                                 {customer != null && customer.customer_id}
                             </h1>
                         </div>
@@ -194,8 +195,8 @@ export default function CustomerDetail() {
                             <div
                                 className={`flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch ${
                                     allowUpdate
-                                        ? "bg-[#EA580C] hover:bg-[#C2410C]"
-                                        : "bg-orange-400"
+                                        ? "bg-background-brand-default hover:bg-background-brand-hover"
+                                        : "bg-background-brand-disable"
                                 }   rounded-lg `}
                             >
                                 <img
@@ -203,7 +204,7 @@ export default function CustomerDetail() {
                                     alt="save"
                                     className="flex w-5 h-5 flex-col justify-center"
                                 />
-                                <h1 className="text-sm font-semibold text-[#fff]">
+                                <h1 className="text-sm font-semibold text-text-white">
                                     Lưu
                                 </h1>
                             </div>
@@ -211,9 +212,9 @@ export default function CustomerDetail() {
                     ) : (
                         <div
                             onClick={() => setOpenUpdateButton(true)}
-                            className="flex cursor-pointer px-4 py-2 flex-col items-center gap-2 justify-center self-stretch border border-[#E5E5E5] rounded-lg bg-[#ffff] hover:bg-gray-200"
+                            className="flex cursor-pointer px-4 py-2 flex-col items-center gap-2 justify-center self-stretch border border-border-neutral-default rounded-lg bg-background-surface_default hover:bg-background-neutral-subtle_hover"
                         >
-                            <h1 className="text-sm font-semibold text-[#171717]">
+                            <h1 className="text-sm font-semibold text-text-primary">
                                 Chỉnh sửa thông tin
                             </h1>
                         </div>
@@ -227,7 +228,7 @@ export default function CustomerDetail() {
             </div>
             <div
                 name="tab-bar"
-                className="flex items-center gap-6 self-stretch border-b-2 border-gray-300"
+                className="flex items-center gap-6 self-stretch border-b-2 border-border-neutral-press"
             >
                 {tabs.map((tab) => (
                     <div
@@ -242,8 +243,8 @@ export default function CustomerDetail() {
                         <div
                             className={`${
                                 activeTab === tab.id
-                                    ? "text-black"
-                                    : "text-gray-400"
+                                    ? "text-text-black"
+                                    : "text-text-secondary"
                             } transition-colors duration-300`}
                         >
                             {tab.icon}
@@ -251,8 +252,8 @@ export default function CustomerDetail() {
                         <h1
                             className={`text-base font-medium ${
                                 activeTab === tab.id
-                                    ? "text-black"
-                                    : "text-gray-500"
+                                    ? "text-text-black"
+                                    : "text-text-gray"
                             } transition-colors duration-300`}
                         >
                             {tab.label}
@@ -264,9 +265,9 @@ export default function CustomerDetail() {
                 {customer == null ? <InfoLoading /> : getTapSelect()}
             </div>
             {loading && (
-                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
+                <div className="fixed flex flex-col inset-0 bg-background-black bg-opacity-50 z-[100] items-center justify-center gap-4">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
                         Đang tải thông tin khách hàng
                     </h1>
                 </div>
@@ -280,7 +281,7 @@ export function InfoLoading() {
         <div className="flex py-6 flex-col items-start gap-6 self-stretch">
             <div
                 name="personal-info"
-                className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-x-gray-200"
+                className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-x-border-neutral-focus"
             >
                 <Skeleton className="h-7 w-24" />
                 <div
@@ -320,7 +321,7 @@ export function InfoLoading() {
             </div>
             <div
                 name="personal-info"
-                className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-x-gray-200"
+                className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-x-border-neutral-focus"
             >
                 <Skeleton className="h-7 w-24" />
                 <div

@@ -1,32 +1,29 @@
-/* eslint-disable no-unused-vars */
 /** @type {import('tailwindcss').Config} */
-import { typography } from "./src/styles/typography";
-import { color_variables } from "./src/styles/colors";
+//import { typography } from "./src/styles/typography";
+import color_variables from "./src/styles/colors";
+//console.log(color_variables.color_variables.background.brand);
+const addColors = (colorObj) => {
+    const colors = {};
+    Object.keys(colorObj).forEach((key) => {
+        const value = colorObj[key];
+        if (typeof value === "object") {
+            colors[key] = addColors(value); // Đệ quy cho các nhóm con (object)
+        } else {
+            colors[key] = value; // Thêm màu trực tiếp nếu là giá trị đơn
+        }
+    });
+    return colors;
+};
+
 export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
     theme: {
         fontFamily: {
             sans: ["Inter", "sans-serif"],
         },
-        // height:{
-        //   'left-login-top-height':'64px',
-        //   'left-login-bottom-height':'352px',
-        // },
-        // width:{
-        //   'left-login-width': '448px',
-        //   'right-login-width': '992px',
-        // },
-        // fontSize:{
-        //   'app-name-size': typography.fontSize.display_xs,
-        //   'login-size': typography.fontSize.display_md,
-        // },
-        // fontWeight:{
-        //   'login-title': typography.fontWeight.semibold
-        // }
         extend: {
             colors: {
-                "dark-purple": "#081A51",
-                "light-white": "rgba(255,255,255,0.18)",
+                ...addColors(color_variables.color_variables),
             },
             boxShadow: {
                 custom: "0px 4px 8px 0px rgba(0, 0, 0, 0.1)", // Thêm màu nếu cần

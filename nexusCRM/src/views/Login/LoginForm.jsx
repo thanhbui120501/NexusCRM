@@ -217,12 +217,12 @@ function LoginForm({ onLoading }) {
             className="flex flex-col self-center px-6 mt-12 max-w-full font-sans w-[416px] max-md:px-5 max-md:mt-10"
             onSubmit={Submit}
         >
-            <h2 className="text-3xl font-semibold leading-none text-neutral-900">
+            <h2 className="text-3xl font-semibold leading-none text-text-primary">
                 Đăng nhập
             </h2>
             <div className="flex flex-col mt-8 w-full">
                 <div className="flex flex-col w-full">
-                    <div className="flex flex-col w-full text-neutral-900">
+                    <div className="flex flex-col w-full text-text-primary">
                         <div className="flex flex-col w-full">
                             <label
                                 htmlFor="username"
@@ -233,7 +233,7 @@ function LoginForm({ onLoading }) {
                             <input
                                 type="text"
                                 id="username"
-                                className="flex gap-2 items-center px-3 py-2 mt-1.5 w-full text-base whitespace-nowrap rounded-lg border border-solid border-neutral-200"
+                                className="flex gap-2 items-center px-3 py-2 mt-1.5 w-full whitespace-nowrap rounded-lg border border-solid border-border-neutral-subtle text-base font-normal text-text-primary"
                                 onChange={handleUsernameChange("username")}
                                 placeholder="Nhập tên đăng nhập"
                                 ref={usernameRef}
@@ -249,11 +249,11 @@ function LoginForm({ onLoading }) {
                         <div className="flex flex-col w-full">
                             <label
                                 htmlFor="password"
-                                className="flex items-center self-start text-sm font-medium leading-none text-neutral-900"
+                                className="flex items-center self-start text-sm font-medium leading-none text-text-primary"
                             >
                                 Mật khẩu
                             </label>
-                            <div className="flex gap-2 items-center px-3 py-2 mt-1.5 w-full rounded-lg border border-solid border-neutral-200">
+                            <div className="flex gap-2 items-center px-3 py-2 mt-1.5 w-full rounded-lg border border-solid border-border-neutral-subtle">
                                 <input
                                     type={
                                         values.showPassword
@@ -262,7 +262,7 @@ function LoginForm({ onLoading }) {
                                     }
                                     onChange={handlePasswordChange("password")}
                                     value={values.password}
-                                    className="flex-1 shrink gap-0.5 self-stretch my-auto min-w-[240px] border-neutral-200"
+                                    className="flex-1 shrink gap-0.5 self-stretch my-auto min-w-[240px] text-base font-normal text-text-primary"
                                     placeholder="Nhập mật khẩu"
                                     ref={passwordRef}
                                 />
@@ -291,11 +291,11 @@ function LoginForm({ onLoading }) {
                             checked={values.rememberPassword}
                             onChange={handleClickRememberPassword}
                             id="remember"
-                            className="h-4 w-4  bg-gray-100 border-gray-300 rounded-lg accent-[#EA580C]"
+                            className="h-4 w-4 border-border-neutral-subtle rounded-lg  accent-background-brand-default text-base font-normal"
                         />
                         <label
                             htmlFor="remember"
-                            className="self-stretch my-auto text-sm font-medium leading-none text-neutral-900"
+                            className="self-stretch my-auto text-sm font-medium leading-none text-text-primary"
                         >
                             Ghi nhớ tài khoản
                         </label>
@@ -304,10 +304,10 @@ function LoginForm({ onLoading }) {
                 <button
                     type="submit"
                     //disabled={values.username!="" && values.password!="" ? true : false } //
-                    className="flex overflow-hidden flex-col mt-8 w-full text-base font-semibold text-center text-white rounded-lg"
+                    className="flex overflow-hidden flex-col mt-8 w-full text-base font-semibold text-center text-text-white rounded-lg"
                 >
                     <span
-                        className={`flex-1 shrink gap-2 self-stretch px-4 py-3 w-full bg-neutral-900 hover:bg-neutral-800 `}
+                        className={`flex-1 shrink gap-2 self-stretch px-4 py-3 w-full bg-background-neutral-default hover:bg-background-neutral-hover`}
                     >
                         Đăng nhập
                     </span>
@@ -315,7 +315,7 @@ function LoginForm({ onLoading }) {
 
                 {/* {errorMessage && <p className="text-sm font-medium text-red-600">{errorMessage}</p>} */}
                 {isLocked && (
-                    <p className="mt-2 text-sm font-medium text-red-600">
+                    <p className="mt-2 text-sm font-medium text-text-negative">
                         Đăng nhập sai quá nhiều lần, thử lại sau {remainingTime}{" "}
                         giây
                     </p>

@@ -158,20 +158,20 @@ export default function AddressDialog({
     };
     return (
         <div
-            className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center"
+            className="fixed flex flex-col inset-0 bg-background-black bg-opacity-50 z-[100] items-center justify-center"
             onClick={() => onClose(false)}
         >
             <div
-                className="flex p-4 flex-col items-start gap-3 rounded-xl bg-[#fff] shadow-custom w-[45rem]"
+                className="flex p-4 flex-col items-start gap-3 rounded-xl bg-background-surface_default shadow-custom w-[45rem]"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center self-stretch">
-                    <h1 className="text-base font-medium text-[#171717]">
+                    <h1 className="text-base font-medium text-text-primary">
                         Thêm địa chỉ mới
                     </h1>
                     <div
                         onClick={() => onClose(false)}
-                        className="flex justify-center items-center gap-2 border rounded-lg bg-white w-8 h-8 cursor-pointer"
+                        className="flex justify-center items-center gap-2 border rounded-lg bg-background-surface_default w-8 h-8 cursor-pointer"
                     >
                         <img
                             src="/icons/xmark.svg"
@@ -181,15 +181,15 @@ export default function AddressDialog({
                     </div>
                 </div>
                 <div className="flex py-2.5 flex-col justify-between items-start self-stretch">
-                    <div className="border bg-[#e5e5e5] h-[1px] w-full"></div>
+                    <div className="border border-border-neutral-default h-[1px] w-full"></div>
                 </div>
                 <div className="flex flex-col items-start gap-3 self-stretch">
                     <div className="flex justify-center items-start gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Chọn đất nước
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     type="text"
                                     name="nation"
@@ -212,17 +212,17 @@ export default function AddressDialog({
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 relative">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Tỉnh/TP
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     type="text"
                                     name="province"
                                     id="province"
                                     readOnly
                                     placeholder="Chọn Tỉnh/TP"
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-[#171717]"
+                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
                                     value={
                                         province &&
                                         Object.keys(province).length > 0
@@ -252,10 +252,10 @@ export default function AddressDialog({
                     </div>
                     <div className="flex justify-center items-start gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 relative">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Quận/Huyện
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     type="text"
                                     name="district"
@@ -268,7 +268,7 @@ export default function AddressDialog({
                                             ? district.full_name
                                             : ""
                                     }
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-[#171717]"
+                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
                                 />
                                 <img
                                     src="/icons/angle-down.svg"
@@ -292,10 +292,10 @@ export default function AddressDialog({
                             )}
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 relative">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Phường/Xã/Thị Trấn
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     type="text"
                                     name="ward"
@@ -307,7 +307,7 @@ export default function AddressDialog({
                                             ? ward.full_name
                                             : ""
                                     }
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-[#171717]"
+                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
                                 />
                                 <img
                                     src="/icons/angle-down.svg"
@@ -331,10 +331,10 @@ export default function AddressDialog({
                     </div>
                     <div className="flex justify-center items-start gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Địa chỉ
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     type="text"
                                     name="address-line"
@@ -342,7 +342,7 @@ export default function AddressDialog({
                                     placeholder="Nhập địa chỉ"
                                     value={addressLine}
                                     onChange={handleChange}
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-[#171717]"
+                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
                                 />
                                 {/* <img
                                     src="/icons/angle-down.svg"
@@ -357,8 +357,8 @@ export default function AddressDialog({
                             </div>
                         </div>
                         {/* <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">Phường/Xã/Thị Trấn</h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <h1 className="text-sm font-medium text-text-primary">Phường/Xã/Thị Trấn</h1>
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input type="text" name="ward" id="ward" readOnly placeholder="Chọn Phường/Xã/Thị Trấn" className="flex items-center gap-0.5 flex-1"/>
                                 <img
                                     src="/icons/angle-down.svg"
@@ -381,16 +381,16 @@ export default function AddressDialog({
                             onChange={(e) => {
                                 handleCheckboxChange(e.target.checked);
                             }}
-                            className="h-4 w-4  bg-gray-100 border-gray-300 rounded-lg accent-[#EA580C]"
+                            className="h-4 w-4  bg-background-neutral-subtle_hover border-border-neutral-press rounded-lg accent-background-brand-default"
                         />
-                        <h1 className="text-base font-medium text-[#171717]">
+                        <h1 className="text-base font-medium text-text-primary">
                             Đặt làm địa chỉ mặc định
                         </h1>
                     </div>
                 </div>
                 <div className="flex justify-end items-center gap-2 self-stretch">
                     {listAddress != null && listAddress.length >= 10 && (
-                        <h1 className="text-sm font-medium text-red-600">
+                        <h1 className="text-sm font-medium text-text-negative">
                             Số lượng địa chỉ đã đạt giới hạn
                         </h1>
                     )}
@@ -399,16 +399,16 @@ export default function AddressDialog({
                         addressLine === "" ||
                         listWard.some((item) => item.id === ward.id) ===
                             false) && (
-                        <h1 className="text-sm font-medium text-red-600">
+                        <h1 className="text-sm font-medium text-text-negative">
                             Địa chỉ không hợp lệ
                         </h1>
                     )}
 
                     <button
                         onClick={() => onClose(false)}
-                        className="flex flex-col py-2 px-4 items-center justify-center gap-2 border border-[#E5E5E5] bg-[#fff] hover:bg-gray-200 rounded-lg"
+                        className="flex flex-col py-2 px-4 items-center justify-center gap-2 border border-border-neutral-default bg-background-surface_default hover:bg-background-neutral-subtle_hover rounded-lg"
                     >
-                        <h1 className="text-sm font-semibold text-[#171717]">
+                        <h1 className="text-sm font-semibold text-text-primary">
                             Hủy
                         </h1>
                     </button>
@@ -421,18 +421,18 @@ export default function AddressDialog({
                         Object.keys(ward).length > 0 && (
                             <button
                                 onClick={handldeAccept}
-                                className="flex flex-col py-2 px-4 items-center justify-center gap-2 border  bg-[#171717] hover:bg-gray-500 rounded-lg"
+                                className="flex flex-col py-2 px-4 items-center justify-center gap-2 border  bg-background-black hover:bg-background-neutral-disable rounded-lg"
                             >
-                                <h1 className="text-sm font-semibold text-[#fff]">
+                                <h1 className="text-sm font-semibold text-text-white">
                                     Xác nhận
                                 </h1>
                             </button>
                         )}
                 </div>
                 {loadingCreate && (
-                    <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
-                        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                        <h1 className="text-sm font-medium text-white">
+                    <div className="fixed flex flex-col inset-0 bg-background-black bg-opacity-50 z-[100] items-center justify-center gap-4">
+                        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                        <h1 className="text-sm font-medium text-text-white">
                             Đang thêm mới địa chỉ
                         </h1>
                     </div>
@@ -444,17 +444,17 @@ export default function AddressDialog({
 
 export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute top-16 border bg-white z-50 p-2 h-40 overflow-y-auto overflow-x-hidden gap-2 w-full">
+        <div className="flex flex-col absolute top-16 border bg-background-surface_default z-50 p-2 h-40 overflow-y-auto overflow-x-hidden gap-2 w-full">
             {listProvince.map((pro) => (
                 <div
                     key={pro.id}
-                    className="flex hover:bg-gray-200 cursor-pointer"
+                    className="flex hover:bg-background-neutral-subtle_hover cursor-pointer"
                     onClick={() => {
                         onClose(false);
                         onData(pro);
                     }}
                 >
-                    <h1 className="text-sm font-medium text-[#171717]">
+                    <h1 className="text-sm font-medium text-text-primary">
                         {pro.full_name}
                     </h1>
                 </div>
@@ -465,17 +465,17 @@ export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
 
 export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute top-16 border bg-white p-2 h-32 z-50 overflow-y-auto overflow-x-hidden gap-2 w-full">
+        <div className="flex flex-col absolute top-16 border bg-background-surface_default p-2 h-32 z-50 overflow-y-auto overflow-x-hidden gap-2 w-full">
             {listDistrict?.map((dis) => (
                 <div
                     key={dis.id}
-                    className="flex hover:bg-gray-200 cursor-pointer"
+                    className="flex hover:bg-background-neutral-subtle_hover cursor-pointer"
                     onClick={() => {
                         onClose(false);
                         onData(dis);
                     }}
                 >
-                    <h1 className="text-sm font-medium text-[#171717]">
+                    <h1 className="text-sm font-medium text-text-primary">
                         {dis.full_name}
                     </h1>
                 </div>
@@ -486,17 +486,17 @@ export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
 
 export function SelectWardDropdown({ listWard, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute top-16 border bg-white p-2 z-50 h-28 overflow-y-auto overflow-x-hidden gap-2 w-full">
+        <div className="flex flex-col absolute top-16 border bg-background-surface_default p-2 z-50 h-28 overflow-y-auto overflow-x-hidden gap-2 w-full">
             {listWard.map((war) => (
                 <div
                     key={war.id}
-                    className="flex hover:bg-gray-200 cursor-pointer"
+                    className="flex hover:bg-background-neutral-subtle_hover cursor-pointer"
                     onClick={() => {
                         onClose(false);
                         onData(war);
                     }}
                 >
-                    <h1 className="text-sm font-medium text-[#171717]">
+                    <h1 className="text-sm font-medium text-text-primary">
                         {war.full_name}
                     </h1>
                 </div>

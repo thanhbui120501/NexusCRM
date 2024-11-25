@@ -300,9 +300,9 @@ export default function Account() {
                         key={i}
                         className={`flex ${
                             currentPage === i
-                                ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                : "text-gray-900 hover:text-white hover:bg-gray-900"
-                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(i)}
                     >
@@ -318,9 +318,9 @@ export default function Account() {
                             key={i}
                             className={`flex ${
                                 currentPage === i
-                                    ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(i)}
                         >
@@ -331,7 +331,7 @@ export default function Account() {
                 pages.push(
                     <div
                         key={"more_0"}
-                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                         type="text"
                     >
                         ...
@@ -342,11 +342,11 @@ export default function Account() {
                         key={totalPages}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-gray-900 text-white hover:bg-[#262626]"
-                                : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
+                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                         }
                             
-                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                         type="button"
                         onClick={() => handlePageChange(totalPages)}
                     >
@@ -360,11 +360,11 @@ export default function Account() {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -374,7 +374,7 @@ export default function Account() {
                     pages.push(
                         <div
                             key={"more_1"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -386,9 +386,9 @@ export default function Account() {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default text-text-white"
+                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -402,11 +402,11 @@ export default function Account() {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -416,7 +416,7 @@ export default function Account() {
                     pages.push(
                         <div
                             key={"more_2"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -428,9 +428,9 @@ export default function Account() {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-gray-900 text-white"
-                                        : "text-gray-900 hover:text-white hover:bg-gray-900"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default text-text-white"
+                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -441,7 +441,7 @@ export default function Account() {
                     pages.push(
                         <div
                             key={"more_3"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-gray-900"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
                             type="text"
                         >
                             ...
@@ -452,9 +452,9 @@ export default function Account() {
                             key={totalPages}
                             className={`flex ${
                                 currentPage === totalPages
-                                    ? "bg-gray-900 text-white"
-                                    : "text-gray-900 hover:text-white hover:bg-gray-900"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 focus:text-white focus:bg-gray-900 active:text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default text-text-white"
+                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
                             type="button"
                             onClick={() => handlePageChange(totalPages)}
                         >
@@ -475,16 +475,16 @@ export default function Account() {
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
-                    <h1 className="self-stretch text-gray-900 font-semibold text-3xl">
+                    <h1 className="self-stretch text-text-primary font-semibold text-3xl">
                         Tài khoản
                     </h1>
-                    <h1 className="self-stretch text-gray-400 font-medium text-base">
+                    <h1 className="self-stretch text-text-secondary font-medium text-base">
                         Quản lí tất cả tài khoản tại đây
                     </h1>
                 </div>
                 <div className="relative flex items-center gap-2">
                     {loadingSearch && (
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-orange-600 border-solid"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-border-brand-default border-solid"></div>
                     )}
                     {usersCount > 0 && (
                         <>
@@ -532,7 +532,7 @@ export default function Account() {
                     )}
                     {selectedUsers.length == 0 ? (
                         <div
-                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-orange-600 hover:bg-[#C2410C] cursor-pointer"
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-background-brand-default hover:bg-background-brand-hover cursor-pointer"
                             onClick={() => {
                                 handleNavigation("/account/create");
                             }}
@@ -544,18 +544,18 @@ export default function Account() {
                                     className=""
                                 />
                             </div>
-                            <h1 className="text-center font-semibold text-sm text-white">
+                            <h1 className="text-center font-semibold text-sm text-text-white">
                                 Thêm mới
                             </h1>
                         </div>
                     ) : (
                         <div
-                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] cursor-pointer onClick={()=>{}}"
+                            className="flex h-10 pt-2 pb-2 pl-4 pr-4 justify-center items-center gap-2 self-stretch rounded-lg bg-background-negative-default hover:bg-background-negative-hover cursor-pointer onClick={()=>{}}"
                             onClick={() => {
                                 deletedUser();
                             }}
                         >
-                            <h1 className="text-center font-semibold text-sm text-white">
+                            <h1 className="text-center font-semibold text-sm text-text-white">
                                 Xóa ({selectedUsers.length})
                             </h1>
                         </div>
@@ -572,14 +572,14 @@ export default function Account() {
             />
             {usersCount.length == 0 && !loading ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
-                    <h1 className="text-base font-medium text-red-600">
+                    <h1 className="text-base font-medium text-text-negative">
                         Chưa có nhân viên nào trên hệ thống!
                     </h1>
                     <h1
                         onClick={() => {
                             handleNavigation("/account/create");
                         }}
-                        className="cursor-pointer text-blue-600 text-sm font-medium underline"
+                        className="cursor-pointer text-text-info text-sm font-medium underline"
                     >
                         Thêm nhân viên ngay
                     </h1>
@@ -587,15 +587,15 @@ export default function Account() {
             ) : (
                 <div className="flex pb-6 flex-col items-start gap-3 self-stretch">
                     <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto  max-w-full">
-                        <table className="w-full table-fixed bg-white ">
+                        <table className="w-full table-fixed bg-background-surface_default">
                             <thead className="rounded-t-lg sticky top-0 z-10">
-                                <tr className="bg-gray-50 text-gray-500 text-sm font-medium">
+                                <tr className="bg-background-neutral-subtle text-text-gray text-sm font-medium">
                                     <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg w-[5%]">
                                         <input
                                             type="checkbox"
                                             checked={isAllSelected}
                                             onChange={handleSelectAll}
-                                            className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
+                                            className="accent-background-brand-default border-2 border-border-gray w-6 h-5"
                                         />
                                     </th>
                                     <th className="py-3 px-6 text-center w-[5%]">
@@ -624,12 +624,12 @@ export default function Account() {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="text-gray-600 text-sm font-light">
+                            <tbody className="text-text-gray text-sm font-light">
                                 {users.length == 0 && !loading ? (
                                     <tr>
                                         <td
                                             colSpan="10"
-                                            className="py-6 text-center text-gray-500"
+                                            className="py-6 text-center text-text-gray"
                                         >
                                             Không có tài khoản nào được tìm thấy
                                         </td>
@@ -643,11 +643,11 @@ export default function Account() {
                                                     `/account/${user.account_id}`
                                                 );
                                             }}
-                                            className={`border-b border-gray-200 hover:bg-orange-100 ${
+                                            className={`border-b border-border-neutral-focus hover:bg-background-brand-subtle_hover ${
                                                 selectedUsers.includes(
                                                     user.account_id
                                                 )
-                                                    ? "bg-orange-100"
+                                                    ? "bg-background-brand-subtle_hover"
                                                     : ""
                                             }`}
                                         >
@@ -669,10 +669,10 @@ export default function Account() {
                                                             user.account_id
                                                         )
                                                     }
-                                                    className="accent-[#EA580C] border-2 border-gray-500 w-6 h-5"
+                                                    className="accent-background-brand-default border-2 border-border-gray w-6 h-5"
                                                 />
                                             </td>
-                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-gray-900">
+                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-text-primary">
                                                 {startIndex + index}
                                             </td>
                                             <td className="py-3 px-6 text-left">
@@ -696,19 +696,19 @@ export default function Account() {
                                                     />
                                                 )}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.username}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.full_name}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.phone_number}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.email}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
                                                 <ul>
                                                     {user.role.map((r) => (
                                                         <li key={r.role_id}>
@@ -719,14 +719,14 @@ export default function Account() {
                                             </td>
                                             <td className="py-3 px-6 text-left whitespace-nowrap text-ellipsis">
                                                 {user.status == 1 ? (
-                                                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-[#F0FDF4]">
-                                                        <li className="font-medium text-sm text-[#16A34A]">
+                                                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#16A34A] bg-background-positive-subtle">
+                                                        <li className="font-medium text-sm text-text-positive">
                                                             Đang hoạt động
                                                         </li>
                                                     </ul>
                                                 ) : (
-                                                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-[#FEF2F2]">
-                                                        <li className="font-medium text-sm text-[#DC2626]">
+                                                    <ul className="flex pl-3 pr-3 pt-1 pb-1 w-[140px] h-[20px] justify-center items-center gap-[10px] border rounded-[4px] border-[#DC2626] bg-background-negative-subtle">
+                                                        <li className="font-medium text-sm text-text-negative">
                                                             Ngưng hoạt động
                                                         </li>
                                                     </ul>
@@ -742,12 +742,12 @@ export default function Account() {
                         <div className=" flex items-start gap-3">
                             <div className="relative overflow-visible flex flex-col items-start gap-1 max-h-none">
                                 <div
-                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-gray-200"
+                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-border-neutral-focus"
                                     onClick={() =>
                                         setOpenDropDownData(!openDropDownData)
                                     }
                                 >
-                                    <h1 className="text-gray-900 font-medium text-sm cursor-pointer">
+                                    <h1 className="text-text-primary font-medium text-sm cursor-pointer">
                                         {showRowNumber}
                                     </h1>
                                     <img
@@ -764,20 +764,20 @@ export default function Account() {
                                 )}
                             </div>
 
-                            <h1 className="text-gray-900 font-medium text-sm mt-2">
+                            <h1 className="text-text-primary font-medium text-sm mt-2">
                                 Hiển thị 1 - {showRowNumber} dòng dữ liệu{" "}
                             </h1>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => handlePageChange(1)}
-                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default active:text-text-white active:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Đầu tiên
                             </button>
                             <button
                                 onClick={() => handlePrev()}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
                                 <svg
@@ -797,7 +797,7 @@ export default function Account() {
 
                             <button
                                 onClick={() => handleNext()}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-gray-900 hover:text-white hover:bg-gray-900  focus:text-white focus:bg-gray-900  active:text-white active:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
                                 <svg
@@ -815,7 +815,7 @@ export default function Account() {
                             </button>
                             <button
                                 onClick={() => handlePageChange(totalPages)}
-                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-gray-900 hover:text-white hover:bg-gray-900 active:text-white active:bg-gray-900 focus:text-white focus:bg-gray-900 disabled:pointer-events-none disabled:opacity-50"
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default active:text-text-white active:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Cuối cùng
                             </button>
@@ -825,8 +825,8 @@ export default function Account() {
             )}
             {loading && (
                 <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
                         Đang tải danh sách nhân viên
                     </h1>
                 </div>
@@ -868,13 +868,13 @@ export function AccountStatistics({
         if (lastmonth === 0) {
             if (current === 0) {
                 return (
-                    <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                    <div className="flex items-center justify-center gap-2.5 border border-border-positive-focus bg-background-positive-subtle rounded-full">
                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
                             <img
                                 src="/icons/arrow-trend-up.svg"
                                 alt="arrow-trend-up"
                             />
-                            <h1 className="text-[#16A34A] font-medium text-sm">
+                            <h1 className="text-text-positive font-medium text-sm">
                                 0 %
                             </h1>
                         </div>
@@ -882,13 +882,13 @@ export function AccountStatistics({
                 );
             }
             return (
-                <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                <div className="flex items-center justify-center gap-2.5 border border-border-positive-focus bg-background-positive-subtle rounded-full">
                     <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
                         <img
                             src="/icons/arrow-trend-up.svg"
                             alt="arrow-trend-up"
                         />
-                        <h1 className="text-[#16A34A] font-medium text-sm">
+                        <h1 className="text-text-positive font-medium text-sm">
                             100 %
                         </h1>
                     </div>
@@ -897,13 +897,13 @@ export function AccountStatistics({
         }
         if (grow === 0) {
             return (
-                <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                <div className="flex items-center justify-center gap-2.5 border border-border-positive-focus bg-background-positive-subtle rounded-full">
                     <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
                         <img
                             src="/icons/arrow-trend-up.svg"
                             alt="arrow-trend-up"
                         />
-                        <h1 className="text-[#16A34A] font-medium text-sm">
+                        <h1 className="text-text-positive font-medium text-sm">
                             0 %
                         </h1>
                     </div>
@@ -913,13 +913,13 @@ export function AccountStatistics({
             if (grow > 0) {
                 let percent = formatNumber((grow / lastmonth) * 100);
                 return (
-                    <div className="flex items-center justify-center gap-2.5 border border-b-[#BBF7D0] bg-[#F0FDF4] rounded-full">
+                    <div className="flex items-center justify-center gap-2.5 border border-border-positive-focus bg-background-positive-subtle rounded-full">
                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
                             <img
                                 src="/icons/arrow-trend-up.svg"
                                 alt="arrow-trend-up"
                             />
-                            <h1 className="text-[#16A34A] font-medium text-sm">
+                            <h1 className="text-text-positive font-medium text-sm">
                                 {percent} %
                             </h1>
                         </div>
@@ -928,13 +928,13 @@ export function AccountStatistics({
             } else {
                 let percent = formatNumber((grow / lastmonth) * 100);
                 return (
-                    <div className="flex items-center justify-center gap-2.5 border border-b-[#FECACA] bg-[#FEF2F2] rounded-full">
+                    <div className="flex items-center justify-center gap-2.5 border border-border-negative-focus bg-background-negative-subtle rounded-full">
                         <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
                             <img
                                 src="/icons/arrow-trend-down.svg"
                                 alt="arrow-trend-down"
                             />
-                            <h1 className="text-[#DC2626] font-medium text-sm">
+                            <h1 className="text-text-negative font-medium text-sm">
                                 {percent * -1} %
                             </h1>
                         </div>
@@ -947,9 +947,9 @@ export function AccountStatistics({
     return (
         <div className="flex pb-6 items-center self-stretch">
             <div className="flex items-center gap-6 flex-1">
-                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle  bg-background-surface_default">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-base font-medium text-gray-900">
+                        <h1 className="text-base font-medium text-text-primary">
                             Tổng tài khoản
                         </h1>
                         <img
@@ -958,20 +958,20 @@ export function AccountStatistics({
                             className="cursor-pointer"
                         />
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900">
+                    <h1 className="text-4xl font-bold text-text-primary">
                         {loading ? 0 : users + 1}
                     </h1>
                     <div className="flex items-center gap-2 self-stretch">
-                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                        <h1 className="font-medium text-base text-text-secondary">
                             so với tháng trước
                         </h1>
 
                         {getAccountPercent(userThisMonth, lastmonthUser)}
                     </div>
                 </div>
-                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-base font-medium text-gray-900">
+                        <h1 className="text-base font-medium text-text-primary">
                             Tài khoản ngưng hoạt động
                         </h1>
                         <img
@@ -980,7 +980,7 @@ export function AccountStatistics({
                             className="cursor-pointer"
                         />
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900">
+                    <h1 className="text-4xl font-bold text-text-primary">
                         {loading
                             ? 0
                             : formatNumber(
@@ -989,7 +989,7 @@ export function AccountStatistics({
                         %
                     </h1>
                     <div className="flex items-center gap-2 self-stretch">
-                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                        <h1 className="font-medium text-base text-text-secondary">
                             so với tháng trước
                         </h1>
                         {getAccountPercent(
@@ -998,9 +998,9 @@ export function AccountStatistics({
                         )}
                     </div>
                 </div>
-                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-[#E5E5E5] bg-[#FFF]">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-base font-medium text-gray-900">
+                        <h1 className="text-base font-medium text-text-primary">
                             Doanh thu/Tài khoản
                         </h1>
                         <img
@@ -1009,20 +1009,20 @@ export function AccountStatistics({
                             className="cursor-pointer"
                         />
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900">
+                    <h1 className="text-4xl font-bold text-text-primary">
                         2,250,000,000
                     </h1>
                     <div className="flex items-center gap-2 self-stretch">
-                        <h1 className="font-medium text-base text-[#A3A3A3]">
+                        <h1 className="font-medium text-base text-text-secondary">
                             so với tháng trước
                         </h1>
-                        <div className="flex items-center justify-center gap-2.5 border bg-[#F0FDF4] rounded-full">
+                        <div className="flex items-center justify-center gap-2.5 border bg-background-positive-subtle rounded-full">
                             <div className="flex px-1.5 py-0.5 justify-center items-center gap-1.5">
                                 <img
                                     src="/icons/arrow-trend-up.svg"
                                     alt="arrow-trend-up"
                                 />
-                                <h1 className="text-[#16A34A] font-medium text-sm">
+                                <h1 className="text-text-positive font-medium text-sm">
                                     12 %
                                 </h1>
                             </div>

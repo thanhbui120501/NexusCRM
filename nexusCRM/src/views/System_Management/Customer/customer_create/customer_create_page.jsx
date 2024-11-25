@@ -256,10 +256,10 @@ export default function CustomerCreate() {
                 className="flex py-6 justify-between items-end self-stretch"
             >
                 <div className="flex flex-col items-start gap-2 flex-1">
-                    <h1 className="font-semibold text-3xl text-[#171717]">
+                    <h1 className="font-semibold text-3xl text-text-primary">
                         Thêm mới khách hàng
                     </h1>
-                    <h1 className="font-medium text-base text-[#A3A3A3]">
+                    <h1 className="font-medium text-base text-text-secondary">
                         Thêm mới khách hàng vào hệ thống
                     </h1>
                 </div>
@@ -267,13 +267,13 @@ export default function CustomerCreate() {
                     className="flex items-center gap-3 cursor-pointer"
                     onClick={handleExternalSubmit}
                 >
-                    <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-[#EA580C] rounded-lg hover:bg-[#C2410C]">
+                    <div className="flex py-2 px-4 h-10 justify-center items-center gap-2 self-stretch bg-background-brand-default rounded-lg hover:bg-background-brand-hover">
                         <img
                             src="/icons/save.svg"
                             alt="save"
                             className="flex w-5 h-5 flex-col justify-center"
                         />
-                        <h1 className="text-sm font-semibold text-[#fff]">
+                        <h1 className="text-sm font-semibold text-text-white">
                             Lưu
                         </h1>
                     </div>
@@ -285,12 +285,12 @@ export default function CustomerCreate() {
             >
                 <form
                     encType="multipart/form-data"
-                    className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200"
+                    className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-border-neutral-default"
                     ref={formRef}
                     autoComplete="off"
                     onSubmit={onSubmit}
                 >
-                    <h1 className="text-xl font-semibold text-[#171717]">
+                    <h1 className="text-xl font-semibold text-text-primary">
                         Thông tin khách hàng
                     </h1>
                     <div
@@ -299,7 +299,7 @@ export default function CustomerCreate() {
                     >
                         <div className="flex w-[250px] flex-col items-start gap-2 ">
                             <div className="flex flex-col items-start gap-2.5 self-stretch">
-                                <h1 className="font-medium text-sm text-[#171717]">
+                                <h1 className="font-medium text-sm text-text-primary">
                                     Ảnh đại diện
                                 </h1>
                             </div>
@@ -310,8 +310,8 @@ export default function CustomerCreate() {
                                         "p-6"
                                     } items-center gap-2.5 rounded-lg border ${
                                         errorMessage || errors.image
-                                            ? "border-[#DC2626]"
-                                            : "border-gray-200"
+                                            ? "border-border-negative-default"
+                                            : "border-border-neutral-default"
                                     }  border-dashed h-[68px] w-[68px]`}
                                 >
                                     <div className="flex flex-col justify-center items-center gap-2.5 w-full h-full">
@@ -333,14 +333,14 @@ export default function CustomerCreate() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#171717] px-3 py-2 justify-center hover:bg-[#262626]"
+                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-background-neutral-default px-3 py-2 justify-center hover:bg-[#262626]"
                                         onClick={() =>
                                             document
                                                 .getElementById("avatarInput")
                                                 .click()
                                         }
                                     >
-                                        <h1 className="font-semibold text-xs text-[#fff]">
+                                        <h1 className="font-semibold text-xs text-text-white">
                                             Tải ảnh
                                         </h1>
                                     </div>
@@ -352,7 +352,7 @@ export default function CustomerCreate() {
                                         style={{ display: "none" }} // Ẩn input
                                     />
                                     <div
-                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-[#fff] px-3 py-2 justify-center border border-[#E5E5E5]"
+                                        className="flex flex-col items-start gap-2.5 rounded-lg cursor-pointer bg-background-surface_default px-3 py-2 justify-center border border-border-neutral-default"
                                         onClick={() => {
                                             setAvatar(
                                                 "/icons/avatar_empty.svg"
@@ -360,7 +360,7 @@ export default function CustomerCreate() {
                                             setImage(null);
                                         }}
                                     >
-                                        <h1 className="font-semibold text-xs text-[#171717]">
+                                        <h1 className="font-semibold text-xs text-text-primary">
                                             Xóa ảnh
                                         </h1>
                                     </div>
@@ -373,7 +373,7 @@ export default function CustomerCreate() {
                                         : "invisible"
                                 }`}
                             >
-                                <h1 className="font-medium text-sm text-[#DC2626]">
+                                <h1 className="font-medium text-sm text-text-negative">
                                     {errors.image && (
                                         <>
                                             {errors.image}
@@ -387,10 +387,10 @@ export default function CustomerCreate() {
                     </div>
                     <div className="flex justify-center items-start content-start gap-4 self-stretch flex-wrap">
                         <div className="flex flex-col items-start gap-1.5 self-stretch flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Tên khách hàng
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     placeholder="Nhập tên khách hàng"
                                     type="text"
@@ -403,17 +403,17 @@ export default function CustomerCreate() {
                             </div>
                             {errors.fullname && (
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.fullname}
                                 </h1>
                             )}
                         </div>
                         <div className="flex flex-col items-start gap-1.5 self-stretch flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Ngày sinh
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg relative">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg relative">
                                 <input
                                     readOnly
                                     placeholder="Chọn ngày sinh"
@@ -446,7 +446,7 @@ export default function CustomerCreate() {
                             </div>
                             {errors.birthDay && (
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.birthDay}
                                 </h1>
@@ -455,10 +455,10 @@ export default function CustomerCreate() {
                     </div>
                     <div className="flex justify-center items-start content-start gap-4 self-stretch flex-wrap">
                         <div className="flex flex-col items-start gap-1.5 self-stretch flex-1 relative">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Giới tính
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     readOnly
                                     placeholder="Chọn giới tính"
@@ -484,10 +484,10 @@ export default function CustomerCreate() {
                             )}
                         </div>
                         <div className="flex flex-col items-start gap-1.5 self-stretch flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Email
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     placeholder="Nhập email"
                                     type="text"
@@ -498,7 +498,7 @@ export default function CustomerCreate() {
                             </div>
                             {errors.email && (
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.email}
                                 </h1>
@@ -507,10 +507,10 @@ export default function CustomerCreate() {
                     </div>
                     <div className="flex justify-center items-start content-start gap-4 self-stretch flex-wrap">
                         <div className="flex flex-col items-start gap-1.5 self-stretch flex-1">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Số điện thoại
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     placeholder="Nhập số điện thoại"
                                     type="text"
@@ -522,17 +522,17 @@ export default function CustomerCreate() {
                             </div>
                             {errors.phone && (
                                 <h1
-                                    className={`font-medium text-sm text-[#DC2626] text-ellipsis whitespace-nowrap overflow-hidden`}
+                                    className={`font-medium text-sm text-text-negative text-ellipsis whitespace-nowrap overflow-hidden`}
                                 >
                                     {errors.phone}
                                 </h1>
                             )}
                         </div>
                         <div className="flex flex-col items-start gap-1.5 self-stretch flex-1 invisible">
-                            <h1 className="text-sm font-medium text-[#171717]">
+                            <h1 className="text-sm font-medium text-text-primary">
                                 Ngày sinh
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-[#E5E5E5] rounded-lg">
+                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input
                                     readOnly
                                     placeholder="Chọn ngày sinh"
@@ -554,9 +554,9 @@ export default function CustomerCreate() {
             </div>
             <Address addAddress={addAddress} listAddress={listAddress} />
             {loading && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-sm font-medium text-white">
+                <div className="absolute inset-0 bg-background-black bg-opacity-50 z-[900] flex flex-col items-center justify-center ">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
                         Đang cập nhật
                     </h1>
                 </div>
@@ -590,9 +590,9 @@ export function Address({ addAddress, listAddress }) {
     const [openAddressDialog, setOpenAddressDialog] = useState(false);
     return (
         <div className="felx pb-6 flex-col items-start gap-2.5 self-stretch">
-            <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-gray-200">
+            <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-border-neutral-default">
                 <div className="flex justify-between items-center self-stretch">
-                    <h1 className="text-xl font-semibold text-[#171717]">
+                    <h1 className="text-xl font-semibold text-text-primary">
                         Địa chỉ
                     </h1>
                     <div
@@ -608,7 +608,7 @@ export function Address({ addAddress, listAddress }) {
                             // eslint-disable-next-line react/prop-types
                             listAddress.length >= 10
                                 ? "bg-gray-400"
-                                : "bg-[#171717]"
+                                : "bg-background-neutral-default"
                         } `}
                     >
                         <img src="/icons/plus.svg" alt="plus" />
@@ -625,7 +625,7 @@ export function Address({ addAddress, listAddress }) {
                             className="flex items-center pb-3 justify-between self-stretch"
                         >
                             <div className="flex items-center gap-3">
-                                <h1 className="text-base font-medium text-[#171717]">
+                                <h1 className="text-base font-medium text-text-primary">
                                     {handleAddress(add)}
                                 </h1>
                                 {add.is_default_address && (
@@ -636,7 +636,7 @@ export function Address({ addAddress, listAddress }) {
                                     </div>
                                 )}
                             </div>
-                            <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-[#E5E5E5] bg-[#fff] cursor-pointer">
+                            <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-border-neutral-default bg-background-surface_default cursor-pointer">
                                 <img src="/icons/ellipsis.svg" alt="" />
                             </div>
                         </div>

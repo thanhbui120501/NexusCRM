@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axiosClient from "../../../axiosClient";
 import { toast, ToastContainer } from "react-toastify";
 import SidePanel from "./sidepanel";
+
 export default function Role() {
     //set loading
     const [loading, setLoading] = useState(false);
@@ -54,9 +55,9 @@ export default function Role() {
           return (
             <div
               key={0}
-              className={`flex w-8 h-8 justify-center items-center bg-[#FFF7ED] border border-white rounded-full`}
+              className={`flex w-8 h-8 justify-center items-center bg-background-brand-subtle border border-border-white rounded-full`}
             >
-              <h1 className="text-xs font-medium text-[#EA580C]">0</h1>
+              <h1 className="text-xs font-medium text-text-brand">0</h1>
             </div>
           );
         }
@@ -66,7 +67,7 @@ export default function Role() {
             key={avatar.account_id}
             src={`http://127.0.0.1:8000/uploads/${avatar.image_name}`}
             alt={`avatar-${avatar.id}`}
-            className={`w-[32px] h-[32px] rounded-full absolute border-2 border-white`}
+            className={`w-[32px] h-[32px] rounded-full absolute border-2 border-border-white`}
             style={{
               left: `${index * 24}px`,
               zIndex: 6 - index,
@@ -82,9 +83,9 @@ export default function Role() {
           avatars.push(
             <div
               key={0}
-              className={`flex w-8 h-8 justify-center items-center bg-[#FFF7ED] border border-white rounded-full absolute left-[130px] z-0`}
+              className={`flex w-8 h-8 justify-center items-center bg-background-brand-subtle border border-border-white rounded-full absolute left-[130px] z-0`}
             >
-              <h1 className="text-xs font-medium text-[#EA580C]">
+              <h1 className="text-xs font-medium text-text-brand">
                 +{listMember.length - 5}
               </h1>
             </div>
@@ -97,10 +98,10 @@ export default function Role() {
         <>
             <div className="flex py-6 justify-between items-end self-stretch gap-2">
                 <div className="flex flex-col items-start gap-2 flex-1">
-                    <h1 className="font-semibold text-3xl text-[#171717]">
+                    <h1 className="font-semibold text-3xl text-text-primary">
                         Chức vụ
                     </h1>
-                    <h1 className="font-medium text-base text-[#A3A3A3]">
+                    <h1 className="font-medium text-base text-text-secondary">
                         Quản lí tất cả chức vụ tại đây
                     </h1>
                 </div>
@@ -108,17 +109,17 @@ export default function Role() {
             </div>
             {loading ? (
                 <div className="flex flex-col inset-0  items-center justify-center w-full h-full gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-600 border-solid"></div>
-                    <h1 className="text-base font-medium text-orange-600">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-base font-medium text-text-brand">
                         Đang tải
                     </h1>
                 </div>
             ) : listRoles?.listMember?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
-                    <h1 className="text-base font-medium text-red-600">
+                    <h1 className="text-base font-medium text-text-negative">
                         Không có chức vụ nào
                     </h1>
-                    <h1 className=" text-blue-600 text-sm font-medium">
+                    <h1 className=" text-text-info text-sm font-medium">
                         Thêm chức vụ để có thể quản lý nhân viên tốt hơn!
                     </h1>
                 </div>
@@ -128,35 +129,35 @@ export default function Role() {
                         <div
                             key={role.role_id}
                             name="card"
-                            className="flex p-4 flex-col items-start gap-4 flex-1 rounded-xl border border-b-[#E5E5E5]"
+                            className="flex p-4 flex-col items-start gap-4 flex-1 rounded-xl border border-b-border-neutral-default"
                         >
                             <div className="flex justify-between items-center self-stretch">
-                                <h1 className="font-semibold text-xl text-[#171717]">
+                                <h1 className="font-semibold text-xl text-text-primary">
                                     {role.role_name}
                                 </h1>
 
                                 {role.status ? (
-                                    <div className="flex justify-center items-center gap-2.5 border border-[#16A34A] bg-[#F0FDF4]  rounded-[4px] px-3 py-1">
-                                        <h1 className="font-medium text-sm text-[#16A34A]">
+                                    <div className="flex justify-center items-center gap-2.5 border border-border-positive-default bg-background-positive-subtle rounded-[4px] px-3 py-1">
+                                        <h1 className="font-medium text-sm text-text-positive">
                                             Đang hoạt động
                                         </h1>
                                     </div>
                                 ) : (
-                                    <div className="flex justify-center items-center gap-2.5 border border-[#DC2626] bg-[#FEF2F2] rounded-[4px] px-3 py-1">
-                                        <h1 className="font-medium text-sm text-[#DC2626]">
+                                    <div className="flex justify-center items-center gap-2.5 border border-border-negative-default bg-background-negative-subtle rounded-[4px] px-3 py-1">
+                                        <h1 className="font-medium text-sm text-text-negative">
                                             Ngưng hoạt động
                                         </h1>
                                     </div>
                                 )}
                             </div>
                             <div className="flex justify-center items-start gap-2.5 self-stretch h-[120px] max-h-[120px] w-full">
-                                <h1 className="flex-1 text-base font-medium text-[#A3A3A3] overflow-hidden text-ellipsis whitespace-normal line-clamp-5">
+                                <h1 className="flex-1 text-base font-medium text-text-secondary overflow-hidden text-ellipsis whitespace-normal line-clamp-5">
                                     {role.description}
                                 </h1>
                             </div>
                             <div className="flex justify-between items-center self-stretch">
                                 <div className="flex items-center gap-5">
-                                    <h1 className="font-medium text-base text-[#171717]">
+                                    <h1 className="font-medium text-base text-text-primary">
                                         Nhân viên:
                                     </h1>
                                     <div className="relative w-[182px] h-[32px]">                                        
@@ -171,7 +172,7 @@ export default function Role() {
                                     className="flex flex-col items-start gap-2.5 cursor-pointer"
                                 >
                                     <div className="flex px-0.5 justify-center items-center gap-2 self-stretch">
-                                        <h1 className="font-semibold text-base text-[#EA580C]">
+                                        <h1 className="font-semibold text-base text-text-brand">
                                             Chi tiết
                                         </h1>
                                         <img
@@ -189,7 +190,7 @@ export default function Role() {
 
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-10"
+                    className="fixed inset-0 bg-background-black bg-opacity-50 z-10"
                     onClick={() => {
                         toggleSidePanel(false);
                     }}
