@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 //import { typography } from "./src/styles/typography";
 import color_variables from "./src/styles/colors";
-//console.log(color_variables.color_variables.background.brand);
+console.log(color_variables.color_variables.border.neutral);
 const addColors = (colorObj) => {
     const colors = {};
     Object.keys(colorObj).forEach((key) => {

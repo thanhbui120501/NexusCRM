@@ -10,7 +10,7 @@ export default function ShowFillter({
     onCloseFillter,
     listFillter,
     listAdmin,
-    onSubmit
+    onSubmit,
 }) {
     const timeFillter = listFillter.find((filter) => filter.type === "time");
     const roleFillter = listFillter.find((fillter) => fillter.type === "role");
@@ -28,6 +28,7 @@ export default function ShowFillter({
     const [itemAdmin, setItemAdmin] = useState(
         listAdmin != null ? listAdmin[0].username : ""
     );
+
     const date = new Date(
         timeFillter.time.split("/")[2],
         timeFillter.time.split("/")[1] - 1,
@@ -38,7 +39,7 @@ export default function ShowFillter({
     const [endDate, setEndDate] = useState(date);
     const [showDatePicker, setShowDatePicker] = useState(false);
     //call back data
-    
+
     const callbackIdAccount = (val) => {
         setAdminId(val);
     };
@@ -97,27 +98,23 @@ export default function ShowFillter({
                 "Không xác định";
         }
     };
-    // const getData = (val) => {
-    //     onData(val);
-    // };
-
     const handleCloseFillter = (val) => {
         onCloseFillter(val);
     };
-    const handleSubmit = (val) =>{
+    const handleSubmit = (val) => {
         onSubmit(val);
-    }
+    };
     return (
-        <div className="absolute fillter flex flex-col p-3 items-start gap-2 border rounded-xl bg-[#FFF] shadow-[0px 4px 8px 0px] ">
+        <div className="absolute fillter flex flex-col p-3 items-start gap-2 border rounded-xl bg-background-surface_default shadow-[0px 4px 8px 0px] ">
             <div className="flex flex-col items-start gap-2 relative">
                 {listFillter.map((fillter, index) => (
                     <div key={index} className="flex items-center gap-3">
                         <div className="flex items-center gap-3">
-                            <div className="relative flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
+                            <div className="relative flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-border-neutral-subtle_hover">
                                 <div className="flex flex-col items-start gap-1.5 self-stretch">
                                     <div className="flex px-3 py-2 items-center gap-2 self-stretch">
                                         <div className="w-[180px] min-w-0 flex items-center">
-                                            <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                                            <h1 className="font-normal text-base text-text-primary whitespace-nowrap overflow-hidden text-ellipsis">
                                                 {getTitileSearchBy(
                                                     fillter.type
                                                 )}
@@ -135,7 +132,6 @@ export default function ShowFillter({
                                                     setOpenAdminItem(
                                                         !openAdminItem
                                                     );
-                                                
                                             }}
                                         >
                                             <img
@@ -162,28 +158,28 @@ export default function ShowFillter({
                                     callbackIdAccount={callbackIdAccount}
                                 />
                             )}
-                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
+                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-border-neutral-subtle_hover">
                                 <div className="flex flex-col items-start gap-1.5 self-stretch">
                                     <div className="flex px-3 py-2 items-center gap-2 self-stretch min-w-[0]">
                                         {/* <input
                                         type="text"
-                                        className="flex items-center gap-0.5 flex-1 font-normal text-base text-gray-900"
+                                        className="flex items-center gap-0.5 flex-1 font-normal text-base text-text-primary"
                                     /> */}
-                                        <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <h1 className="font-normal text-base text-text-primary whitespace-nowrap overflow-hidden text-ellipsis">
                                             {getSubTitileSearchBy(fillter.type)}
                                         </h1>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-neutral-100">
+                            <div className="flex w-40 h-auto flex-col justify-center items-start gap-[10px] border rounded-lg border-border-neutral-subtle_hover">
                                 <div className="flex flex-col items-start gap-1.5 self-stretch">
                                     <div className="flex px-3 py-2 items-center gap-2 self-stretch">
                                         {/* <input
                                         type="text"
-                                        className="flex items-center gap-0.5 flex-1 font-normal text-base text-gray-900"
+                                        className="flex items-center gap-0.5 flex-1 font-normal text-base text-text-primary"
                                     /> */}
                                         <div className="w-[180px] min-w-0 flex items-center">
-                                            <h1 className="font-normal text-base text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                                            <h1 className="font-normal text-base text-text-primary whitespace-nowrap overflow-hidden text-ellipsis">
                                                 {getThirdTitleSearchBy(
                                                     fillter.type
                                                 )}
@@ -287,7 +283,7 @@ export default function ShowFillter({
                         alt="icon-addnew-fillter-item"
                         className=""
                     />
-                    <h1 className="font-semibold text-sm text-orange-600">
+                    <h1 className="font-semibold text-sm text-text-brand">
                         Thêm mới
                     </h1>
                 </div>
@@ -299,9 +295,9 @@ export default function ShowFillter({
                 <div className="flex flex-col items-start gap-2.5 w-[90x] h-full">
                     <div
                         onClick={() => handleCloseFillter(false)}
-                        className="flex h-32 py-2 px-3 justify-center items-center gap-2 self-stretch border rounded-lg border-gray-100 bg-white cursor-pointer"
+                        className="flex h-32 py-2 px-3 justify-center items-center gap-2 self-stretch border rounded-lg border-border-neutral-subtle_hover bg-background-surface_default cursor-pointer"
                     >
-                        <h1 className="text-center font-semibold text-xs text-[#171717]">
+                        <h1 className="text-center font-semibold text-xs text-text-primary">
                             Xóa bộ lọc
                         </h1>
                     </div>
@@ -320,9 +316,9 @@ export default function ShowFillter({
                             handleSubmit(true);
                             handleCloseFillter(false);
                         }}
-                        className="flex h-32 py-2 px-3 justify-center items-center gap-2 self-stretch rounded-lg bg-[#171717] cursor-pointer"
+                        className="flex h-32 py-2 px-3 justify-center items-center gap-2 self-stretch rounded-lg bg-background-neutral-default cursor-pointer"
                     >
-                        <h1 className="text-center font-semibold text-xs text-[#FFF]">
+                        <h1 className="text-center font-semibold text-xs text-text-white">
                             Áp dụng bộ lọc
                         </h1>
                     </div>
@@ -334,11 +330,11 @@ export default function ShowFillter({
 
 export function ShowListTimeItem({ listItem, callbackOpen, callbackData }) {
     return (
-        <div className="absolute flex flex-col  gap-3 items-center bg-gray-50 z-[100] top-9 w-40  rounded-lg">
+        <div className="absolute flex flex-col  gap-3 items-center bg-background-neutral-subtle z-[100] top-9 w-40  rounded-lg">
             {listItem.map((item) => (
                 <div
                     key={item}
-                    className="flex justify-center items-center gap-2 hover:bg-gray-100 p-2 cursor-pointer w-full"
+                    className="flex justify-center items-center gap-2 hover:bg-background-neutral-subtle_hover p-2 cursor-pointer w-full"
                     onClick={() => {
                         callbackOpen(false);
                         callbackData(item);
@@ -357,11 +353,11 @@ export function ShowListAdminItem({
     callbackIdAccount,
 }) {
     return (
-        <div className="absolute flex flex-col  gap-3 items-center bg-gray-50 z-[100] top-[5.5rem] w-40 max-h-40 rounded-lg overflow-y-auto">
+        <div className="absolute flex flex-col  gap-3 items-center bg-background-neutral-subtle z-[100] top-[5.5rem] w-40 max-h-40 rounded-lg overflow-y-auto">
             {listItem.map((item) => (
                 <div
                     key={item.account_id}
-                    className="flex justify-center items-center gap-2 hover:bg-gray-100 p-2 cursor-pointer w-full"
+                    className="flex justify-center items-center gap-2 hover:bg-background-neutral-subtle_hover p-2 cursor-pointer w-full"
                     onClick={() => {
                         callbackAminOpen(false);
                         callbackAdminData(item.username);
