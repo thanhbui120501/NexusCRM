@@ -132,7 +132,7 @@ export default function SideBar() {
     return (
         <div className="flex h-screen ">
             <nav
-                className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-background-neutral-subtle overflow-y-auto overflow-x-hidden transition-all ${
+                className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-background-neutral-subtle overflow-y-hidden overflow-x-hidden transition-all ${
                     open ? "w-72" : "w-20"
                 } duration-300 relative`}
             >

@@ -269,6 +269,7 @@ const color_variables = {
             press: alias_tokens.neutral.neutral_300,
             focus: alias_tokens.neutral.neutral_200,
             subtle: alias_tokens.neutral.neutral_200,
+            subtle_hover: alias_tokens.neutral.neutral_100
         },
         brand: {
             default: alias_tokens.brand.brand_600,
