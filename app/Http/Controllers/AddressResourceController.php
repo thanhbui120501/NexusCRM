@@ -70,7 +70,7 @@ class AddressResourceController extends Controller
             return response()->json($arr, Response::HTTP_OK);
         } else {
             //check address count 
-            $addressCount = Address::where('customer_id', $request->customer_id)->count();
+            $addressCount = Address::where('customer_id', $request->customer_id)->where('deleted_status', 0)->count();
             if ($addressCount >= 10) {
                 $arr = [
                     'success' => false,
@@ -83,9 +83,9 @@ class AddressResourceController extends Controller
             if ($addressCount === 0) {
                 $input['is_default_address'] = 1;
             } else {
-                
-                if ($input['is_default_address'] == 1) {                    
-                    $setNormalAddress = Address::where('is_default_address', 1)->update(['is_default_address' => 0]);                   
+
+                if ($input['is_default_address'] == 1) {
+                    $setNormalAddress = Address::where('is_default_address', 1)->update(['is_default_address' => 0]);
                 }
             }
 
@@ -102,22 +102,12 @@ class AddressResourceController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Address $address)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Address $address) {}
+    //set default address
     public function setDefaultAddress(Address $address)
     {
 
-        $setNormalAddress = Address::where('is_default_address', 1)->update(['is_default_address' => 0]);
+        $setNormalAddress = Address::where("customer_id", $address->customer_id)->where('is_default_address', 1)->update(['is_default_address' => 0]);
         $setDefault = Address::where("address_id", $address->address_id)->update(['is_default_address' => 1]);
         $add = Address::where("address_id", $address->address_id)->first();
         if ($setDefault) {
@@ -145,8 +135,7 @@ class AddressResourceController extends Controller
      */
     public function destroy(Address $address)
     {
-        $address->delete();
-
+        $delete = Address::where('address_id', $address->address_id)->update(['deleted_status' => 1]);
         $arr = [
             'success' => true,
             'status_code' => 204,

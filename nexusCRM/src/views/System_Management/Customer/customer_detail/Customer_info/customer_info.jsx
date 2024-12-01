@@ -15,6 +15,8 @@ import { CustomerValidation } from "../../../../../validation";
 import { toast, ToastContainer } from "react-toastify";
 import Skeleton from "../../../../../components/skeleton";
 import AddressDialog from "./addressdialog";
+import { FaStar } from "react-icons/fa6";
+import { IoMdCloseCircle } from "react-icons/io";
 // eslint-disable-next-line react/display-name,
 const CustomerInfo = forwardRef(
     // eslint-disable-next-line react/prop-types
@@ -37,7 +39,7 @@ const CustomerInfo = forwardRef(
         );
     }
 );
-export default CustomerInfo;
+
 // eslint-disable-next-line  react/display-name
 export const PersonalInfo = forwardRef(
     // eslint-disable-next-line react/prop-types
@@ -538,13 +540,19 @@ export const PersonalInfo = forwardRef(
 export function Address({ customer_id }) {
     const [address, setAddress] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [updateLoding, setUpdateLoading] = useState(false);
     const [updateAddress, onUpdateAddress] = useState(false);
+
     //status update
     const [statusCode, setStatusCode] = useState("");
     //open address dialog
     const [openAddressDialog, setOpenAddressDialog] = useState(false);
+    //address index
+    const [addressKey, setKey] = useState("");
     //type to open address dialog
     const type = "updated";
+    //open address options
+    const [openAddressOptions, setOpenAddressOptions] = useState(false);
     //het list address
     useEffect(() => {
         if (statusCode != "") {
@@ -609,7 +617,64 @@ export function Address({ customer_id }) {
             add.province
         );
     };
+    const handleAddressOption = (key) => {
+        if (key === addressKey) {
+            setOpenAddressOptions(!openAddressOptions);
+        } else {
+            setOpenAddressOptions(true);
+        }
 
+        setKey(key);
+    };
+    const setDefaultAddress = async () => {
+        try {
+            setUpdateLoading(true);
+
+            const response = await axiosClient.patch(
+                `/address/set-default-address/${addressKey}`
+            );
+            if (response.status === 200) {
+                toast.success("Thiết lập thành công!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                getAddress();
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setUpdateLoading(false);
+            setOpenAddressOptions(false);
+        }
+    };
+    const deleteAddress = async () => {
+        try {
+            setUpdateLoading(true);
+            const response = await axiosClient.delete(
+                `/address/delete-address/${addressKey}`
+            );
+            if (response.status === 204) {
+                toast.success("Xóa địa chỉ thành công!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                getAddress();
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setUpdateLoading(false);
+            setOpenAddressOptions(false);
+        }
+    };
     return (
         <div className="flex p-6 flex-col items-start gap-6 self-stretch border rounded-xl border-border-neutral-subtle">
             <div className="flex justify-between items-center self-stretch">
@@ -637,19 +702,40 @@ export function Address({ customer_id }) {
                 </div>
             </div>
 
+            {updateLoding && (
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[120] items-center justify-center gap-4">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
+                        Đang cập nhật
+                    </h1>
+                </div>
+            )}
+
             {loading ? (
                 <div className="flex flex-col items-start gap-4 self-stretch">
-                    <Skeleton className="h-6 w-96" />
-                    <Skeleton className="h-6 w-96" />
-                    <Skeleton className="h-6 w-96" />
-                    <Skeleton className="h-6 w-96" />
+                    <div className="flex pb-3 justify-between items-center self-stretch border-b-[1px] relative">
+                        <Skeleton className="rounded-md h-6 w-96" />{" "}
+                        <Skeleton className="rounded-md h-8 w-8" />
+                    </div>
+                    <div className="flex pb-3 justify-between items-center self-stretch border-b-[1px] relative">
+                        <Skeleton className="rounded-md  h-6 w-96" />{" "}
+                        <Skeleton className="rounded-md h-8 w-8" />
+                    </div>
+                    <div className="flex pb-3 justify-between items-center self-stretch border-b-[1px] relative">
+                        <Skeleton className="rounded-md  h-6 w-96" />{" "}
+                        <Skeleton className="rounded-md h-8 w-8" />
+                    </div>
+                    <div className="flex pb-3 justify-between items-center self-stretch border-b-[1px] relative">
+                        <Skeleton className="rounded-md  h-6 w-96" />{" "}
+                        <Skeleton className="rounded-md h-8 w-8" />
+                    </div>
                 </div>
             ) : (
                 <div className="flex flex-col items-start gap-4 self-stretch">
                     {address.map((add) => (
                         <div
                             key={add.address_id}
-                            className="flex pb-3 justify-between items-center self-stretch border-b-[1px]"
+                            className="flex pb-3 justify-between items-center self-stretch border-b-[1px] relative"
                         >
                             <div className="flex gap-3 items-center">
                                 <h1 className="text-base font-medium text-text-primary">
@@ -663,9 +749,21 @@ export function Address({ customer_id }) {
                                     </div>
                                 )}
                             </div>
-                            <div className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-border-neutral-default bg-background-surface_default cursor-pointer">
+                            <div
+                                onClick={() =>
+                                    handleAddressOption(add.address_id)
+                                }
+                                className="flex flex-col justify-center items-center gap-2.5 p-2 border rounded-lg border-border-neutral-default bg-background-surface_default cursor-pointer"
+                            >
                                 <img src="/icons/ellipsis.svg" alt="" />
                             </div>
+                            {openAddressOptions &&
+                                addressKey === add.address_id && (
+                                    <AddressOption
+                                        setDefaultAddress={setDefaultAddress}
+                                        deleteAddress={deleteAddress}
+                                    />
+                                )}
                         </div>
                     ))}
                 </div>
@@ -681,6 +779,31 @@ export function Address({ customer_id }) {
                     type={type}
                 />
             )}
+        </div>
+    );
+}
+// eslint-disable-next-line react/prop-types
+export function AddressOption({ setDefaultAddress, deleteAddress }) {
+    return (
+        <div className="flex flex-col p-2 items-start bg-background-surface_default absolute right-0 top-10 z-[100] border border-border-neutral-default rounded-lg gap-3 w-auto">
+            <div
+                onClick={() => {
+                    setDefaultAddress();
+                }}
+                className="flex flex-row p-1 w-full rounded-md  gap-1 items-start justify-start hover:bg-background-info-subtle_hover cursor-pointer text-text-info"
+            >
+                <FaStar size={20} />
+                <h1 className="text-sm font-normal">Thiết lập mặc định</h1>
+            </div>
+            <div
+                onClick={() => {
+                    deleteAddress();
+                }}
+                className="flex flex-row p-1 w-full rounded-md gap-1 items-start justify-start hover:bg-background-negative-subtle_hover cursor-pointer text-text-negative"
+            >
+                <IoMdCloseCircle size={20} />
+                <h1 className="text-sm font-normal">Xóa</h1>
+            </div>
         </div>
     );
 }
@@ -1324,3 +1447,5 @@ export function SelectWardDropdown({ listWard, onClose, onData }) {
         </div>
     );
 }
+
+export default CustomerInfo;

@@ -526,7 +526,7 @@ export default function ProductPage() {
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <div
                                 className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-border-neutral-default cursor-pointer"
-                                // onClick={() => setOpenFillter(!openFillter)}
+                                //onClick={() => setOpenFillter(!openFillter)}
                             >
                                 <img
                                     src="/icons/sliders.svg"

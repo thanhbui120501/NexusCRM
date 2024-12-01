@@ -130,7 +130,7 @@ export default function SideBar() {
         { title: "Trợ giúp", subject: false, icon: "/icons/help.svg" },
     ];
     return (
-        <div className="flex h-screen ">
+        <div className="flex h-screen">
             <nav
                 className={`p-3 flex flex-col items-start flex-shrink-0 self-stretch bg-background-neutral-subtle overflow-y-hidden overflow-x-hidden transition-all ${
                     open ? "w-72" : "w-20"

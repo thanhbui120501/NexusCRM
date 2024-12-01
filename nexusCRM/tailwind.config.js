@@ -1,7 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-//import { typography } from "./src/styles/typography";
 import color_variables from "./src/styles/colors";
-console.log(color_variables.color_variables.border.neutral);
 const addColors = (colorObj) => {
     const colors = {};
     Object.keys(colorObj).forEach((key) => {
@@ -17,13 +15,14 @@ const addColors = (colorObj) => {
 
 export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+    darkMode: "class",
     theme: {
         fontFamily: {
             sans: ["Inter", "sans-serif"],
         },
         extend: {
             colors: {
-                ...addColors(color_variables.color_variables),
+                ...addColors(color_variables.color_variables),                             
             },
             boxShadow: {
                 custom: "0px 4px 8px 0px rgba(0, 0, 0, 0.1)", // Thêm màu nếu cần
