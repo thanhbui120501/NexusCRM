@@ -134,23 +134,26 @@ export default function Account() {
     const callbackSubmitfillter = (val) => {
         submitFillter(val);
     };
-    const getUserByKeyword = async () => {
+    const getUserByKeyword = async (page, limit) => {
         try {
             setLoadingSearch(true);
             if (!keyword || keyword == "") {
                 getUsers(currentPage, showRowNumber);
             }
+            const offset = (page - 1) * limit;
             const response = await axiosClient.get(
                 "/account/search-account-by-keyword",
                 {
                     params: {
                         keyword: keyword,
+                        limit: limit,
+                        offset: offset
                     },
                 }
             );
             setUsers(response.data.data);
             //set pages
-            const pages = Math.ceil(response.data.data.length / showRowNumber);
+            const pages = Math.ceil(response.data.totalRecords / limit);
             setTotalPages(pages);
         } catch (err) {
             const response = err.response;
@@ -159,17 +162,22 @@ export default function Account() {
             setLoadingSearch(false);
         }
     };
-    const getFillterData = async () => {
+    const getFillterData = async (page, limit) => {
         try {
+            const offset = (page - 1) * limit;
             const response = await axiosClient.get("/account/account-fillter", {
                 params: {
                     start_date: dataCallback.startD,
                     end_date: dataCallback.end_date,
                     created_by: dataCallback.account_id,
+                    limit: limit,
+                    offset: offset,
                 },
             });
             submitFillter(false);
             setUsers(response.data.data);
+            const pages = Math.ceil(response.data.totalRecords / limit);
+            setTotalPages(pages);
         } catch (err) {
             const response = err.response;
             console.log(response.message);
@@ -245,7 +253,7 @@ export default function Account() {
     };
 
     useEffect(() => {
-        isSubmitFillter && getFillterData();
+        isSubmitFillter && getFillterData(currentPage, showRowNumber);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSubmitFillter]);
     //get user by number row
@@ -260,7 +268,7 @@ export default function Account() {
     const handleSearch = (keyword) => {
         // Cập nhật URL với keyword trong query string
         if (keyword.trim() != "") {
-            getUserByKeyword();
+            getUserByKeyword(currentPage, showRowNumber);
         } else {
             getUsers(currentPage, showRowNumber); // Nếu không có keyword, điều hướng về trang chính
         }
@@ -511,7 +519,7 @@ export default function Account() {
                             <img src="/icons/line.svg" alt="icon-statistics" />
                             <div
                                 className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
-                                // onClick={() => setOpenFillter(!openFillter)}
+                                onClick={() => setOpenFillter(!openFillter)}
                             >
                                 <img
                                     src="/icons/sliders.svg"

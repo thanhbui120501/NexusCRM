@@ -75,32 +75,39 @@ class SearchResourceController extends Controller
     public function searchUserByKeyWord(Request $request)
     {
         $keyword = $request->input('keyword');
+        //limit and offset
+        $limit = $request->query('limit', 100000);
+        $offset = $request->query('offset', 0);
 
-        $accounts = Account::where('username', 'like', "%{$keyword}%")->where('deleted_status',0)   
+        //final accounts
+        $accounts = Account::where('username', 'like', "%{$keyword}%")->where('deleted_status', 0)
             ->orWhere('phone_number', 'like', "%{$keyword}%")
             ->orWhere('full_name', 'like', "%{$keyword}%")
             ->orWhere('email', 'like', "%{$keyword}%")
             ->orWhereHas('roles', function ($query) use ($keyword) {
                 $query->where('role_name', 'like', "%{$keyword}%");
-            })
-            ->get();
+            });
+        $account_limit = $accounts->offset($offset)->limit($limit)->get();
+        $account_without_limit = $accounts->count();
 
         $arr = [
             'success' => true,
             'status_code' => 200,
-            'message' => "List of accounts result",
-            'data' => AccountResource::collection($accounts)
+            'message' => "List of accounts results",
+            'data' => AccountResource::collection($account_limit),
+            'totalRecords' => $account_without_limit,
         ];
         return response()->json($arr, Response::HTTP_OK);
     }
 
-    public function searchCustomerByKeyWord(Request $request){
+    public function searchCustomerByKeyWord(Request $request)
+    {
         $keyword = $request->input('keyword');
 
-        $accounts = Customer::where('customer_id', 'like', "%{$keyword}%")->where('deleted_status',0)   
+        $accounts = Customer::where('customer_id', 'like', "%{$keyword}%")->where('deleted_status', 0)
             ->orWhere('phone_number', 'like', "%{$keyword}%")
             ->orWhere('full_name', 'like', "%{$keyword}%")
-            ->orWhere('email', 'like', "%{$keyword}%")         
+            ->orWhere('email', 'like', "%{$keyword}%")
             ->get();
 
         $arr = [
@@ -112,11 +119,12 @@ class SearchResourceController extends Controller
         return response()->json($arr, Response::HTTP_OK);
     }
 
-    public function searchProductsByKeyWord(Request $request){
+    public function searchProductsByKeyWord(Request $request)
+    {
         $keyword = $request->input('keyword');
 
-        $products = Product::where('product_id', 'like', "%{$keyword}%")->where('deleted_status',0)   
-            ->orWhere('product_name', 'like', "%{$keyword}%")                     
+        $products = Product::where('product_id', 'like', "%{$keyword}%")->where('deleted_status', 0)
+            ->orWhere('product_name', 'like', "%{$keyword}%")
             ->get();
 
         $arr = [
