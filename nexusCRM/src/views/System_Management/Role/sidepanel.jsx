@@ -152,9 +152,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                         key={i}
                         className={`flex ${
                             currentPage === i
-                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
-                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                        } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  `}
                         type="button"
                         onClick={() => handlePageChange(i)}
                     >
@@ -170,9 +170,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={i}
                             className={`flex ${
                                 currentPage === i
-                                    ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                            } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                             type="button"
                             onClick={() => handlePageChange(i)}
                         >
@@ -183,7 +183,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 pages.push(
                     <div
                         key={"more_0"}
-                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                        className="flex w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                         type="text"
                     >
                         ...
@@ -194,11 +194,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                         key={totalPages}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
-                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
                         }
                             
-                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                         w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center rounded-lg text-center transition-all text-sm font-medium`}
                         type="button"
                         onClick={() => handlePageChange(totalPages)}
                     >
@@ -212,11 +212,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-background-neutral-default text-text-white"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -226,7 +226,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     pages.push(
                         <div
                             key={"more_1"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                             type="text"
                         >
                             ...
@@ -238,9 +238,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-background-neutral-default text-text-white"
-                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                        : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                                } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  `}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -254,11 +254,11 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-background-neutral-default text-text-white"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  `}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -268,7 +268,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     pages.push(
                         <div
                             key={"more_2"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                             type="text"
                         >
                             ...
@@ -280,9 +280,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-background-neutral-default text-text-white"
-                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                        : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                                } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -293,7 +293,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                     pages.push(
                         <div
                             key={"more_3"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                             type="text"
                         >
                             ...
@@ -304,9 +304,9 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             key={totalPages}
                             className={`flex ${
                                 currentPage === totalPages
-                                    ? "bg-background-neutral-default text-text-white"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                            } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                             type="button"
                             onClick={() => handlePageChange(totalPages)}
                         >
@@ -320,7 +320,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
     };
     return (
         <div
-            className={`flex flex-col items-start fixed top-0 right-0 h-screen w-[712px] bg-background-surface_default shadow-lg transform ${
+            className={`flex flex-col items-start fixed top-0 right-0 h-screen w-[712px] bg-background-surface_default dark:bg-background-neutral-hover shadow-lg transform ${
                 isOpen ? "translate-x-0" : "translate-x-full"
             }  transition-transform duration-300 ease-in-out z-[200] overflow-y-auto overflow-x-hidden `}
         >
@@ -329,7 +329,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 id="header"
                 className="flex px-6 py-4 justify-between items-center self-stretch"
             >
-                <h1 className="text-text-primary text-base font-medium">
+                <h1 className="text-text-primary dark:text-text-white text-base font-medium">
                     Chi tiết chức vụ
                 </h1>
                 <ToastContainer />
@@ -355,7 +355,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                 className="flex p-6 flex-col items-start gap-6 flex-1 self-stretch"
             >
                 <div className="flex flex-col items-start gap-3 self-stretch">
-                    <h1 className="text-xl font-semibold text-text-primary">
+                    <h1 className="text-xl font-semibold text-text-primary dark:text-text-white">
                         {role.role_name}
                     </h1>
                     <h1 className="text-base font-medium text-text-secondary">
@@ -373,23 +373,23 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             handleCheckboxChange(e.target.checked);
                         }}
                         //onClick={() => {updateStatus();}}
-                        className="h-4 w-4  bg-gray-100 border-gray-300 rounded-lg accent-background-brand-default"
+                        className="w-4 h-4 text-text-brand ring-1 ring-background-neutral-default bg-background-neutral-subtle_hover rounded focus:ring-background-brand-default dark:focus:ring-background-brand-hover dark:ring-offset-gray-800 focus:ring-2"
                     />
-                    <h1 className="text-base font-medium text-text-primary">
+                    <h1 className="text-base font-medium text-text-primary dark:text-text-white">
                         Hoạt động
                     </h1>
                 </div>
                 <div className="flex flex-col items-start gap-3 self-stretch">
-                    <h1 className="text-base font-semibold text-text-primary">
+                    <h1 className="text-base font-semibold text-text-primary dark:text-text-white">
                         Phân quyền chức năng
                     </h1>
                     <div className="grid grid-cols-4 gap-2">
                         {role?.role_function?.map((func, index) => (
                             <div
                                 key={index}
-                                className="flex px-3 py-1 justify-center items-center gap-2.5 border bg-background-neutral-subtle rounded-full"
+                                className="flex px-3 py-1 justify-center items-center gap-2.5 border bg-background-neutral-subtle dark:bg-background-neutral-default rounded-full"
                             >
-                                <h1 className="text-sm font-medium text-text-primary">
+                                <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                                     {func}
                                 </h1>
                             </div>
@@ -417,23 +417,26 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             name="title"
                             className="flex justify-between items-center self-stretch"
                         >
-                            <h1 className="text-base font-semibold text-text-primary">
+                            <h1 className="text-base font-semibold text-text-primary dark:text-text-white">
                                 Danh sách nhân viên
                             </h1>
                             <div className="flex items-center gap-2">
-                                <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-border-neutral-default">
-                                    <img
-                                        src="/icons/search.svg"
-                                        alt="icon-search"
-                                        className={`w-5 h-5 cursor-pointer`}
+                                <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-border-neutral-default bg-background-surface_default dark:bg-background-neutral-default">
+                                    <svg
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`w-5 h-5 cursor-pointer text-text-primary dark:text-text-white`}
                                         onClick={() => {}}
-                                    />
-                                    <div className="flex items-center gap-[2px] ml-2 flex-1">
+                                    >
+                                        <path d="M19.6875 18.8984C20.0781 19.2891 20.0781 19.875 19.6875 20.2266C19.5312 20.4219 19.2969 20.5 19.0625 20.5C18.7891 20.5 18.5547 20.4219 18.3594 20.2266L13.125 14.9922C11.7188 16.125 9.96094 16.75 8.08594 16.75C3.63281 16.75 0 13.1172 0 8.625C0 4.17188 3.59375 0.5 8.08594 0.5C12.5391 0.5 16.2109 4.17188 16.2109 8.625C16.2109 10.5391 15.5859 12.2969 14.4531 13.6641L19.6875 18.8984ZM1.875 8.625C1.875 12.1016 4.64844 14.875 8.125 14.875C11.5625 14.875 14.375 12.1016 14.375 8.625C14.375 5.1875 11.5625 2.375 8.125 2.375C4.64844 2.375 1.875 5.1875 1.875 8.625Z" />
+                                    </svg>
+                                    <div className="flex items-center gap-0.5 ml-2 flex-1 ">
                                         <input
                                             type="text"
                                             value={searchTerm}
                                             onChange={handleSearch}
                                             placeholder="Tìm kiếm nhân viên"
+                                            className="rounded-lg pl-1 py-1 text-sm font-normal text-text-primary dark:text-text-white dark:placeholder:text-text-secondary focus:ring-1 focus:ring-border-brand-default dark:focus:bg-background-neutral-press bg-background-surface_default dark:bg-background-neutral-hover"
                                         />
                                     </div>
                                 </div>
@@ -447,11 +450,14 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                         showErrorToast();
                                     }}
                                 >
-                                    <img
-                                        src="/icons/sliders.svg"
-                                        alt="icon-sliders"
-                                        className="flex flex-col items-center w-5 h-5 "
-                                    />
+                                    <svg
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="w-5 h-5 text-text-primary dark:text-text-white"
+                                    >
+                                        <path d="M0 16.75C0 16.2422 0.390625 15.8125 0.9375 15.8125H3.24219C3.63281 14.5625 4.84375 13.625 6.25 13.625C7.61719 13.625 8.82812 14.5625 9.21875 15.8125H19.0625C19.5703 15.8125 20 16.2422 20 16.75C20 17.2969 19.5703 17.6875 19.0625 17.6875H9.21875C8.82812 18.9766 7.61719 19.875 6.25 19.875C4.84375 19.875 3.63281 18.9766 3.24219 17.6875H0.9375C0.390625 17.6875 0 17.2969 0 16.75ZM7.5 16.75C7.5 16.0859 6.91406 15.5 6.25 15.5C5.54688 15.5 5 16.0859 5 16.75C5 17.4531 5.54688 18 6.25 18C6.91406 18 7.5 17.4531 7.5 16.75ZM13.75 7.375C15.1172 7.375 16.3281 8.3125 16.7188 9.5625H19.0625C19.5703 9.5625 20 9.99219 20 10.5C20 11.0469 19.5703 11.4375 19.0625 11.4375H16.7188C16.3281 12.7266 15.1172 13.625 13.75 13.625C12.3438 13.625 11.1328 12.7266 10.7422 11.4375H0.9375C0.390625 11.4375 0 11.0469 0 10.5C0 9.99219 0.390625 9.5625 0.9375 9.5625H10.7422C11.1328 8.3125 12.3438 7.375 13.75 7.375ZM15 10.5C15 9.83594 14.4141 9.25 13.75 9.25C13.0469 9.25 12.5 9.83594 12.5 10.5C12.5 11.2031 13.0469 11.75 13.75 11.75C14.4141 11.75 15 11.2031 15 10.5ZM19.0625 3.3125C19.5703 3.3125 20 3.74219 20 4.25C20 4.79688 19.5703 5.1875 19.0625 5.1875H10.4688C10.0781 6.47656 8.86719 7.375 7.5 7.375C6.09375 7.375 4.88281 6.47656 4.49219 5.1875H0.9375C0.390625 5.1875 0 4.79688 0 4.25C0 3.74219 0.390625 3.3125 0.9375 3.3125H4.49219C4.88281 2.0625 6.09375 1.125 7.5 1.125C8.86719 1.125 10.0781 2.0625 10.4688 3.3125H19.0625ZM6.25 4.25C6.25 4.95312 6.79688 5.5 7.5 5.5C8.16406 5.5 8.75 4.95312 8.75 4.25C8.75 3.58594 8.16406 3 7.5 3C6.79688 3 6.25 3.58594 6.25 4.25Z" />
+                                    </svg>
                                 </div>
                             </div>
                         </div>
@@ -493,7 +499,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                                     <h1 className="text-sm font-medium text-text-secondary">
                                                         {mem.account_id}
                                                     </h1>
-                                                    <h1 className="text-base font-semibold text-text-primary">
+                                                    <h1 className="text-base font-semibold text-text-primary dark:text-text-white">
                                                         {mem.full_name}
                                                     </h1>
                                                 </div>
@@ -526,14 +532,22 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                                         handleSetTotalPages();
                                     }}
                                 >
-                                    <h1 className="text-text-primary font-medium text-sm cursor-pointer">
+                                    <h1 className="text-text-primary dark:text-text-white font-medium text-sm cursor-pointer">
                                         {showRowNumber}
                                     </h1>
-                                    <img
-                                        src="/icons/statis_more_icon.svg"
-                                        alt="icon-selected"
-                                        className={`w-4 h-4 cursor-pointer`}
-                                    />
+
+                                    <svg
+                                        viewBox="0 0 9 15"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`w-4 h-4 cursor-pointer text-text-primary dark:text-text-white ${
+                                            openDropDownData
+                                                ? "rotate-90"
+                                                : "rotate-0"
+                                        }`}
+                                    >
+                                        <path d="M2.47656 0.9375L8.0625 6.875C8.21875 7.07031 8.33594 7.30469 8.33594 7.5C8.33594 7.73438 8.21875 7.96875 8.0625 8.16406L2.47656 14.1016C2.125 14.4922 1.53906 14.4922 1.14844 14.1406C0.757812 13.7891 0.757812 13.2031 1.10938 12.8125L6.10938 7.5L1.10938 2.22656C0.757812 1.83594 0.757812 1.25 1.14844 0.898438C1.53906 0.546875 2.125 0.546875 2.47656 0.9375Z" />
+                                    </svg>
                                 </div>
                                 {openDropDownData && (
                                     <ShowDataDropDown
@@ -545,7 +559,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => handlePrev()}
-                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
+                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default active:text-text-white dark:active:text-text-primary active:bg-background-neutral-default dark:active:bg-background-surface_default focus:text-text-white dark:focus:text-text-primary focus:bg-background-neutral-default dark:focus:bg-background-surface_default disabled:pointer-events-none disabled:opacity-50"
                                     type="button"
                                 >
                                     <svg
@@ -565,7 +579,7 @@ export default function SidePanel({ isOpen, onData, role, onUpdated }) {
 
                                 <button
                                     onClick={() => handleNext()}
-                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
+                                    className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default active:text-text-white dark:active:text-text-primary active:bg-background-neutral-default dark:active:bg-background-surface_default focus:text-text-white dark:focus:text-text-primary focus:bg-background-neutral-default dark:focus:bg-background-surface_default disabled:pointer-events-none disabled:opacity-50"
                                     type="button"
                                 >
                                     <svg

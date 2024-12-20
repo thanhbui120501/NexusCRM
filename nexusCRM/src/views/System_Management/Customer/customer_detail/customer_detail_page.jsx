@@ -159,7 +159,7 @@ export default function CustomerDetail() {
                     ) : (
                         <div className="flex flex-col items-start gap-2">
                             <div className="flex items-center gap-2 self-stretch">
-                                <h1 className="font-semibold text-2xl">
+                                <h1 className="font-semibold text-2xl text-text-primary dark:text-text-white">
                                     {customer != null && customer.full_name}
                                 </h1>
 
@@ -212,9 +212,9 @@ export default function CustomerDetail() {
                     ) : (
                         <div
                             onClick={() => setOpenUpdateButton(true)}
-                            className="flex cursor-pointer px-4 py-2 flex-col items-center gap-2 justify-center self-stretch border border-border-neutral-default rounded-lg bg-background-surface_default hover:bg-background-neutral-subtle_hover"
+                            className="flex cursor-pointer px-4 py-2 flex-col items-center gap-2 justify-center self-stretch border border-border-neutral-default rounded-lg bg-background-surface_default hover:bg-background-neutral-subtle_hover dark:bg-background-neutral-hover dark:hover:bg-background-neutral-press"
                         >
-                            <h1 className="text-sm font-semibold text-text-primary">
+                            <h1 className="text-sm font-semibold text-text-primary dark:text-text-white">
                                 Chỉnh sửa thông tin
                             </h1>
                         </div>
@@ -243,7 +243,7 @@ export default function CustomerDetail() {
                         <div
                             className={`${
                                 activeTab === tab.id
-                                    ? "text-text-black"
+                                    ? "text-text-black dark:text-text-white"
                                     : "text-text-secondary"
                             } transition-colors duration-300`}
                         >
@@ -252,7 +252,7 @@ export default function CustomerDetail() {
                         <h1
                             className={`text-base font-medium ${
                                 activeTab === tab.id
-                                    ? "text-text-black"
+                                    ? "text-text-black dark:text-text-white"
                                     : "text-text-gray"
                             } transition-colors duration-300`}
                         >

@@ -14,7 +14,7 @@ export default function Role() {
     const [hasUpdated, setHasUpdated] = useState(false);
     //set open/close side panel
     const [isOpen, setIsOpen] = useState(false);
-    //set aniimated    
+    //set aniimated
     const toggleSidePanel = (value) => {
         setIsOpen(value);
     };
@@ -52,53 +52,54 @@ export default function Role() {
     };
     const renderAvatars = (listMember) => {
         if (listMember.length === 0) {
-          return (
-            <div
-              key={0}
-              className={`flex w-8 h-8 justify-center items-center bg-background-brand-subtle border border-border-white rounded-full`}
-            >
-              <h1 className="text-xs font-medium text-text-brand">0</h1>
-            </div>
-          );
+            return (
+                <div
+                    key={0}
+                    className={`flex w-8 h-8 justify-center items-center bg-background-brand-subtle border border-border-white rounded-full`}
+                >
+                    <h1 className="text-xs font-medium text-text-brand">0</h1>
+                </div>
+            );
         }
-      
+
         const avatars = listMember.slice(0, 5).map((avatar, index) => (
-          <img
-            key={avatar.account_id}
-            src={`http://127.0.0.1:8000/uploads/${avatar.image_name}`}
-            alt={`avatar-${avatar.id}`}
-            className={`w-[32px] h-[32px] rounded-full absolute border-2 border-border-white`}
-            style={{
-              left: `${index * 24}px`,
-              zIndex: 6 - index,
-            }}
-            onError={(e) => {
-                e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
-                e.target.src = "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
-            }} 
-          />
+            <img
+                key={avatar.account_id}
+                src={`http://127.0.0.1:8000/uploads/${avatar.image_name}`}
+                alt={`avatar-${avatar.id}`}
+                className={`w-[32px] h-[32px] rounded-full absolute border-2 border-border-white`}
+                style={{
+                    left: `${index * 24}px`,
+                    zIndex: 6 - index,
+                }}
+                onError={(e) => {
+                    e.target.onerror = null; // Ngăn lặp vô hạn khi ảnh thay thế cũng lỗi
+                    e.target.src =
+                        "https://dummyimage.com/150x150/cccccc/000000&text=N/A"; // Đường dẫn đến ảnh mặc định
+                }}
+            />
         ));
-      
+
         if (listMember.length > 5) {
-          avatars.push(
-            <div
-              key={0}
-              className={`flex w-8 h-8 justify-center items-center bg-background-brand-subtle border border-border-white rounded-full absolute left-[130px] z-0`}
-            >
-              <h1 className="text-xs font-medium text-text-brand">
-                +{listMember.length - 5}
-              </h1>
-            </div>
-          );
+            avatars.push(
+                <div
+                    key={0}
+                    className={`flex w-8 h-8 justify-center items-center bg-background-brand-subtle border border-border-white rounded-full absolute left-[130px] z-0`}
+                >
+                    <h1 className="text-xs font-medium text-text-brand">
+                        +{listMember.length - 5}
+                    </h1>
+                </div>
+            );
         }
-      
+
         return avatars;
     };
     return (
         <>
             <div className="flex py-6 justify-between items-end self-stretch gap-2">
                 <div className="flex flex-col items-start gap-2 flex-1">
-                    <h1 className="font-semibold text-3xl text-text-primary">
+                    <h1 className="font-semibold text-3xl text-text-primary dark:text-text-white">
                         Chức vụ
                     </h1>
                     <h1 className="font-medium text-base text-text-secondary">
@@ -108,13 +109,13 @@ export default function Role() {
                 <ToastContainer />
             </div>
             {loading ? (
-                <div className="flex flex-col inset-0  items-center justify-center w-full h-full gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-border-brand-default border-solid"></div>
-                    <h1 className="text-base font-medium text-text-brand">
-                        Đang tải
+                <div className="fixed flex flex-col inset-0 bg-black bg-opacity-50 z-[100] items-center justify-center gap-4">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-border-brand-default border-solid"></div>
+                    <h1 className="text-sm font-medium text-text-white">
+                        Đang tải danh sách chức vụ
                     </h1>
                 </div>
-            ) : listRoles?.listMember?.length === 0 ? (
+            ) : listRoles?.listMember?.length == 0 ? (
                 <div className="flex flex-col items-center justify-center w-full mt-4">
                     <h1 className="text-base font-medium text-text-negative">
                         Không có chức vụ nào
@@ -129,10 +130,10 @@ export default function Role() {
                         <div
                             key={role.role_id}
                             name="card"
-                            className="flex p-4 flex-col items-start gap-4 flex-1 rounded-xl border border-b-border-neutral-default"
+                            className="flex p-4 flex-col items-start gap-4 flex-1 rounded-xl border border-b-border-neutral-default bg-background-surface_default dark:bg-background-neutral-hover"
                         >
                             <div className="flex justify-between items-center self-stretch">
-                                <h1 className="font-semibold text-xl text-text-primary">
+                                <h1 className="font-semibold text-xl text-text-primary dark:text-text-white">
                                     {role.role_name}
                                 </h1>
 
@@ -157,10 +158,10 @@ export default function Role() {
                             </div>
                             <div className="flex justify-between items-center self-stretch">
                                 <div className="flex items-center gap-5">
-                                    <h1 className="font-medium text-base text-text-primary">
+                                    <h1 className="font-medium text-base text-text-primary dark:text-text-white">
                                         Nhân viên:
                                     </h1>
-                                    <div className="relative w-[182px] h-[32px]">                                        
+                                    <div className="relative w-[182px] h-[32px]">
                                         {renderAvatars(role.list_member)}
                                     </div>
                                 </div>
@@ -196,8 +197,7 @@ export default function Role() {
                     }}
                 ></div>
             )}
-            
-            
+
             <SidePanel
                 isOpen={isOpen}
                 onData={toggleSidePanel}

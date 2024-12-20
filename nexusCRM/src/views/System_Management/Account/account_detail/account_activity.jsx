@@ -34,9 +34,18 @@ export default function AccountActivity({ id }) {
     };
     return (
         <div className="flex flex-col p-6 items-start gap-6 self-stretch border rounded-xl border-border-neutral-default">
-            <h1 className="font-semibold text-xl text-text-primary">
+            <h1 className="font-semibold text-xl text-text-primary dark:text-text-white">
                 Hoạt động
             </h1>
+
+            {listActivity && listActivity.length == 0 && (
+                <div className="">
+                    <h1 className="text-base font-normal text-text-negative">
+                        Chưa có hoạt động nào trên tài khoản này.
+                    </h1>
+                </div>
+            )}
+
             <div className="flex flex-col items-start gap-3 self-stretch h-48 overflow-y-auto overflow-x-hidden">
                 {listActivity &&
                     listActivity.length > 0 &&
@@ -54,7 +63,7 @@ export default function AccountActivity({ id }) {
                                     alt="avatar"
                                     className="w-8 h-8 rounded-full object-cover"
                                 />
-                                <h1 className="font-medium text-base text-text-primary">
+                                <h1 className="font-medium text-base text-text-primary dark:text-text-white">
                                     {acc.username}
                                 </h1>
                                 <h1 className="font-medium text-base text-text-secondary">
@@ -65,7 +74,7 @@ export default function AccountActivity({ id }) {
                                 <div className="flex w-8 h-8 justify-center items-start gap-2.5">
                                     <div className="h-full w-0.5 bg-background-neutral-disable" />
                                 </div>
-                                <h1 className="font-normal text-base text-text-primary">
+                                <h1 className="font-normal text-base text-text-primary dark:text-text-white">
                                     {acc.activity_content}
                                 </h1>
                             </div>

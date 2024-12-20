@@ -12,7 +12,8 @@ const addColors = (colorObj) => {
     });
     return colors;
 };
-
+import scrollbar from "tailwind-scrollbar";
+import forms from "@tailwindcss/forms";
 export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
     darkMode: "class",
@@ -22,7 +23,7 @@ export default {
         },
         extend: {
             colors: {
-                ...addColors(color_variables.color_variables),                             
+                ...addColors(color_variables.color_variables),
             },
             boxShadow: {
                 custom: "0px 4px 8px 0px rgba(0, 0, 0, 0.1)", // Thêm màu nếu cần
@@ -30,5 +31,5 @@ export default {
         },
     },
 
-    plugins: [],
+    plugins: [scrollbar({ nocompatible: true }), forms],
 };
