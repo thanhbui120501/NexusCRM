@@ -47,11 +47,9 @@
   line-height: 40;
 }
 
-input[type="checkbox"]:checked {
-  background-color: #2563eb; /* Tailwind màu xanh: bg-blue-600 */
-  border-color: #2563eb;
+input {
+  all: unset;
 }
-
 /* Đảm bảo body và html chiếm toàn bộ chiều cao màn hình */
 html, body {
   height: 100%;
@@ -96,4 +94,12 @@ html, body {
   z-index: 100;
   right: 8.25rem;
   top:2.75rem;
+}
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }

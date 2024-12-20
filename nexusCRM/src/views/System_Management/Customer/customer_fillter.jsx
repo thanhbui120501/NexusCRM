@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { vi } from "date-fns/locale";
 import { format } from "date-fns";
 
-export default function ShowFillter({
+export default function CustomerFillter({
     onData,
     onCloseFillter,
     listFillter,

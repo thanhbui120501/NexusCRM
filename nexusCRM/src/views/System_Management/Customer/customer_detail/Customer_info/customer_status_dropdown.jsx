@@ -14,7 +14,7 @@ export default function CustomerStatusDropdown({ onData, onClose }) {
         }
     };
     return (
-        <ul className="absolute z-10 w-full mt-2 bg-background-surface_default border border-border-neutral-subtle rounded-md shadow-lg top-16">
+        <ul className="absolute z-10 p-1 w-full mt-2 bg-background-surface_default border dark:bg-background-neutral-default border-border-neutral-subtle rounded-md shadow-lg top-16">
             {status.map((status) => (
                 <li
                     key={status}
@@ -22,7 +22,7 @@ export default function CustomerStatusDropdown({ onData, onClose }) {
                         onData(status);
                         onClose(false);
                     }}
-                    className="px-4 py-2 hover:bg-background-neutral-subtle_hover cursor-pointer"
+                    className="px-4 py-2 rounded-md hover:bg-background-neutral-subtle_hover dark:hover:bg-background-neutral-press cursor-pointer text-text-primary dark:text-text-white"
                 >
                     {handleStatus(status)}
                 </li>

@@ -162,11 +162,11 @@ export default function AddressDialog({
             onClick={() => onClose(false)}
         >
             <div
-                className="flex p-4 flex-col items-start gap-3 rounded-xl bg-background-surface_default shadow-custom w-[45rem]"
+                className="flex p-4 flex-col items-start gap-3 rounded-xl bg-background-surface_default dark:bg-background-neutral-hover shadow-custom w-[45rem]"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center self-stretch">
-                    <h1 className="text-base font-medium text-text-primary">
+                    <h1 className="text-base font-medium text-text-primary dark:text-text-white">
                         Thêm địa chỉ mới
                     </h1>
                     <div
@@ -186,61 +186,76 @@ export default function AddressDialog({
                 <div className="flex flex-col items-start gap-3 self-stretch">
                     <div className="flex justify-center items-start gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="text-sm font-medium text-text-primary">
+                            <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                                 Chọn đất nước
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
-                                <input
-                                    type="text"
-                                    name="nation"
-                                    id="nation"
-                                    value={"Việt Nam"}
-                                    readOnly
-                                    placeholder="Chọn đất nước"
-                                    className="flex items-center gap-0.5 flex-1"
-                                />
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    className="cursor-pointer"
-                                    // onClick={() =>
-                                    //     setOpenSelectProvince(
-                                    //         !openSelectProvince
-                                    //     )
-                                    // }
-                                />
+
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg bg-background-surface_default dark:bg-background-neutral-default `}
+                            >
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input
+                                        className="w-full pl-1 py-1 text-base font-normal dark:placeholder:text-text-secondary rounded-lg bg-background-surface_default dark:bg-background-neutral-hover text-text-primary dark:text-text-white focus:ring-border-brand-default "
+                                        type="text"
+                                        name="nation"
+                                        id="nation"
+                                        value={"Việt Nam"}
+                                        readOnly
+                                        placeholder="Chọn đất nước"
+                                    />
+                                    <svg
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="cursor-pointer w-5 h-5 text-text-primary dark:text-text-white -rotate-90"
+                                    >
+                                        <path d="M16.5625 9.01562L10.625 14.6016C10.4297 14.7969 10.1953 14.875 10 14.875C9.76562 14.875 9.53125 14.7969 9.33594 14.6406L3.39844 9.01562C3.00781 8.66406 3.00781 8.07812 3.35938 7.6875C3.71094 7.29688 4.29688 7.29688 4.6875 7.64844L10 12.6484L15.2734 7.64844C15.6641 7.29688 16.25 7.29688 16.6016 7.6875C16.9531 8.07812 16.9531 8.66406 16.5625 9.01562Z" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 relative">
-                            <h1 className="text-sm font-medium text-text-primary">
+                            <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                                 Tỉnh/TP
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
-                                <input
-                                    type="text"
-                                    name="province"
-                                    id="province"
-                                    readOnly
-                                    placeholder="Chọn Tỉnh/TP"
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
-                                    value={
-                                        province &&
-                                        Object.keys(province).length > 0
-                                            ? province.full_name
-                                            : ""
-                                    }
-                                />
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                        setOpenSelectProvince(
-                                            !openSelectProvince
-                                        )
-                                    }
-                                />
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg bg-background-surface_default dark:bg-background-neutral-default `}
+                            >
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input
+                                        className="w-full pl-1 py-1 text-base font-normal dark:placeholder:text-text-secondary rounded-lg bg-background-surface_default dark:bg-background-neutral-hover text-text-primary dark:text-text-white focus:ring-border-brand-default "
+                                        type="text"
+                                        name="province"
+                                        id="province"
+                                        readOnly
+                                        placeholder="Chọn Tỉnh/TP"
+                                        value={
+                                            province &&
+                                            Object.keys(province).length > 0
+                                                ? province.full_name
+                                                : ""
+                                        }
+                                    />
+                                    <svg
+                                        onClick={() =>
+                                            setOpenSelectProvince(
+                                                !openSelectProvince
+                                            )
+                                        }
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`cursor-pointer w-5 h-5 text-text-primary dark:text-text-white ${
+                                            openSelectProvince
+                                                ? "rotate-0"
+                                                : "-rotate-90"
+                                        }`}
+                                    >
+                                        <path d="M16.5625 9.01562L10.625 14.6016C10.4297 14.7969 10.1953 14.875 10 14.875C9.76562 14.875 9.53125 14.7969 9.33594 14.6406L3.39844 9.01562C3.00781 8.66406 3.00781 8.07812 3.35938 7.6875C3.71094 7.29688 4.29688 7.29688 4.6875 7.64844L10 12.6484L15.2734 7.64844C15.6641 7.29688 16.25 7.29688 16.6016 7.6875C16.9531 8.07812 16.9531 8.66406 16.5625 9.01562Z" />
+                                    </svg>
+                                </div>
                             </div>
+
                             {openSelectProvince && (
                                 <SelectProvinceDropdown
                                     listProvince={listProvince}
@@ -252,37 +267,50 @@ export default function AddressDialog({
                     </div>
                     <div className="flex justify-center items-start gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 relative">
-                            <h1 className="text-sm font-medium text-text-primary">
+                            <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                                 Quận/Huyện
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
-                                <input
-                                    type="text"
-                                    name="district"
-                                    id="district"
-                                    readOnly
-                                    placeholder="Chọn Quận/Huyện"
-                                    value={
-                                        district &&
-                                        Object.keys(district).length > 0
-                                            ? district.full_name
-                                            : ""
-                                    }
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
-                                />
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                        province &&
-                                            Object.keys(province).length > 0 &&
-                                            setOpenSelectDistrict(
-                                                !openSelectDistrict
-                                            );
-                                    }}
-                                />
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg bg-background-surface_default dark:bg-background-neutral-default `}
+                            >
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input
+                                        className="w-full pl-1 py-1 text-base font-normal dark:placeholder:text-text-secondary rounded-lg bg-background-surface_default dark:bg-background-neutral-hover text-text-primary dark:text-text-white focus:ring-border-brand-default "
+                                        type="text"
+                                        name="district"
+                                        id="district"
+                                        readOnly
+                                        placeholder="Chọn Quận/Huyện"
+                                        value={
+                                            district &&
+                                            Object.keys(district).length > 0
+                                                ? district.full_name
+                                                : ""
+                                        }
+                                    />
+                                    <svg
+                                        onClick={() => {
+                                            province &&
+                                                Object.keys(province).length >
+                                                    0 &&
+                                                setOpenSelectDistrict(
+                                                    !openSelectDistrict
+                                                );
+                                        }}
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`cursor-pointer w-5 h-5 text-text-primary dark:text-text-white ${
+                                            openSelectDistrict
+                                                ? "rotate-0"
+                                                : "-rotate-90"
+                                        }`}
+                                    >
+                                        <path d="M16.5625 9.01562L10.625 14.6016C10.4297 14.7969 10.1953 14.875 10 14.875C9.76562 14.875 9.53125 14.7969 9.33594 14.6406L3.39844 9.01562C3.00781 8.66406 3.00781 8.07812 3.35938 7.6875C3.71094 7.29688 4.29688 7.29688 4.6875 7.64844L10 12.6484L15.2734 7.64844C15.6641 7.29688 16.25 7.29688 16.6016 7.6875C16.9531 8.07812 16.9531 8.66406 16.5625 9.01562Z" />
+                                    </svg>
+                                </div>
                             </div>
+
                             {openSelectDistrict && (
                                 <SelectDistrictDropdown
                                     listDistrict={listDistrict}
@@ -292,34 +320,49 @@ export default function AddressDialog({
                             )}
                         </div>
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1 relative">
-                            <h1 className="text-sm font-medium text-text-primary">
+                            <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                                 Phường/Xã/Thị Trấn
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
-                                <input
-                                    type="text"
-                                    name="ward"
-                                    id="ward"
-                                    readOnly
-                                    placeholder="Chọn Phường/Xã/Thị Trấn"
-                                    value={
-                                        ward && Object.keys(ward).length > 0
-                                            ? ward.full_name
-                                            : ""
-                                    }
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
-                                />
-                                <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                        district &&
-                                            Object.keys(district).length > 0 &&
-                                            setOpenSelectWard(!openSelectWard);
-                                    }}
-                                />
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg bg-background-surface_default dark:bg-background-neutral-default `}
+                            >
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input
+                                        className="w-full pl-1 py-1 text-base font-normal dark:placeholder:text-text-secondary rounded-lg bg-background-surface_default dark:bg-background-neutral-hover text-text-primary dark:text-text-white focus:ring-border-brand-default "
+                                        type="text"
+                                        name="ward"
+                                        id="ward"
+                                        readOnly
+                                        placeholder="Chọn Phường/Xã/Thị Trấn"
+                                        value={
+                                            ward && Object.keys(ward).length > 0
+                                                ? ward.full_name
+                                                : ""
+                                        }
+                                    />
+                                    <svg
+                                        onClick={() => {
+                                            district &&
+                                                Object.keys(district).length >
+                                                    0 &&
+                                                setOpenSelectWard(
+                                                    !openSelectWard
+                                                );
+                                        }}
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`cursor-pointer w-5 h-5 text-text-primary dark:text-text-white ${
+                                            openSelectWard
+                                                ? "rotate-0"
+                                                : "-rotate-90"
+                                        }`}
+                                    >
+                                        <path d="M16.5625 9.01562L10.625 14.6016C10.4297 14.7969 10.1953 14.875 10 14.875C9.76562 14.875 9.53125 14.7969 9.33594 14.6406L3.39844 9.01562C3.00781 8.66406 3.00781 8.07812 3.35938 7.6875C3.71094 7.29688 4.29688 7.29688 4.6875 7.64844L10 12.6484L15.2734 7.64844C15.6641 7.29688 16.25 7.29688 16.6016 7.6875C16.9531 8.07812 16.9531 8.66406 16.5625 9.01562Z" />
+                                    </svg>
+                                </div>
                             </div>
+
                             {openSelectWard && (
                                 <SelectWardDropdown
                                     listWard={listWard}
@@ -331,33 +374,27 @@ export default function AddressDialog({
                     </div>
                     <div className="flex justify-center items-start gap-4 self-stretch">
                         <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="text-sm font-medium text-text-primary">
+                            <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                                 Địa chỉ
                             </h1>
-                            <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
-                                <input
-                                    type="text"
-                                    name="address-line"
-                                    id="address-line"
-                                    placeholder="Nhập địa chỉ"
-                                    value={addressLine}
-                                    onChange={handleChange}
-                                    className="flex items-center gap-0.5 flex-1 text-sm font-medium text-text-primary"
-                                />
-                                {/* <img
-                                    src="/icons/angle-down.svg"
-                                    alt="angle-down"
-                                    className="cursor-pointer"
-                                    // onClick={() =>
-                                    //     setOpenSelectProvince(
-                                    //         !openSelectProvince
-                                    //     )
-                                    // }
-                                /> */}
+                            <div
+                                className={`flex px-3 py-2 items-center gap-2 self-stretch border rounded-lg bg-background-surface_default dark:bg-background-neutral-default `}
+                            >
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input
+                                        type="text"
+                                        name="address-line"
+                                        id="address-line"
+                                        placeholder="Nhập địa chỉ"
+                                        value={addressLine}
+                                        onChange={handleChange}
+                                        className="w-full pl-1 py-1 text-base font-normal dark:placeholder:text-text-secondary rounded-lg bg-background-surface_default dark:bg-background-neutral-hover text-text-primary dark:text-text-white focus:ring-border-brand-default "
+                                    />
+                                </div>
                             </div>
                         </div>
                         {/* <div className="flex flex-col justify-center items-start gap-2.5 flex-1">
-                            <h1 className="text-sm font-medium text-text-primary">Phường/Xã/Thị Trấn</h1>
+                            <h1 className="text-sm font-medium text-text-primary dark:text-text-white">Phường/Xã/Thị Trấn</h1>
                             <div className="flex px-3 py-2 items-center gap-2 self-stretch border border-border-neutral-default rounded-lg">
                                 <input type="text" name="ward" id="ward" readOnly placeholder="Chọn Phường/Xã/Thị Trấn" className="flex items-center gap-0.5 flex-1"/>
                                 <img
@@ -381,9 +418,9 @@ export default function AddressDialog({
                             onChange={(e) => {
                                 handleCheckboxChange(e.target.checked);
                             }}
-                            className="h-4 w-4  bg-background-neutral-subtle_hover border-border-neutral-press rounded-lg accent-background-brand-default"
+                            className="w-5 h-5 text-text-brand ring-1 ring-background-neutral-default  bg-background-neutral-subtle_hover rounded  focus:ring-background-brand-default "
                         />
-                        <h1 className="text-base font-medium text-text-primary">
+                        <h1 className="text-base font-medium text-text-primary dark:text-text-white">
                             Đặt làm địa chỉ mặc định
                         </h1>
                     </div>
@@ -408,7 +445,7 @@ export default function AddressDialog({
                         onClick={() => onClose(false)}
                         className="flex flex-col py-2 px-4 items-center justify-center gap-2 border border-border-neutral-default bg-background-surface_default hover:bg-background-neutral-subtle_hover rounded-lg"
                     >
-                        <h1 className="text-sm font-semibold text-text-primary">
+                        <h1 className="text-sm font-semibold text-text-primary ">
                             Hủy
                         </h1>
                     </button>
@@ -418,10 +455,14 @@ export default function AddressDialog({
                         district &&
                         Object.keys(district).length > 0 &&
                         ward &&
-                        Object.keys(ward).length > 0 && (
+                        Object.keys(ward).length > 0 &&
+                        listDistrict.some((item) => item.id === district.id) ==
+                            true &&
+                        listWard.some((item) => item.id === ward.id) ==
+                            true && (
                             <button
                                 onClick={handldeAccept}
-                                className="flex flex-col py-2 px-4 items-center justify-center gap-2 border  bg-background-black hover:bg-background-neutral-disable rounded-lg"
+                                className="flex flex-col py-2 px-4 items-center justify-center gap-2 border  bg-background-black hover:bg-background-neutral-press rounded-lg"
                             >
                                 <h1 className="text-sm font-semibold text-text-white">
                                     Xác nhận
@@ -444,17 +485,17 @@ export default function AddressDialog({
 
 export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute top-16 border bg-background-surface_default z-50 p-2 h-40 overflow-y-auto overflow-x-hidden gap-2 w-full">
+        <div className="flex flex-col absolute rounded-lg top-16 border bg-background-surface_default dark:bg-background-neutral-default z-50 p-2 h-40 overflow-y-auto overflow-x-hidden gap-2 w-full">
             {listProvince.map((pro) => (
                 <div
                     key={pro.id}
-                    className="flex hover:bg-background-neutral-subtle_hover cursor-pointer"
+                    className="flex pl-1 py-1 hover:bg-background-neutral-subtle_hover dark:hover:bg-background-neutral-press cursor-pointer rounded-lg"
                     onClick={() => {
                         onClose(false);
                         onData(pro);
                     }}
                 >
-                    <h1 className="text-sm font-medium text-text-primary">
+                    <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                         {pro.full_name}
                     </h1>
                 </div>
@@ -465,17 +506,17 @@ export function SelectProvinceDropdown({ listProvince, onClose, onData }) {
 
 export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute top-16 border bg-background-surface_default p-2 h-32 z-50 overflow-y-auto overflow-x-hidden gap-2 w-full">
-            {listDistrict?.map((dis) => (
+        <div className="flex flex-col absolute rounded-lg top-16 border bg-background-surface_default dark:bg-background-neutral-default z-50 p-2 h-40 overflow-y-auto overflow-x-hidden gap-2 w-full">
+            {listDistrict.map((dis) => (
                 <div
                     key={dis.id}
-                    className="flex hover:bg-background-neutral-subtle_hover cursor-pointer"
+                    className="flex pl-1 py-1 hover:bg-background-neutral-subtle_hover dark:hover:bg-background-neutral-press cursor-pointer rounded-lg"
                     onClick={() => {
                         onClose(false);
                         onData(dis);
                     }}
                 >
-                    <h1 className="text-sm font-medium text-text-primary">
+                    <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                         {dis.full_name}
                     </h1>
                 </div>
@@ -486,17 +527,17 @@ export function SelectDistrictDropdown({ listDistrict, onClose, onData }) {
 
 export function SelectWardDropdown({ listWard, onClose, onData }) {
     return (
-        <div className="flex flex-col absolute top-16 border bg-background-surface_default p-2 z-50 h-28 overflow-y-auto overflow-x-hidden gap-2 w-full">
+        <div className="flex flex-col absolute rounded-lg top-16 border bg-background-surface_default dark:bg-background-neutral-default z-50 p-2 h-40 overflow-y-auto overflow-x-hidden gap-2 w-full">
             {listWard.map((war) => (
                 <div
                     key={war.id}
-                    className="flex hover:bg-background-neutral-subtle_hover cursor-pointer"
+                    className="flex pl-1 py-1 hover:bg-background-neutral-subtle_hover dark:hover:bg-background-neutral-press cursor-pointer rounded-lg"
                     onClick={() => {
                         onClose(false);
                         onData(war);
                     }}
                 >
-                    <h1 className="text-sm font-medium text-text-primary">
+                    <h1 className="text-sm font-medium text-text-primary dark:text-text-white">
                         {war.full_name}
                     </h1>
                 </div>

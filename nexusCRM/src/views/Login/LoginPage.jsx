@@ -7,10 +7,11 @@ function LoginPage() {
     const onLoading = (val) => {
         setLoading(val);
     };
+    
     return (
-        <div className="flex flex-row justify-between items-start bg-background-surface_default overflow-hidden h-full">
-            <div className="flex flex-col self-stretch px-4 my-auto  scale-75 sm:scale-100 lg:scale-110 m-4 sm:m-6 lg:m-10">
-                <div className="flex gap-2 items-center py-4 w-full text-xl font-semibold font-sans whitespace-nowrap text-text-primary">
+        <div className="flex justify-between bg-background-surface_default dark:bg-background-neutral-default overflow-hidden h-full">
+            <div name="left-form-login" className="flex flex-col self-stretch px-4 my-auto scale-75 sm:scale-100 lg:scale-110 m-4 sm:m-6 lg:m-10">
+                <div className="flex gap-2 items-center py-4 w-full text-xl font-semibold font-sans whitespace-nowrap text-text-primary dark:text-text-white">
                     <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/93173637173314e133d11df1576e4c797610fa28468e8820ecfbf2dd083cebd2?placeholderIfAbsent=true&apiKey=6129f3f077614e979263c9b69c421594"

@@ -103,18 +103,24 @@ class SearchResourceController extends Controller
     public function searchCustomerByKeyWord(Request $request)
     {
         $keyword = $request->input('keyword');
+        //limit and offset
+        $limit = $request->query('limit', 100000);
+        $offset = $request->query('offset', 0);
 
-        $accounts = Customer::where('customer_id', 'like', "%{$keyword}%")->where('deleted_status', 0)
+        $customers = Customer::where('customer_id', 'like', "%{$keyword}%")->where('deleted_status', 0)
             ->orWhere('phone_number', 'like', "%{$keyword}%")
             ->orWhere('full_name', 'like', "%{$keyword}%")
-            ->orWhere('email', 'like', "%{$keyword}%")
-            ->get();
+            ->orWhere('email', 'like', "%{$keyword}%");
+        $customer_limit = $customers->offset($offset)->limit($limit)->get();
+        $customer_without_limit = $customers->count();
 
+        //return json
         $arr = [
             'success' => true,
             'status_code' => 200,
             'message' => "List of customer result",
-            'data' => CustomerResource::collection($accounts)
+            'data' => CustomerResource::collection($customer_limit),
+            'totalRecords' => $customer_without_limit,
         ];
         return response()->json($arr, Response::HTTP_OK);
     }

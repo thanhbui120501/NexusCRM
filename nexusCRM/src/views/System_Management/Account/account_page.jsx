@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import ShowDataDropDown from "./showDataDropdown";
 import axiosClient from "../../../axiosClient";
 import DialogComponent from "../../../components/dialog";
-import ShowFillter from "./showFillter";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AccountFillter from "./account_fillter";
 
 export default function Account() {
     const localUser = JSON.parse(
@@ -147,7 +147,7 @@ export default function Account() {
                     params: {
                         keyword: keyword,
                         limit: limit,
-                        offset: offset
+                        offset: offset,
                     },
                 }
             );
@@ -308,9 +308,9 @@ export default function Account() {
                         key={i}
                         className={`flex ${
                             currentPage === i
-                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
-                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                        } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                        } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  `}
                         type="button"
                         onClick={() => handlePageChange(i)}
                     >
@@ -326,9 +326,9 @@ export default function Account() {
                             key={i}
                             className={`flex ${
                                 currentPage === i
-                                    ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                            } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                             type="button"
                             onClick={() => handlePageChange(i)}
                         >
@@ -339,7 +339,7 @@ export default function Account() {
                 pages.push(
                     <div
                         key={"more_0"}
-                        className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                        className="flex w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                         type="text"
                     >
                         ...
@@ -350,11 +350,11 @@ export default function Account() {
                         key={totalPages}
                         className={`flex ${
                             currentPage === totalPages
-                                ? "bg-background-neutral-default text-text-white hover:bg-background-neutral-hover"
-                                : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
                         }
                             
-                         w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                         w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center rounded-lg text-center transition-all text-sm font-medium`}
                         type="button"
                         onClick={() => handlePageChange(totalPages)}
                     >
@@ -368,11 +368,11 @@ export default function Account() {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-background-neutral-default text-text-white"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -382,7 +382,7 @@ export default function Account() {
                     pages.push(
                         <div
                             key={"more_1"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                             type="text"
                         >
                             ...
@@ -394,9 +394,9 @@ export default function Account() {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-background-neutral-default text-text-white"
-                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                        : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                                } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  `}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -410,11 +410,11 @@ export default function Account() {
                             key={1}
                             className={`flex ${
                                 currentPage === 1
-                                    ? "bg-background-neutral-default text-text-white"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
                             }
                                 
-                             w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                             w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  `}
                             type="button"
                             onClick={() => handlePageChange(1)}
                         >
@@ -424,7 +424,7 @@ export default function Account() {
                     pages.push(
                         <div
                             key={"more_2"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                             type="text"
                         >
                             ...
@@ -436,9 +436,9 @@ export default function Account() {
                                 key={i}
                                 className={`flex ${
                                     currentPage === i
-                                        ? "bg-background-neutral-default text-text-white"
-                                        : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                                } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                        ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                        : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                                } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                                 type="button"
                                 onClick={() => handlePageChange(i)}
                             >
@@ -449,7 +449,7 @@ export default function Account() {
                     pages.push(
                         <div
                             key={"more_3"}
-                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary"
+                            className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center text-center text-sm font-medium  text-text-primary dark:text-text-white"
                             type="text"
                         >
                             ...
@@ -460,9 +460,9 @@ export default function Account() {
                             key={totalPages}
                             className={`flex ${
                                 currentPage === totalPages
-                                    ? "bg-background-neutral-default text-text-white"
-                                    : "text-text-primary hover:text-text-white hover:bg-background-neutral-default"
-                            } w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default active:text-text-white active:bg-gray-000 disabled:pointer-events-none disabled:opacity-50`}
+                                    ? "bg-background-neutral-default dark:bg-background-surface_default text-text-white dark:text-text-primary hover:bg-background-neutral-hover dark:hover:bg-background-neutral-subtle_hover"
+                                    : "text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default"
+                            } w-9 h-9 px-3 py-2 justify-center gap-[10px] items-center  rounded-lg text-center transition-all text-sm font-medium`}
                             type="button"
                             onClick={() => handlePageChange(totalPages)}
                         >
@@ -483,54 +483,66 @@ export default function Account() {
             <ToastContainer />
             <div className="flex justify-between items-end self-stretch">
                 <div className="flex flex-col flex-1 items-start gap-2 ">
-                    <h1 className="self-stretch text-text-primary font-semibold text-3xl">
+                    <h1 className="self-stretch text-text-primary dark:text-text-white font-semibold text-3xl">
                         Tài khoản
                     </h1>
                     <h1 className="self-stretch text-text-secondary font-medium text-base">
                         Quản lí tất cả tài khoản tại đây
                     </h1>
                 </div>
-                <div className="relative flex items-center gap-2">
+                <div className="relative flex items-center justify-center gap-2">
                     {loadingSearch && (
                         <div className="animate-spin rounded-full h-5 w-5 border-t-[2px] border-border-brand-default border-solid"></div>
                     )}
                     {usersCount > 0 && (
                         <>
                             <div className="flex pt-2 pb-2 pl-3 pr-3 items-center self-stretch border rounded-lg border-[#E5E5E5]">
-                                <img
-                                    src="/icons/search.svg"
-                                    alt="icon-search"
-                                    className={`w-5 h-5 cursor-pointer`}
+                                <svg
+                                    viewBox="0 0 21 21"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5 cursor-pointer text-text-primary dark:text-text-white"
                                     onClick={() => {
                                         handleSearch(keyword);
                                     }}
-                                />
-                                <div className="flex items-center gap-[2px] ml-2 flex-1">
+                                >
+                                    <path
+                                        d="M19.6875 18.8984C20.0781 19.2891 20.0781 19.875 19.6875 20.2266C19.5312 20.4219 19.2969 20.5 19.0625 20.5C18.7891 20.5 18.5547 20.4219 18.3594 20.2266L13.125 14.9922C11.7188 16.125 9.96094 16.75 8.08594 16.75C3.63281 16.75 0 13.1172 0 8.625C0 4.17188 3.59375 0.5 8.08594 0.5C12.5391 0.5 16.2109 4.17188 16.2109 8.625C16.2109 10.5391 15.5859 12.2969 14.4531 13.6641L19.6875 18.8984ZM1.875 8.625C1.875 12.1016 4.64844 14.875 8.125 14.875C11.5625 14.875 14.375 12.1016 14.375 8.625C14.375 5.1875 11.5625 2.375 8.125 2.375C4.64844 2.375 1.875 5.1875 1.875 8.625Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+
+                                <div className="flex items-center gap-0.5 ml-2 flex-1">
                                     <input
                                         type="text"
                                         value={keyword}
                                         onChange={(e) =>
                                             handleChange(e.target.value)
                                         }
+                                        className="bg-background-surface_default dark:bg-background-neutral-press rounded-lg text-text-primary dark:text-text-white max-h-3 focus:ring-1 focus:outline-none focus:ring-border-brand-default dark:focus:ring-border-neutral-focus"
                                         placeholder="Tìm kiếm tài khoản"
                                     />
                                 </div>
                             </div>
-                            <img src="/icons/line.svg" alt="icon-statistics" />
+                            <img src="/icons/line.svg" alt="iine" />
                             <div
                                 className="flex p-[10px] justify-center items-center gap-2 border rounded-lg border-[#E5E5E5] cursor-pointer"
                                 onClick={() => setOpenFillter(!openFillter)}
                             >
-                                <img
-                                    src="/icons/sliders.svg"
-                                    alt="icon-sliders"
-                                    className="flex flex-col items-center w-5 h-5 "
-                                />
+                                <svg
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5 text-text-primary dark:text-text-white"
+                                >
+                                    <path
+                                        d="M0 16.75C0 16.2422 0.390625 15.8125 0.9375 15.8125H3.24219C3.63281 14.5625 4.84375 13.625 6.25 13.625C7.61719 13.625 8.82812 14.5625 9.21875 15.8125H19.0625C19.5703 15.8125 20 16.2422 20 16.75C20 17.2969 19.5703 17.6875 19.0625 17.6875H9.21875C8.82812 18.9766 7.61719 19.875 6.25 19.875C4.84375 19.875 3.63281 18.9766 3.24219 17.6875H0.9375C0.390625 17.6875 0 17.2969 0 16.75ZM7.5 16.75C7.5 16.0859 6.91406 15.5 6.25 15.5C5.54688 15.5 5 16.0859 5 16.75C5 17.4531 5.54688 18 6.25 18C6.91406 18 7.5 17.4531 7.5 16.75ZM13.75 7.375C15.1172 7.375 16.3281 8.3125 16.7188 9.5625H19.0625C19.5703 9.5625 20 9.99219 20 10.5C20 11.0469 19.5703 11.4375 19.0625 11.4375H16.7188C16.3281 12.7266 15.1172 13.625 13.75 13.625C12.3438 13.625 11.1328 12.7266 10.7422 11.4375H0.9375C0.390625 11.4375 0 11.0469 0 10.5C0 9.99219 0.390625 9.5625 0.9375 9.5625H10.7422C11.1328 8.3125 12.3438 7.375 13.75 7.375ZM15 10.5C15 9.83594 14.4141 9.25 13.75 9.25C13.0469 9.25 12.5 9.83594 12.5 10.5C12.5 11.2031 13.0469 11.75 13.75 11.75C14.4141 11.75 15 11.2031 15 10.5ZM19.0625 3.3125C19.5703 3.3125 20 3.74219 20 4.25C20 4.79688 19.5703 5.1875 19.0625 5.1875H10.4688C10.0781 6.47656 8.86719 7.375 7.5 7.375C6.09375 7.375 4.88281 6.47656 4.49219 5.1875H0.9375C0.390625 5.1875 0 4.79688 0 4.25C0 3.74219 0.390625 3.3125 0.9375 3.3125H4.49219C4.88281 2.0625 6.09375 1.125 7.5 1.125C8.86719 1.125 10.0781 2.0625 10.4688 3.3125H19.0625ZM6.25 4.25C6.25 4.95312 6.79688 5.5 7.5 5.5C8.16406 5.5 8.75 4.95312 8.75 4.25C8.75 3.58594 8.16406 3 7.5 3C6.79688 3 6.25 3.58594 6.25 4.25Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
                             </div>
                         </>
                     )}
                     {openFillter && (
-                        <ShowFillter
+                        <AccountFillter
                             onCloseFillter={callbackFillTer}
                             listFillter={listFillter}
                             listAdmin={listAdmin}
@@ -594,16 +606,16 @@ export default function Account() {
                 </div>
             ) : (
                 <div className="flex pb-6 flex-col items-start gap-3 self-stretch">
-                    <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto  max-w-full">
-                        <table className="w-full table-fixed bg-background-surface_default">
+                    <div className="flex items-start self-stretch overflow-x-hidden overflow-y-auto max-w-full rounded-t-lg">
+                        <table className="w-full table-fixed bg-background-surface_default dark:bg-background-neutral-hover">
                             <thead className="rounded-t-lg sticky top-0 z-10">
-                                <tr className="bg-background-neutral-subtle text-text-gray text-sm font-medium">
+                                <tr className="bg-background-neutral-subtle dark:bg-background-neutral-press text-text-gray dark:text-text-white text-sm font-medium">
                                     <th className="py-3 px-6 text-left rounded-tl-lg rounded-bl-lg w-[5%]">
                                         <input
                                             type="checkbox"
                                             checked={isAllSelected}
                                             onChange={handleSelectAll}
-                                            className="accent-background-brand-default border-2 border-border-gray w-6 h-5"
+                                            className="w-5 h-5 text-text-brand ring-1 ring-background-neutral-default  bg-background-neutral-subtle_hover rounded  focus:ring-background-brand-default"
                                         />
                                     </th>
                                     <th className="py-3 px-6 text-center w-[5%]">
@@ -612,19 +624,19 @@ export default function Account() {
                                     <th className="py-3 px-6 text-left w-[12%] whitespace-nowrap">
                                         Ảnh đại diện
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
+                                    <th className="py-3 px-6 text-left w-[18%] whitespace-nowrap">
                                         Tên tài khoản
                                     </th>
                                     <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Tên nhân viên
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[15%] whitespace-nowrap">
+                                    <th className="py-3 px-6 text-left w-[18%] whitespace-nowrap">
                                         Số điện thoại
                                     </th>
                                     <th className="py-3 px-6 text-left w-[20%] whitespace-nowrap">
                                         Email
                                     </th>
-                                    <th className="py-3 px-6 text-left w-[12%] whitespace-nowrap ">
+                                    <th className="py-3 px-6 text-left w-[15%] whitespace-nowrap ">
                                         Chức vụ
                                     </th>
                                     <th className="py-3 px-6 text-left rounded-tr-lg rounded-br-lg w-[20%] whitespace-nowrap ">
@@ -651,36 +663,32 @@ export default function Account() {
                                                     `/account/${user.account_id}`
                                                 );
                                             }}
-                                            className={`border-b border-border-neutral-focus hover:bg-background-brand-subtle_hover ${
+                                            className={`border-b border-border-neutral-focus hover:bg-background-brand-subtle_hover dark:hover:bg-background-neutral-disable cursor-pointer ${
                                                 selectedUsers.includes(
                                                     user.account_id
                                                 )
-                                                    ? "bg-background-brand-subtle_hover"
+                                                    ? "bg-background-brand-subtle_hover dark:bg-background-neutral-disable"
                                                     : ""
                                             }`}
                                         >
                                             <td className="py-3 px-6 text-left">
-                                                <input
-                                                    type="checkbox"
-                                                    disabled={
-                                                        localUser.role[0]
-                                                            .role_level >=
-                                                        user.role[0].role_level
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    checked={selectedUsers.includes(
-                                                        user.account_id
-                                                    )}
-                                                    onChange={() =>
-                                                        handleCheckboxChange(
+                                                {localUser.role[0].role_level <
+                                                    user.role[0].role_level && (
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedUsers.includes(
                                                             user.account_id
-                                                        )
-                                                    }
-                                                    className="accent-background-brand-default border-2 border-border-gray w-6 h-5"
-                                                />
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChange(
+                                                                user.account_id
+                                                            )
+                                                        }
+                                                        className="w-5 h-5 text-text-brand ring-1 ring-background-neutral-default bg-background-neutral-subtle_hover rounded  focus:ring-background-brand-default "
+                                                    />
+                                                )}
                                             </td>
-                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-text-primary">
+                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium text-base text-text-primary dark:text-text-white">
                                                 {startIndex + index}
                                             </td>
                                             <td className="py-3 px-6 text-left">
@@ -704,22 +712,25 @@ export default function Account() {
                                                     />
                                                 )}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary dark:text-text-white whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.username}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary dark:text-text-white whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.full_name}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary dark:text-text-white whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.phone_number}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary dark:text-text-white whitespace-nowrap text-ellipsis overflow-hidden">
                                                 {user.email}
                                             </td>
-                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary whitespace-nowrap text-ellipsis overflow-hidden">
+                                            <td className="py-3 px-6 text-left font-medium text-base text-text-primary dark:text-text-white ">
                                                 <ul>
                                                     {user.role.map((r) => (
-                                                        <li key={r.role_id}>
+                                                        <li
+                                                            key={r.role_id}
+                                                            className="whitespace-nowrap text-ellipsis overflow-hidden"
+                                                        >
                                                             {r.role_name}
                                                         </li>
                                                     ))}
@@ -750,19 +761,29 @@ export default function Account() {
                         <div className=" flex items-start gap-3">
                             <div className="relative overflow-visible flex flex-col items-start gap-1 max-h-none">
                                 <div
-                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-border-neutral-focus"
+                                    className="flex pl-3 pr-3 pt-2 pb-2 items-center gap-[10px] border rounded-lg border-border-neutral-focus dark:border-border-white"
                                     onClick={() =>
                                         setOpenDropDownData(!openDropDownData)
                                     }
                                 >
-                                    <h1 className="text-text-primary font-medium text-sm cursor-pointer">
+                                    <h1 className="text-text-primary dark:text-text-white font-medium text-sm cursor-pointer">
                                         {showRowNumber}
                                     </h1>
-                                    <img
-                                        src="/icons/statis_more_icon.svg"
-                                        alt="icon-selected"
-                                        className={`w-4 h-4 cursor-pointer`}
-                                    />
+
+                                    <svg
+                                        viewBox="0 0 9 15"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`w-4 h-4 cursor-pointer text-text-primary dark:text-text-white ${
+                                            openDropDownData
+                                                ? "rotate-90"
+                                                : "rotate-0"
+                                        }`}
+                                    >
+                                        <path
+                                            d="M2.47656 0.9375L8.0625 6.875C8.21875 7.07031 8.33594 7.30469 8.33594 7.5C8.33594 7.73438 8.21875 7.96875 8.0625 8.16406L2.47656 14.1016C2.125 14.4922 1.53906 14.4922 1.14844 14.1406C0.757812 13.7891 0.757812 13.2031 1.10938 12.8125L6.10938 7.5L1.10938 2.22656C0.757812 1.83594 0.757812 1.25 1.14844 0.898438C1.53906 0.546875 2.125 0.546875 2.47656 0.9375Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
                                 </div>
                                 {openDropDownData && (
                                     <ShowDataDropDown
@@ -772,20 +793,20 @@ export default function Account() {
                                 )}
                             </div>
 
-                            <h1 className="text-text-primary font-medium text-sm mt-2">
+                            <h1 className="text-text-primary dark:text-text-white font-medium text-sm mt-2">
                                 Hiển thị 1 - {showRowNumber} dòng dữ liệu{" "}
                             </h1>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => handlePageChange(1)}
-                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default active:text-text-white active:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default active:text-text-white dark:active:text-text-primary active:bg-background-neutral-default dark:active:bg-background-surface_default focus:text-text-white dark:focus:text-text-primary focus:bg-background-neutral-default dark:focus:bg-background-surface_default disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Đầu tiên
                             </button>
                             <button
                                 onClick={() => handlePrev()}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default active:text-text-white dark:active:text-text-primary active:bg-background-neutral-default dark:active:bg-background-surface_default focus:text-text-white dark:focus:text-text-primary focus:bg-background-neutral-default dark:focus:bg-background-surface_default disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
                                 <svg
@@ -805,7 +826,7 @@ export default function Account() {
 
                             <button
                                 onClick={() => handleNext()}
-                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary hover:text-text-white hover:bg-background-neutral-default  focus:text-text-white focus:bg-background-neutral-default  active:text-text-white active:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
+                                className="flex w-9 h-9 px-3 py-2 justify-items-center gap-[10px] items-center  rounded-lg text-center transition-all  text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default active:text-text-white dark:active:text-text-primary active:bg-background-neutral-default dark:active:bg-background-surface_default focus:text-text-white dark:focus:text-text-primary focus:bg-background-neutral-default dark:focus:bg-background-surface_default disabled:pointer-events-none disabled:opacity-50"
                                 type="button"
                             >
                                 <svg
@@ -823,7 +844,7 @@ export default function Account() {
                             </button>
                             <button
                                 onClick={() => handlePageChange(totalPages)}
-                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary hover:text-text-white hover:bg-background-neutral-default active:text-text-white active:bg-background-neutral-default focus:text-text-white focus:bg-background-neutral-default disabled:pointer-events-none disabled:opacity-50"
+                                className="flex px-3 py-2 justify-items-center gap-[10px] rounded-lg text-center transition-all text-sm font-medium  text-text-primary dark:text-text-white hover:text-text-white dark:hover:text-text-primary hover:bg-background-neutral-default dark:hover:bg-background-surface_default active:text-text-white dark:active:text-text-primary active:bg-background-neutral-default dark:active:bg-background-surface_default focus:text-text-white dark:focus:text-text-primary focus:bg-background-neutral-default dark:focus:bg-background-surface_default disabled:pointer-events-none disabled:opacity-50"
                             >
                                 Cuối cùng
                             </button>
@@ -955,9 +976,9 @@ export function AccountStatistics({
     return (
         <div className="flex pb-6 items-center self-stretch">
             <div className="flex items-center gap-6 flex-1">
-                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle  bg-background-surface_default">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default  dark:bg-background-neutral-hover">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-base font-medium text-text-primary">
+                        <h1 className="text-base font-medium text-text-primary dark:text-text-white">
                             Tổng tài khoản
                         </h1>
                         <img
@@ -966,7 +987,7 @@ export function AccountStatistics({
                             className="cursor-pointer"
                         />
                     </div>
-                    <h1 className="text-4xl font-bold text-text-primary">
+                    <h1 className="text-4xl font-bold text-text-primary dark:text-text-white">
                         {loading ? 0 : users + 1}
                     </h1>
                     <div className="flex items-center gap-2 self-stretch">
@@ -977,9 +998,9 @@ export function AccountStatistics({
                         {getAccountPercent(userThisMonth, lastmonthUser)}
                     </div>
                 </div>
-                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default dark:bg-background-neutral-hover dark:bg-background-neutral-hover">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-base font-medium text-text-primary">
+                        <h1 className="text-base font-medium text-text-primary dark:text-text-white">
                             Tài khoản ngưng hoạt động
                         </h1>
                         <img
@@ -988,7 +1009,7 @@ export function AccountStatistics({
                             className="cursor-pointer"
                         />
                     </div>
-                    <h1 className="text-4xl font-bold text-text-primary">
+                    <h1 className="text-4xl font-bold text-text-primary dark:text-text-white">
                         {loading
                             ? 0
                             : formatNumber(
@@ -1006,9 +1027,9 @@ export function AccountStatistics({
                         )}
                     </div>
                 </div>
-                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default">
+                <div className="flex px-6 py-5 flex-col items-start gap-3 flex-1 border rounded-xl border-b-border-neutral-subtle bg-background-surface_default dark:bg-background-neutral-hover dark:bg-background-neutral-hover">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-base font-medium text-text-primary">
+                        <h1 className="text-base font-medium text-text-primary dark:text-text-white">
                             Doanh thu/Tài khoản
                         </h1>
                         <img
@@ -1017,7 +1038,7 @@ export function AccountStatistics({
                             className="cursor-pointer"
                         />
                     </div>
-                    <h1 className="text-4xl font-bold text-text-primary">
+                    <h1 className="text-4xl font-bold text-text-primary dark:text-text-white">
                         2,250,000,000
                     </h1>
                     <div className="flex items-center gap-2 self-stretch">
